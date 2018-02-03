@@ -1,0 +1,13 @@
+env: production
+address:
+  protocol: http
+  ip: '192.168.100.3'
+  port: 80
+dirs:
+  main: 'C:/NodeJS/oc_donators_cab'
+  public: 'C:/NodeJS/oc_donators_cab/public/'
+  abi: 'C:/NodeJS/oc_donators_cab/abi/'
+mongoURI: 'mongodb://user:password@ds119268.mlab.com:19268/opch-test'
+dapp:
+  provider: 'http://52.166.13.111:8535'
+  token: '0x9Dee536694e1f0Adc640972E61826732666345b3'

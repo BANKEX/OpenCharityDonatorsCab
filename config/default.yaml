@@ -1,0 +1,4 @@
+jwt:
+  secret: 'veryBigSecret'
+  exp: 604800
+  temporaryTokenExp: 1200
