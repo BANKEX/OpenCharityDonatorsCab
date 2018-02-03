@@ -21,20 +21,19 @@
 ```
 4. Для запуска в development-окружении: npm run development
 5. Для запуска в production-окружении:
-* отредактировать package.json -> scripts -> clean под конктреную ОС
-* создать пустую папку build в корне проекта
-* npm run production
+    * отредактировать package.json -> scripts -> clean под конктреную ОС
+    * создать пустую папку build в корне проекта
+    * npm run production
 
 ## Тестирование
 1. Установить mocha глобально: npm i mocha -g
 2. Тестирование в development-окружении:
-* запустить сервер в development-окружении: npm run development
-* npm run testDev
+    * запустить сервер в development-окружении: npm run development
+    * npm run testDev
 3. Тестирование в production-окружении:
-* запустить сервер в production-окружении: npm run production
-* npm run testProd
+    * запустить сервер в production-окружении: npm run production
+    * npm run testProd
 
----
 ## Работа с пользователями
 
 ### POST /api/user/signup
@@ -125,7 +124,6 @@
 Обязательное поле password.<br/>
 Возвращает 'Ok'.
 
----
 ## Работа с DAPP
 
 ### GET /api/dapp/getOrganization
