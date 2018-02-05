@@ -9,23 +9,27 @@ export default {
 
   async getCharityEvents(ctx) {
     const charityEventList = await DappService.getCharityEventAddressList(organizations[0]);
-    const data = await Promise.all(charityEventList.map(await DappService.singleCharityEvent));
+    const data = await Promise.all(charityEventList.map(async (address) => (
+      await DappService.singleCharityEvent(organizations[0], address)
+    )));
     ctx.body = { data };
   },
 
   async getIncomingDonations(ctx) {
     const incomingDonationList = await DappService.getIncomingDonationAddressList(organizations[0]);
-    const data = await Promise.all(incomingDonationList.map(await DappService.singleIncomingDonation));
+    const data = await Promise.all(incomingDonationList.map(async (address) => (
+      await DappService.singleIncomingDonation(organizations[0], address)
+    )));
     ctx.body = { data };
   },
   
   async getCharityEvent(ctx) {
-    const data = await DappService.singleCharityEvent(ctx.params.hash);
+    const data = await DappService.singleCharityEvent(organizations[0], ctx.params.hash);
     ctx.body = { data };
   },
   
   async getIncomingDonation(ctx) {
-    const data = await DappService.singleIncomingDonation(ctx.params.hash);
+    const data = await DappService.singleIncomingDonation(organizations[0], ctx.params.hash);
     ctx.body = { data };
   },
 };

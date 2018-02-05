@@ -133,14 +133,14 @@
 Вернет JSON всех CharityEvents {data: [{charityEventObject}]}
 ```
 charityEventObject: {
-    name, payed, target, raised, tags
+    name, payed, target, raised, tags, date, address
 }
 ```
 ### GET /api/dapp/getIncomingDonations
 Вернет JSON всех IncomingDonations {data: [{incomingDonationsObject}]}
 ```
 incomingDonationsObject: {
-    realWorldIdentifier, amount, note, tags
+    realWorldIdentifier, amount, note, tags, date, address
 }
 ```
 ### GET /api/dapp/getCharityEvent/:hash
