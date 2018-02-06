@@ -16,7 +16,7 @@
     "build-server": "babel -d ./build ./server -s",
     "build": "npm run clean && npm run build-server",
     "production": "npm run build && cross-env NODE_ENV=production NODE_PATH=./server:./server/utils babel-node server/server.js",
-    "staging": "npm run build && cross-env NODE_ENV=staging NODE_PATH=./server:./server/utils babel-node server/server.js"
+    "staging": "cross-env NODE_ENV=staging NODE_PATH=./server:./server/utils babel-node server/server.js"
   },
   "nodemonConfig": {
     "watch": [

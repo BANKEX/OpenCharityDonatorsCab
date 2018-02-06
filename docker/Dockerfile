@@ -5,7 +5,6 @@ ADD /abi /
 ADD /build /
 ADD /config /
 ADD /public /
+ADD /server /
 
 EXPOSE 80
-
-CMD ["npm", "run", "staging"]
