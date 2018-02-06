@@ -14,9 +14,7 @@ build-node:
     paths:
       - node_modules/
   script:
-    - sleep 120
     - npm run staging
-    - sleep 120
   artifacts:
     paths:
       - abi
