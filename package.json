@@ -7,17 +7,17 @@
   "license": "MIT",
   "scripts": {
     "lint": "eslint server",
-    "startDev": "cross-env NODE_ENV=development NODE_PATH=./server:./server/utils babel-node server/server.js",
+    "startDev": "cross-env NODE_ENV=development NODE_PATH=./server babel-node server/server.js",
     "development": "startDev.bat",
     "testDev": "mocha --timeout 10000 tests/index-test.js",
     "testStage": "cross-env NODE_ENV=staging mocha --timeout 10000 tests/index-test.js",
     "testProd": "cross-env NODE_ENV=production mocha --timeout 10000 tests/index-test.js",
     "//": "rmdir /q /s build && mkdir build",
     "clean": "rm -rf build && mkdir build",
-    "build-server": "babel -d ./build ./server -s",
+    "build-server": "babel -d ./build ./server",
     "build": "npm run clean && npm run build-server",
-    "production": "cross-env NODE_ENV=production NODE_PATH=./build:./build/utils node build/server.js",
-    "staging": "npm run build && cross-env NODE_ENV=staging NODE_PATH=./server:./server/utils babel-node server/server.js"
+    "production": "cross-env NODE_ENV=production NODE_PATH=./build node build/server.js",
+    "staging": "cross-env NODE_ENV=staging NODE_PATH=./build node build/server.js"
   },
   "nodemonConfig": {
     "watch": [
@@ -59,6 +59,7 @@
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
     "babel-eslint": "^8.2.1",
+    "babel-plugin-transform-runtime": "^6.23.0",
     "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.6.1",
     "eslint": "^4.16.0",

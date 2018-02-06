@@ -1,4 +1,4 @@
-import AppError from 'AppErrors';
+import AppError from '../../../utils/AppErrors.js';
 
 export default () => async (ctx, next) => {
   try {

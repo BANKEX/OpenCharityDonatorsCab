@@ -1,21 +1,21 @@
 import Router from 'koa-router';
 import authController from './controllers/auth-controller.js';
 import userController from './controllers/user-controller.js';
-import jwtUser from 'getUser';
+import getUser from '../../utils/getUser.js';
 import { User } from './models';
 
 const router = new Router({ prefix: '/user' });
 
 router
-  .post('/signup', jwtUser(), authController.signup)
-  .post('/login', jwtUser(), authController.login)
-  .get('/logout', jwtUser(), authController.logout)
-  .post('/forgot', jwtUser(), authController.forgotPassword)
-  .get('/setNewPassword', jwtUser(), authController.setNewPasswordData)
-  .post('/setNewPassword', jwtUser(), authController.setNewPassword)
-  .get('/', jwtUser(), userController.currentUser)
-  .post('/change', jwtUser(), userController.changeUser)
-  .post('/delete', jwtUser(), userController.deleteUser)
+  .post('/signup', getUser(), authController.signup)
+  .post('/login', getUser(), authController.login)
+  .get('/logout', getUser(), authController.logout)
+  .post('/forgot', getUser(), authController.forgotPassword)
+  .get('/setNewPassword', getUser(), authController.setNewPasswordData)
+  .post('/setNewPassword', getUser(), authController.setNewPassword)
+  .get('/', getUser(), userController.currentUser)
+  .post('/change', getUser(), userController.changeUser)
+  .post('/delete', getUser(), userController.deleteUser)
   ;
 
 export default router.routes();

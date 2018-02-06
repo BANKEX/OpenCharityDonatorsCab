@@ -1,5 +1,5 @@
 import pick from 'lodash.pick';
-import AppError from 'AppErrors';
+import AppError from '../../../utils/AppErrors.js';
 import { User } from '../models';
 import { UserService } from '../services';
 

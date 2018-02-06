@@ -1,7 +1,7 @@
 import passport from 'koa-passport';
 import pick from 'lodash.pick';
 import jwt from 'jsonwebtoken';
-import AppError from 'AppErrors.js';
+import AppError from '../../../utils/AppErrors.js';
 import {JWT, ADDRESS} from 'configuration';
 import { User } from '../models';
 import { UserService } from '../services';
