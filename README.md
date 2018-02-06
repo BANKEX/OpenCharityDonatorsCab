@@ -3,7 +3,7 @@
 ## Установка
 1. склонировать репозиторий
 2. npm install
-3. настроить файлы config: development.yaml и production.yaml
+3. настроить файлы config: development.yaml, staging.yaml и production.yaml
 ```
     env: development
     address:
@@ -20,10 +20,10 @@
       token: '0x9Dee536694e1f0Adc640972E61826732666345b3'
 ```
 4. Для запуска в development-окружении: npm run development
-5. Для запуска в production-окружении:
-    * отредактировать package.json -> scripts -> clean под конктреную ОС
+5. Для запуска в staging или production -окружениях:
     * создать пустую папку build в корне проекта
-    * npm run production
+    * npm run build
+    * npm run staging или npm run production
 
 ## Тестирование
 1. Установить mocha глобально: npm i mocha -g
