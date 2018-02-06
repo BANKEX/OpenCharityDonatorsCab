@@ -74,6 +74,8 @@ describe('--------Запросы к DAPP-----------', () => {
     assert.equal(responseData.name, CE[0].name);
     assert.equal(responseData.target, CE[0].target);
     assert.equal(responseData.raised, CE[0].raised);
+    assert.equal(responseData.tags, CE[0].tags);
+    assert.equal(responseData.date, CE[0].date);
   });
 
   it('Запрос getIncomingDonation/hash', async () => {
@@ -84,5 +86,7 @@ describe('--------Запросы к DAPP-----------', () => {
     const response = await rp(options);
     const responseData = JSON.parse(response).data;
     assert.equal(responseData.realWorldIdentifier, ID[0].realWorldIdentifier);
+    assert.equal(responseData.tags, ID[0].tags);
+    assert.equal(responseData.date, ID[0].date);
   });
 });

@@ -1,15 +1,15 @@
 import Router from 'koa-router';
 import controller from './controllers/dapp-controller.js';
-import jwtUser from '../../utils/getUser.js';
+import dappErrors from './errors';
 
 const router = new Router({ prefix: '/dapp' });
 
 router
-  .get('/getOrganization', jwtUser(), controller.getOrganization)
-  .get('/getCharityEvents', jwtUser(), controller.getCharityEvents)
-  .get('/getIncomingDonations', jwtUser(), controller.getIncomingDonations)
-  .get('/getCharityEvent/:hash', jwtUser(), controller.getCharityEvent)
-  .get('/getIncomingDonation/:hash', jwtUser(), controller.getIncomingDonation)
+  .get('/getOrganization', dappErrors(), controller.getOrganization)
+  .get('/getCharityEvents', dappErrors(), controller.getCharityEvents)
+  .get('/getIncomingDonations', dappErrors(), controller.getIncomingDonations)
+  .get('/getCharityEvent/:hash', dappErrors(), controller.getCharityEvent)
+  .get('/getIncomingDonation/:hash', dappErrors(), controller.getIncomingDonation)
 ;
 
 export default router.routes();

@@ -27,7 +27,7 @@
       "absolutePath": "/C/NodeJS/gitHub/oc_client/contracts/app/OrganizationInterface.sol",
       "exportedSymbols": {
         "OrganizationInterface": [
-          773
+          778
         ]
       }
     },
@@ -41,9 +41,9 @@
             ".17"
           ]
         },
-        "id": 767,
+        "id": 772,
         "name": "PragmaDirective",
-        "src": "0:24:8"
+        "src": "0:24:6"
       },
       {
         "attributes": {
@@ -57,10 +57,10 @@
           "documentation": null,
           "fullyImplemented": false,
           "linearizedBaseContracts": [
-            773
+            778
           ],
           "name": "OrganizationInterface",
-          "scope": 774
+          "scope": 779
         },
         "children": [
           {
@@ -74,7 +74,7 @@
               ],
               "name": "isAdmin",
               "payable": false,
-              "scope": 773,
+              "scope": 778,
               "stateMutability": "view",
               "superFunction": null,
               "visibility": "external"
@@ -87,9 +87,9 @@
                   ]
                 },
                 "children": [],
-                "id": 768,
+                "id": 773,
                 "name": "ParameterList",
-                "src": "84:2:8"
+                "src": "84:2:6"
               },
               {
                 "children": [
@@ -97,7 +97,7 @@
                     "attributes": {
                       "constant": false,
                       "name": "",
-                      "scope": 772,
+                      "scope": 777,
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "bool",
@@ -110,40 +110,40 @@
                           "name": "bool",
                           "type": "bool"
                         },
-                        "id": 769,
+                        "id": 774,
                         "name": "ElementaryTypeName",
-                        "src": "110:4:8"
+                        "src": "110:4:6"
                       }
                     ],
-                    "id": 770,
+                    "id": 775,
                     "name": "VariableDeclaration",
-                    "src": "110:4:8"
+                    "src": "110:4:6"
                   }
                 ],
-                "id": 771,
+                "id": 776,
                 "name": "ParameterList",
-                "src": "109:6:8"
+                "src": "109:6:6"
               }
             ],
-            "id": 772,
+            "id": 777,
             "name": "FunctionDefinition",
-            "src": "68:48:8"
+            "src": "68:48:6"
           }
         ],
-        "id": 773,
+        "id": 778,
         "name": "ContractDefinition",
-        "src": "28:93:8"
+        "src": "28:93:6"
       }
     ],
-    "id": 774,
+    "id": 779,
     "name": "SourceUnit",
-    "src": "0:123:8"
+    "src": "0:123:6"
   },
   "compiler": {
     "name": "solc",
-    "version": "0.4.18+commit.9cf6e910.Emscripten.clang"
+    "version": "0.4.19+commit.c4cbbb05.Emscripten.clang"
   },
   "networks": {},
   "schemaVersion": "1.0.1",
-  "updatedAt": "2018-01-31T10:57:06.038Z"
+  "updatedAt": "2018-02-05T07:10:59.307Z"
 }
