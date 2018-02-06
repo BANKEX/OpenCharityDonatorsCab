@@ -6,5 +6,6 @@ ADD /build /build
 ADD /config /config
 ADD /public /public
 ADD /server /server
+ADD /package.json /package.json
 
 EXPOSE 80
