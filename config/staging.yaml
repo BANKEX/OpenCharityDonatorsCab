@@ -4,9 +4,9 @@ address:
   ip: '0.0.0.0'
   port: 80
 dirs:
-  main: '/'
-  public: '/public/'
-  abi: '/abi/'
+  main: '/builds/open_charity/oc_donators_cab/'
+  public: '/builds/open_charity/oc_donators_cab/public/'
+  abi: '/builds/open_charity/oc_donators_cab/abi/'
 mongoURI: 'mongodb://opch:yo123@mongodb:27017/opch-test'
 dapp:
   provider: 'http://52.166.13.111:8535'
