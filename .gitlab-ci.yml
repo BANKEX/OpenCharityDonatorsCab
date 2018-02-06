@@ -1,0 +1,23 @@
+variables:
+  IMAGE_TAG: bankexlabs/$CI_PROJECT_NAME:$CI_JOB_NAME
+  IMAGE: bankexlabs/$CI_PROJECT_NAME:release
+
+stages:
+  - build-node
+
+build-node:
+  image: node
+  stage: build-node
+  before_script:
+    - npm install && npm i mocha -g
+  cache:
+    paths:
+      - node_modules/
+  script:
+    - npm run staging
+  artifacts:
+    paths:
+      - abi
+      - build
+      - config
+      - public
