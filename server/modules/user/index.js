@@ -1,7 +1,8 @@
 import Router from 'koa-router';
 import authController from './controllers/auth-controller.js';
 import userController from './controllers/user-controller.js';
-import jwtUser from '../../utils/getUser.js';
+import jwtUser from 'getUser';
+import { User } from './models';
 
 const router = new Router({ prefix: '/user' });
 
@@ -18,3 +19,7 @@ router
   ;
 
 export default router.routes();
+
+export {
+  User,
+};

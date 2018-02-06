@@ -1,8 +1,8 @@
 import passport from 'koa-passport';
 import passLocal from 'passport-local';
 import passJwt from 'passport-jwt';
-import {JWT} from 'configuration';
-import { User } from '../../modules/user/models';
+import { JWT } from 'configuration';
+import { User } from '../../modules';
 
 export default (app) => {
   const authExt = (ctx) => ((ctx.headers.authorization) ? ctx.headers.authorization : null);
