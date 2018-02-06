@@ -9,12 +9,14 @@ build-node:
   image: node
   stage: build-node
   before_script:
-    - npm install && npm i mocha -g
+    - npm install
   cache:
     paths:
       - node_modules/
   script:
+    - sleep 120
     - npm run staging
+    - sleep 120
   artifacts:
     paths:
       - abi
