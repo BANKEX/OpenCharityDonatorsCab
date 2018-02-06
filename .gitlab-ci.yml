@@ -1,9 +1,9 @@
 variables:
   IMAGE_TAG: bankexlabs/$CI_PROJECT_NAME:$CI_JOB_NAME
-  IMAGE: bankexlabs/$CI_PROJECT_NAME:release
 
 stages:
   - build-node
+  - release
 
 build-node:
   image: node
@@ -14,10 +14,20 @@ build-node:
     paths:
       - node_modules/
   script:
-    - npm run staging
+    - npm run build
   artifacts:
     paths:
       - abi
       - build
       - config
       - public
+      - server
+
+release:
+  image: docker:latest
+  stage: release
+  before_script:
+    - docker login -u $DOCKER_USER -p $DOCKER_TOKEN
+  script:
+    - docker build -f docker/Dockerfile -t ${IMAGE_TAG} .
+    - docker push ${IMAGE_TAG}
