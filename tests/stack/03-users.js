@@ -15,7 +15,7 @@ rp.defaults({
   encoding: 'utf-8'
 });
 
-const mainURL = ADDRESS.protocol+'://' + ADDRESS.ip + ':' + ADDRESS.port;
+const mainURL = ADDRESS.protocol+'://' + ADDRESS.web;
 
 const user = {
   email: "mail"+Math.random(),
@@ -164,6 +164,7 @@ describe('--------Восстановление пароля, удаление п
     const response = await rp.post(options);
     let boo = true;
     const link = JSON.parse(response).data;
+    console.log(link);
     boo = link.indexOf(mainURL+'/api/user/setNewPassword?token=')==0 && boo;
     boo = link.replace(mainURL+'/api/user/setNewPassword?token=','').length==172 && boo;
     temptoken = (boo) ? link.replace(mainURL+'/api/user/setNewPassword?token=','') : '';

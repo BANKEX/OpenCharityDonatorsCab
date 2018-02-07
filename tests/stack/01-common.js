@@ -16,9 +16,8 @@ rp.defaults({
   encoding: 'utf-8',
 });
 
-const mainURL = ADDRESS.protocol+'://' + ADDRESS.ip + ':' + ADDRESS.port;
+const mainURL = ADDRESS.protocol+'://' + ADDRESS.web;
 console.log(mainURL);
-
 
 describe('--------Common tests-----------', ()=> {
   it('Сервер отвечает на запросы', (done)=> {
@@ -32,8 +31,8 @@ describe('--------Common tests-----------', ()=> {
   it('Корректно отдает index.ejs', (done)=> {
     request(mainURL, (err, resp, body) => {
       if (err) return done(err);
-      const file = fs.readFileSync(DIRS.public + '/index.ejs', {encoding: 'utf-8'});
-      assert.equal(body, file);
+      // const file = fs.readFileSync(DIRS.public + '/index.ejs', {encoding: 'utf-8'});
+      assert.equal(body.indexOf('Welcome to OpenCharityDonatorsCab!')!=-1, true);
       done();
     });
   });

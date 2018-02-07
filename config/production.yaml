@@ -1,13 +1,14 @@
 env: production
 address:
   protocol: http
-  ip: '192.168.100.3'
+  ip: '0.0.0.0'
   port: 80
+  web: 'donatorscab.staging.bankex.team'
 dirs:
-  main: 'C:/NodeJS/oc_donators_cab'
-  public: 'C:/NodeJS/oc_donators_cab/public/'
-  abi: 'C:/NodeJS/oc_donators_cab/abi/'
-mongoURI: 'mongodb://user:password@ds119268.mlab.com:19268/opch-test'
+  main: '/oc_donators_cab/'
+  public: '/oc_donators_cab/public/'
+  abi: '/oc_donators_cab/abi/'
+mongoURI: 'mongodb://opch:testpass@donators_mongodb:27017/opch-test'
 dapp:
   provider: 'http://52.166.13.111:8535'
   token: '0x9Dee536694e1f0Adc640972E61826732666345b3'

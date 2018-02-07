@@ -16,7 +16,7 @@ rp.defaults({
   encoding: 'utf-8'
 });
 
-const mainURL = ADDRESS.protocol+'://' + ADDRESS.ip + ':' + ADDRESS.port;
+const mainURL = ADDRESS.protocol+'://' + ADDRESS.web;
 const web3 = new Web3();
 web3.setProvider(new web3.providers.HttpProvider(DAPP.provider));
 const organizations = ['0xf959e72cbfd729888adeee819563e1122545f46b'];

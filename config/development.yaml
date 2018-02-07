@@ -2,7 +2,8 @@ env: development
 address:
   protocol: http
   ip: 'localhost'
-  port: 8080
+  port: 80
+  web: 'localhost:80'
 dirs:
   main: 'C:/NodeJS/oc_donators_cab'
   public: 'C:/NodeJS/oc_donators_cab/public/'
