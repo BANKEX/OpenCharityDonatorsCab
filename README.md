@@ -27,12 +27,9 @@
 
 ## Тестирование
 1. Установить mocha глобально: npm i mocha -g
-2. Тестирование в development-окружении:
-    * запустить сервер в development-окружении: npm run development
-    * npm run testDev
-3. Тестирование в production-окружении:
-    * запустить сервер в production-окружении: npm run production
-    * npm run testProd
+2. Тестирование:
+    * запустить сервер в требуемом окружении (development | staging | production)
+    * запустить тестирование npm run testDev | testStage | testProd
 
 ## Работа с пользователями
 
