@@ -70,6 +70,7 @@ deploy_stage:
   environment:
     name: staging
     url: https://donatorscab.staging.bankex.team
+  when: manual
 
 tests-stage:
   image: docker:latest
@@ -134,4 +135,3 @@ tests-prod:
     - docker exec -i -e NODE_ENV=$NODE_ENV oc_donators_cab sh -c "npm i mocha -g && npm run test"
   only:
     - production
-
