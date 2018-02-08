@@ -1,0 +1,42 @@
+version: '3'
+
+volumes:
+    mongodb_data:
+
+services:
+  oc_donators_cab:
+    image: ${IMAGE}
+    container_name: oc_donators_cab
+    restart: always
+    expose:
+      - "80"
+    environment:
+      NODE_ENV: $NODE_ENV
+      NODE_PATH: $NODE_PATH
+      VIRTUAL_HOST: $VIRTUAL_HOST
+      LETSENCRYPT_HOST: $LETSENCRYPT_HOST
+      LETSENCRYPT_EMAIL: $LETSENCRYPT_EMAIL
+    command: npm run production
+    depends_on:
+      - donators_mongodb
+
+  donators_mongodb:
+    image: aashreys/mongo-auth:latest
+    container_name: donators_mongodb
+    restart: always
+    volumes: 
+      - mongodb_data:/data
+    expose:
+      - "27017"
+    environment:
+      AUTH: "yes"
+      MONGODB_ADMIN_USER: admin
+      MONGODB_ADMIN_PASS: $MONGODB_ADMIN_PASS
+      MONGODB_APPLICATION_DATABASE: opch-test
+      MONGODB_APPLICATION_USER: opch
+      MONGODB_APPLICATION_PASS: $MONGODB_PROD_PASS
+
+networks:
+  default:
+    external:
+      name: webproxy
