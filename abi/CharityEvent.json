@@ -126,7 +126,7 @@
       },
       {
         "attributes": {
-          "SourceUnit": 802,
+          "SourceUnit": 423,
           "absolutePath": "/C/NodeJS/gitHub/oc_client/contracts/app/lib/Tools.sol",
           "file": "./lib/Tools.sol",
           "scope": 260,
@@ -141,7 +141,7 @@
       },
       {
         "attributes": {
-          "SourceUnit": 779,
+          "SourceUnit": 400,
           "absolutePath": "/C/NodeJS/gitHub/oc_client/contracts/app/OrganizationInterface.sol",
           "file": "./OrganizationInterface.sol",
           "scope": 260,
@@ -444,7 +444,7 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 1558,
+                              "referencedDeclaration": 1179,
                               "type": "function (bool) pure",
                               "value": "require"
                             },
@@ -541,7 +541,7 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 1558,
+                              "referencedDeclaration": 1179,
                               "type": "function (bool) pure",
                               "value": "require"
                             },
@@ -638,7 +638,7 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 1558,
+                              "referencedDeclaration": 1179,
                               "type": "function (bool) pure",
                               "value": "require"
                             },
@@ -686,7 +686,7 @@
                                       "isPure": false,
                                       "lValueRequested": false,
                                       "member_name": "isEmptyString",
-                                      "referencedDeclaration": 800,
+                                      "referencedDeclaration": 421,
                                       "type": "function (string memory) pure returns (bool)"
                                     },
                                     "children": [
@@ -696,7 +696,7 @@
                                           "overloadedDeclarations": [
                                             null
                                           ],
-                                          "referencedDeclaration": 801,
+                                          "referencedDeclaration": 422,
                                           "type": "type(library Tools)",
                                           "value": "Tools"
                                         },
@@ -1072,5 +1072,5 @@
   },
   "networks": {},
   "schemaVersion": "1.0.1",
-  "updatedAt": "2018-02-05T07:10:59.304Z"
+  "updatedAt": "2018-02-08T07:23:48.040Z"
 }

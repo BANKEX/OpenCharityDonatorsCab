@@ -2,8 +2,8 @@ env: development
 address:
   protocol: http
   ip: 'localhost'
-  port: 80
-  web: 'localhost:80'
+  port: 8080
+  web: 'localhost:8080'
 dirs:
   main: 'C:/NodeJS/oc_donators_cab'
   public: 'C:/NodeJS/oc_donators_cab/public/'
@@ -11,4 +11,4 @@ dirs:
 mongoURI: 'mongodb://user:password@ds119268.mlab.com:19268/opch-test'
 dapp:
   provider: 'http://52.166.13.111:8535'
-  token: '0x9Dee536694e1f0Adc640972E61826732666345b3'
+  token: '0x7f1dc0f5f8dafd9715ea51f6c11b92929b2dbdea'

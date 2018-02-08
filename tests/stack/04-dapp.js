@@ -19,7 +19,7 @@ rp.defaults({
 const mainURL = ADDRESS.protocol+'://' + ADDRESS.web;
 const web3 = new Web3();
 web3.setProvider(new web3.providers.HttpProvider(DAPP.provider));
-const organizations = ['0xf959e72cbfd729888adeee819563e1122545f46b'];
+const organizations = ['0xe777faf8240196ba99c6e2a89e8f24b75c52eb2a'];
 const abi = (type) => (require(DIRS.abi+type).abi);
 const TOKEN = new web3.eth.Contract(abi('OpenCharityToken.json'), DAPP.token);
 const ORG = new web3.eth.Contract(abi('Organization.json'), organizations[0]);

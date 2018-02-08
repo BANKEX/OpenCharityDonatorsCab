@@ -11,4 +11,4 @@ dirs:
 mongoURI: 'mongodb://opch:testpass@donators_mongodb:27017/opch-test'
 dapp:
   provider: 'http://52.166.13.111:8535'
-  token: '0x9Dee536694e1f0Adc640972E61826732666345b3'
+  token: '0x7f1dc0f5f8dafd9715ea51f6c11b92929b2dbdea'

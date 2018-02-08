@@ -23,8 +23,8 @@
   ],
   "bytecode": "0x6060604052341561000f57600080fd5b6101048061001e6000396000f300606060405260043610603f576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff168063a45f379e146044575b600080fd5b6092600480803590602001908201803590602001908080601f0160208091040260200160405190810160405280939291908181526020018383808284378201915050505050509190505060ac565b604051808215151515815260200191505060405180910390f35b600060b460c4565b8290506000815114915050919050565b6020604051908101604052806000815250905600a165627a7a72305820b23102e89a80153910f4e5751129107f4c8268a7a4e39da2edb2b5da6b4c63770029",
   "deployedBytecode": "0x606060405260043610603f576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff168063a45f379e146044575b600080fd5b6092600480803590602001908201803590602001908080601f0160208091040260200160405190810160405280939291908181526020018383808284378201915050505050509190505060ac565b604051808215151515815260200191505060405180910390f35b600060b460c4565b8290506000815114915050919050565b6020604051908101604052806000815250905600a165627a7a72305820b23102e89a80153910f4e5751129107f4c8268a7a4e39da2edb2b5da6b4c63770029",
-  "sourceMap": "69:192:7:-;;;;;;;;;;;;;;;;;",
-  "deployedSourceMap": "69:192:7:-;;;;;;;;;;;;;;;;;;;;;;;;92:164;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;155:4;172:22;;:::i;:::-;203:3;172:35;;246:1;226:9;:16;:21;218:30;;92:164;;;;:::o;69:192::-;;;;;;;;;;;;;;;:::o",
+  "sourceMap": "69:192:5:-;;;;;;;;;;;;;;;;;",
+  "deployedSourceMap": "69:192:5:-;;;;;;;;;;;;;;;;;;;;;;;;92:164;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;155:4;172:22;;:::i;:::-;203:3;172:35;;246:1;226:9;:16;:21;218:30;;92:164;;;;:::o;69:192::-;;;;;;;;;;;;;;;:::o",
   "source": "pragma solidity ^0.4.17;\r\n\r\n\r\n// TODO: find more descriptive name\r\n\r\nlibrary Tools {\r\n\r\n    function isEmptyString(string memory str) pure public returns (bool) {\r\n        bytes memory emptyTest = bytes(str);\r\n        return (emptyTest.length == 0);\r\n    }\r\n\r\n}",
   "sourcePath": "C:\\NodeJS\\gitHub\\oc_client\\contracts\\app\\lib\\Tools.sol",
   "ast": {
@@ -32,7 +32,7 @@
       "absolutePath": "/C/NodeJS/gitHub/oc_client/contracts/app/lib/Tools.sol",
       "exportedSymbols": {
         "Tools": [
-          801
+          422
         ]
       }
     },
@@ -46,9 +46,9 @@
             ".17"
           ]
         },
-        "id": 780,
+        "id": 401,
         "name": "PragmaDirective",
-        "src": "0:24:7"
+        "src": "0:24:5"
       },
       {
         "attributes": {
@@ -62,10 +62,10 @@
           "documentation": null,
           "fullyImplemented": true,
           "linearizedBaseContracts": [
-            801
+            422
           ],
           "name": "Tools",
-          "scope": 802
+          "scope": 423
         },
         "children": [
           {
@@ -78,7 +78,7 @@
               ],
               "name": "isEmptyString",
               "payable": false,
-              "scope": 801,
+              "scope": 422,
               "stateMutability": "pure",
               "superFunction": null,
               "visibility": "public"
@@ -90,7 +90,7 @@
                     "attributes": {
                       "constant": false,
                       "name": "str",
-                      "scope": 800,
+                      "scope": 421,
                       "stateVariable": false,
                       "storageLocation": "memory",
                       "type": "string memory",
@@ -103,19 +103,19 @@
                           "name": "string",
                           "type": "string storage pointer"
                         },
-                        "id": 781,
+                        "id": 402,
                         "name": "ElementaryTypeName",
-                        "src": "115:6:7"
+                        "src": "115:6:5"
                       }
                     ],
-                    "id": 782,
+                    "id": 403,
                     "name": "VariableDeclaration",
-                    "src": "115:17:7"
+                    "src": "115:17:5"
                   }
                 ],
-                "id": 783,
+                "id": 404,
                 "name": "ParameterList",
-                "src": "114:19:7"
+                "src": "114:19:5"
               },
               {
                 "children": [
@@ -123,7 +123,7 @@
                     "attributes": {
                       "constant": false,
                       "name": "",
-                      "scope": 800,
+                      "scope": 421,
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "bool",
@@ -136,26 +136,26 @@
                           "name": "bool",
                           "type": "bool"
                         },
-                        "id": 784,
+                        "id": 405,
                         "name": "ElementaryTypeName",
-                        "src": "155:4:7"
+                        "src": "155:4:5"
                       }
                     ],
-                    "id": 785,
+                    "id": 406,
                     "name": "VariableDeclaration",
-                    "src": "155:4:7"
+                    "src": "155:4:5"
                   }
                 ],
-                "id": 786,
+                "id": 407,
                 "name": "ParameterList",
-                "src": "154:6:7"
+                "src": "154:6:5"
               },
               {
                 "children": [
                   {
                     "attributes": {
                       "assignments": [
-                        788
+                        409
                       ]
                     },
                     "children": [
@@ -163,7 +163,7 @@
                         "attributes": {
                           "constant": false,
                           "name": "emptyTest",
-                          "scope": 800,
+                          "scope": 421,
                           "stateVariable": false,
                           "storageLocation": "memory",
                           "type": "bytes memory",
@@ -176,14 +176,14 @@
                               "name": "bytes",
                               "type": "bytes storage pointer"
                             },
-                            "id": 787,
+                            "id": 408,
                             "name": "ElementaryTypeName",
-                            "src": "172:5:7"
+                            "src": "172:5:5"
                           }
                         ],
-                        "id": 788,
+                        "id": 409,
                         "name": "VariableDeclaration",
-                        "src": "172:22:7"
+                        "src": "172:22:5"
                       },
                       {
                         "attributes": {
@@ -215,9 +215,9 @@
                               "type": "type(bytes storage pointer)",
                               "value": "bytes"
                             },
-                            "id": 789,
+                            "id": 410,
                             "name": "ElementaryTypeNameExpression",
-                            "src": "197:5:7"
+                            "src": "197:5:5"
                           },
                           {
                             "attributes": {
@@ -225,27 +225,27 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 782,
+                              "referencedDeclaration": 403,
                               "type": "string memory",
                               "value": "str"
                             },
-                            "id": 790,
+                            "id": 411,
                             "name": "Identifier",
-                            "src": "203:3:7"
+                            "src": "203:3:5"
                           }
                         ],
-                        "id": 791,
+                        "id": 412,
                         "name": "FunctionCall",
-                        "src": "197:10:7"
+                        "src": "197:10:5"
                       }
                     ],
-                    "id": 792,
+                    "id": 413,
                     "name": "VariableDeclarationStatement",
-                    "src": "172:35:7"
+                    "src": "172:35:5"
                   },
                   {
                     "attributes": {
-                      "functionReturnParameters": 786
+                      "functionReturnParameters": 407
                     },
                     "children": [
                       {
@@ -292,18 +292,18 @@
                                       "overloadedDeclarations": [
                                         null
                                       ],
-                                      "referencedDeclaration": 788,
+                                      "referencedDeclaration": 409,
                                       "type": "bytes memory",
                                       "value": "emptyTest"
                                     },
-                                    "id": 793,
+                                    "id": 414,
                                     "name": "Identifier",
-                                    "src": "226:9:7"
+                                    "src": "226:9:5"
                                   }
                                 ],
-                                "id": 794,
+                                "id": 415,
                                 "name": "MemberAccess",
-                                "src": "226:16:7"
+                                "src": "226:16:5"
                               },
                               {
                                 "attributes": {
@@ -318,44 +318,44 @@
                                   "type": "int_const 0",
                                   "value": "0"
                                 },
-                                "id": 795,
+                                "id": 416,
                                 "name": "Literal",
-                                "src": "246:1:7"
+                                "src": "246:1:5"
                               }
                             ],
-                            "id": 796,
+                            "id": 417,
                             "name": "BinaryOperation",
-                            "src": "226:21:7"
+                            "src": "226:21:5"
                           }
                         ],
-                        "id": 797,
+                        "id": 418,
                         "name": "TupleExpression",
-                        "src": "225:23:7"
+                        "src": "225:23:5"
                       }
                     ],
-                    "id": 798,
+                    "id": 419,
                     "name": "Return",
-                    "src": "218:30:7"
+                    "src": "218:30:5"
                   }
                 ],
-                "id": 799,
+                "id": 420,
                 "name": "Block",
-                "src": "161:95:7"
+                "src": "161:95:5"
               }
             ],
-            "id": 800,
+            "id": 421,
             "name": "FunctionDefinition",
-            "src": "92:164:7"
+            "src": "92:164:5"
           }
         ],
-        "id": 801,
+        "id": 422,
         "name": "ContractDefinition",
-        "src": "69:192:7"
+        "src": "69:192:5"
       }
     ],
-    "id": 802,
+    "id": 423,
     "name": "SourceUnit",
-    "src": "0:261:7"
+    "src": "0:261:5"
   },
   "compiler": {
     "name": "solc",
@@ -363,5 +363,5 @@
   },
   "networks": {},
   "schemaVersion": "1.0.1",
-  "updatedAt": "2018-02-05T07:10:59.313Z"
+  "updatedAt": "2018-02-08T07:23:48.043Z"
 }

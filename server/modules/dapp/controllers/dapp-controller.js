@@ -1,5 +1,5 @@
 import { DappService } from '../services';
-const organizations = ['0xf959e72cbfd729888adeee819563e1122545f46b'];
+const organizations = ['0xe777faf8240196ba99c6e2a89e8f24b75c52eb2a'];
 
 export default {
   async getOrganization(ctx) {
