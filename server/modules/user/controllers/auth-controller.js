@@ -63,7 +63,7 @@ export default {
     const user = await User.findOne({ email });
     if (!user) throw new AppError(406, 104);
     const tempToken = await UserService.setTempToken(user._id);
-    const tempLink = `${ADDRESS.protocol}://${ADDRESS.web}/api/user/setNewPassword?token=${tempToken}`;
+    const tempLink = `${ADDRESS.external}/api/user/setNewPassword?token=${tempToken}`;
     // send email to user.email with tempLink
     ctx.body = { data: tempLink };
   },

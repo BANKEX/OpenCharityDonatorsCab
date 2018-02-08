@@ -9,20 +9,19 @@
     "lint": "eslint server",
     "startDev": "cross-env NODE_ENV=development NODE_PATH=./server babel-node server/server.js",
     "development": "startDev.bat",
-    "crossD": "cross-env NODE_ENV=development",
-    "crossS": "cross-env NODE_ENV=staging",
-    "crossP": "cross-env NODE_ENV=production",
     "test": "mocha --timeout 10000 tests/index-test.js",
     "clean": "rm -rf build && mkdir build",
     "build-server": "babel -d ./build ./server",
     "build": "npm run clean && npm run build-server",
     "production": "node build/server.js",
     "staging": "node build/server.js",
-
     "cleanWin": "rmdir /q /s build && mkdir build",
     "buildWin": "npm run cleanWin && npm run build-server",
     "stagingWin": "cross-env NODE_ENV=staging NODE_PATH=./build node build/server.js",
-    "productionWin": "cross-env NODE_ENV=production NODE_PATH=./build node build/server.js"
+    "productionWin": "cross-env NODE_ENV=production NODE_PATH=./build node build/server.js",
+    "testDev": "cross-env NODE_ENV=development mocha --timeout 10000 tests/index-test.js",
+    "testStage": "cross-env NODE_ENV=staging mocha --timeout 10000 tests/index-test.js",
+    "testProd": "cross-env NODE_ENV=production mocha --timeout 10000 tests/index-test.js"
   },
   "nodemonConfig": {
     "watch": [

@@ -4,10 +4,6 @@ const rp = require('request-promise');
 const config = require('config');
 
 const ADDRESS = config.get('address');
-const JWT = config.get('jwt');
-const DIRS = config.get('dirs');
-const MONGO_URI = config.get('mongoURI');
-const DAPP = config.get('dapp');
 
 rp.defaults({
   simple: false,
@@ -15,7 +11,7 @@ rp.defaults({
   encoding: 'utf-8'
 });
 
-const mainURL = ADDRESS.protocol+'://' + ADDRESS.web;
+const mainURL = ADDRESS.external;
 
 const user = {
   email: "mail"+Math.random(),

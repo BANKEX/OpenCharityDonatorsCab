@@ -1,9 +1,7 @@
 env: development
 address:
-  protocol: http
-  ip: 'localhost'
-  port: 8080
-  web: 'localhost:8080'
+  internal: 'http://127.0.0.1:8080'
+  external: 'http://127.0.0.1:8080'
 dirs:
   main: 'C:/NodeJS/oc_donators_cab'
   public: 'C:/NodeJS/oc_donators_cab/public/'

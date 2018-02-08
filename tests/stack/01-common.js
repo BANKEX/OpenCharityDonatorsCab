@@ -5,10 +5,6 @@ const fs = require('fs');
 const config = require('config');
 
 const ADDRESS = config.get('address');
-const JWT = config.get('jwt');
-const DIRS = config.get('dirs');
-const MONGO_URI = config.get('mongoURI');
-const DAPP = config.get('dapp');
 
 rp.defaults({
   simple: false,
@@ -16,8 +12,9 @@ rp.defaults({
   encoding: 'utf-8',
 });
 
-const mainURL = ADDRESS.protocol+'://' + ADDRESS.web;
+const mainURL = ADDRESS.external;
 console.log(mainURL);
+console.log(process.env.NODE_ENV);
 
 describe('--------Common tests-----------', ()=> {
   it('Сервер отвечает на запросы', (done)=> {

@@ -1,14 +1,9 @@
 const assert = require('assert');
 const request = require('request');
 const rp = require('request-promise');
-const Web3 = require('web3');
 const config = require('config');
 
 const ADDRESS = config.get('address');
-const JWT = config.get('jwt');
-const DIRS = config.get('dirs');
-const MONGO_URI = config.get('mongoURI');
-const DAPP = config.get('dapp');
 
 rp.defaults({
   simple: false,
@@ -16,14 +11,8 @@ rp.defaults({
   encoding: 'utf-8'
 });
 
-const mainURL = ADDRESS.protocol+'://' + ADDRESS.web;
-const web3 = new Web3();
-web3.setProvider(new web3.providers.HttpProvider(DAPP.provider));
+const mainURL = ADDRESS.external;
 const organizations = ['0xe777faf8240196ba99c6e2a89e8f24b75c52eb2a'];
-const abi = (type) => (require(DIRS.abi+type).abi);
-const TOKEN = new web3.eth.Contract(abi('OpenCharityToken.json'), DAPP.token);
-const ORG = new web3.eth.Contract(abi('Organization.json'), organizations[0]);
-
 let charityEventCount, incomingDonationCount, CE, ID;
 
 describe('--------Запросы к DAPP-----------', () => {
