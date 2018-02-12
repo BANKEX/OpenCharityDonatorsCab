@@ -1,7 +1,7 @@
 import { DappService, FilterService } from '../services';
 import pick from 'lodash.pick';
 import AppError from '../../../utils/AppErrors.js';
-const organizations = ['0xe777faf8240196ba99c6e2a89e8f24b75c52eb2a'];
+const organizations = ['0xc4e24e6b25fb81e3aae568c3e1d7da04ccebd762'];
 
 export default {
   async getOrganization(ctx) {

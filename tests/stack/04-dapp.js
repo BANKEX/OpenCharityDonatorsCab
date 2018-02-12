@@ -12,7 +12,7 @@ rp.defaults({
 });
 
 const mainURL = ADDRESS.external;
-const organizations = ['0xe777faf8240196ba99c6e2a89e8f24b75c52eb2a'];
+const organizations = ['0xc4e24e6b25fb81e3aae568c3e1d7da04ccebd762'];
 let charityEventCount, incomingDonationCount, CE, ID;
 
 describe('--------Запросы к DAPP-----------', () => {
@@ -77,5 +77,38 @@ describe('--------Запросы к DAPP-----------', () => {
     assert.equal(responseData.realWorldIdentifier, ID[0].realWorldIdentifier);
     assert.equal(responseData.tags, ID[0].tags);
     assert.equal(responseData.date, ID[0].date);
+  });
+
+  it('Фильтр getCharityEvents', async () => {
+    const body = {
+      name: {
+        enum: [CE[0].name, CE[1].name, CE[2].name],
+        include: "Test",
+      },
+      target: {
+        range: [100, 110]
+      }
+    };
+
+    const options = {
+      method: 'POST',
+      uri: mainURL + '/api/dapp/getCharityEvents',
+      body: JSON.stringify(body),
+      headers: {
+        'Content-Type' : 'application/json'
+      }
+    };
+    const response = await rp.post(options);
+    const responseData = JSON.parse(response).data;
+    let test = true;
+    test = test && responseData.length == CE.length;
+    responseData.forEach((elem) => {
+      if (elem) {
+        test = test && (elem.name.toLowerCase().indexOf('test')!=-1);
+        test = test && (Number(elem.target)>=100 && Number(elem.target)<=110);
+        test = test && (elem.name.toLowerCase() == CE[0].name.toLowerCase() || elem.name.toLowerCase() == CE[1].name.toLowerCase() || elem.name.toLowerCase() == CE[2].name.toLowerCase())
+      }
+    });
+    assert.equal(test, true);
   });
 });
