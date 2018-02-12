@@ -71,6 +71,7 @@ deploy_stage:
     name: staging
     url: https://donatorscab.staging.bankex.team
   when: manual
+  allow_failure: false
 
 tests-stage:
   image: docker:latest
@@ -117,6 +118,7 @@ deploy_prod:
   only:
     - production
   when: manual
+  allow_failure: false
 
 tests-prod:
   image: docker:latest
