@@ -4,5 +4,5 @@
 /_fixture/
 /storage/
 /_trash/
-yarn.lock
+package-lock.json
 /build/

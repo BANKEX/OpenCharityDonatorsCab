@@ -10,6 +10,8 @@ router
   .get('/getIncomingDonations', dappErrors(), controller.getIncomingDonations)
   .get('/getCharityEvent/:hash', dappErrors(), controller.getCharityEvent)
   .get('/getIncomingDonation/:hash', dappErrors(), controller.getIncomingDonation)
+  .post('/getCharityEvents', dappErrors(), controller.filterCharityEvents)
+  .post('/getIncomingDonations', dappErrors(), controller.filterIncomingDonation)
 ;
 
 export default router.routes();

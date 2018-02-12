@@ -7,9 +7,8 @@
 ```
     env: development
     address:
-      protocol: http
-      ip: 'localhost'
-      port: 8080
+      internal: 'http://127.0.0.1:8080'
+      external: 'https://donatorscab.staging.bankex.team'
     dirs:
       main: 'C:/NodeJS/oc_donators_cab'
       public: 'C:/NodeJS/oc_donators_cab/public/'
@@ -17,13 +16,13 @@
     mongoURI: 'mongodb://user:password@ds119268.mlab.com:19268/opch-test'
     dapp:
       provider: 'http://52.166.13.111:8535'
-      token: '0x9Dee536694e1f0Adc640972E61826732666345b3'
+      token: '0x7f1dc0f5f8dafd9715ea51f6c11b92929b2dbdea'
 ```
 4. Для запуска в development-окружении: npm run development
-5. Для запуска в staging или production -окружениях:
+5. Для запуска в окружениях staging | production:
     * создать пустую папку build в корне проекта
     * npm run build
-    * npm run staging или npm run production
+    * npm run staging | production
 
 ## Тестирование
 1. Установить mocha глобально: npm i mocha -g
@@ -145,3 +144,56 @@ incomingDonationsObject: {
 
 ### GET /api/dapp/getIncomingDonation/:hash
 Вернет JSON данного IncomingDonation по hash {data: {incomingDonationsObject}}
+
+### POST /api/dapp/getCharityEvents
+Выдает отфильтрованные CharityEvents.<br/>
+Принимает content-type application/json и application/x-www-form-urlencoded.<br/>
+Фильтрация производится по трем параметрам: <br/>
+1. include (значение строка) - поле содержит данную подстроку.
+2. enum (значение массив строк) - поле равно одному из значений массива.
+3. range (значение массив из двух элементов либо чисел, либо дат) - поле укладывается в указанный диапазон
+Пример тела запроса: <br/>
+```
+{
+	"date": {
+		"range": ["2018-2-8 11:40:51", "2018-2-10 11:45:51"]
+	},
+	"name": {
+		"include": "test"
+	},
+	"tags": {
+		"enum": ["0x23", "0x06"]
+	}
+}
+```
+Вернет JSON-массив, в котором содержатся {charityEventObject} или false <br/>
+Ответ на запрос-пример: <br/>
+```
+{
+    "data": [
+        {
+            "name": "Test Charity Event",
+            "payed": "0",
+            "target": "200",
+            "raised": "100",
+            "tags": "0x23",
+            "date": "2018-2-8 11:45:51",
+            "address": "0xB211452e4FdEEd73Eeb9f32496D904C3C3132B8B"
+        },
+        {
+            "name": "Test event 2",
+            "payed": "0",
+            "target": "10000",
+            "raised": "100",
+            "tags": "0x06",
+            "date": "2018-2-8 17:58:33",
+            "address": "0x5b98d4a897e01E4acb8396375Ff1Fe78d876A190"
+        },
+        false
+    ]
+}
+```
+У данной организации три CharityEvent, но под предложенный фильтр подходят только два (третий - false).
+
+### POST /api/dapp/getIncomingDonation
+Как POST /api/dapp/getCharityEvents только для IncomingDonation
