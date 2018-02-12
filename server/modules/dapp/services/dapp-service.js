@@ -33,28 +33,20 @@ export default {
     return { name, charityEventCount, incomingDonationCount, address };
   },
 
-  getCharityEventAddressList: async (organizationAddress) => {
+  getCharityEventAddressList: async (organizationAddress, send) => {
     const organization = new web3.eth.Contract(abi('Organization.json'), organizationAddress);
     const charityEventCount = await organization.methods.charityEventCount().call();
-    const charityEventList = [];
     for (let i = 0; i < charityEventCount; i++) {
-      const address = await organization.methods.charityEventIndex(i).call();
-      const isActive = await organization.methods.charityEvents(address).call();
-      (isActive) ? charityEventList.push(address) : null;
+      organization.methods.charityEventIndex(i).call().then(send);
     }
-    return charityEventList;
   },
 
-  getIncomingDonationAddressList: async (organizationAddress) => {
+  getIncomingDonationAddressList: async (organizationAddress, send) => {
     const organization = new web3.eth.Contract(abi('Organization.json'), organizationAddress);
     const incomingDonationCount = await organization.methods.incomingDonationCount().call();
-    const incomingDonationList = [];
     for (let i = 0; i < incomingDonationCount; i++) {
-      const address = await organization.methods.incomingDonationIndex(i).call();
-      const isActive = await organization.methods.incomingDonations(address).call();
-      (isActive) ? incomingDonationList.push(address) : null;
+      organization.methods.incomingDonationIndex(i).call().then(send);
     }
-    return incomingDonationList;
   },
 
   singleCharityEvent: async (organizationAddress, address) => {

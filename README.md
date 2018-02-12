@@ -30,6 +30,10 @@
     * запустить сервер в требуемом окружении (development | staging | production)
     * запустить тестирование npm run testDev | testStage | testProd
 
+## Страница тестирования API
+По адресу /testAPI доступен интерфейс тестирования всех функций API.<br/>
+Все фронтэнд-функции для работы с API см. в /public/testAPI.js
+
 ## Работа с пользователями
 
 ### POST /api/user/signup
@@ -126,14 +130,18 @@
 Вернет JSON единственной организации {data: organization}
 
 ### GET /api/dapp/getCharityEvents
-Вернет JSON всех CharityEvents {data: [{charityEventObject}]}
+Вернет roomID для сокет-подписки.<br/>
+Необходимо подписаться на событие 'data' в данной комнате.<br/>
+Сокет присылает объекты {charityEventObject}
 ```
 charityEventObject: {
     name, payed, target, raised, tags, date, address
 }
 ```
 ### GET /api/dapp/getIncomingDonations
-Вернет JSON всех IncomingDonations {data: [{incomingDonationsObject}]}
+Вернет roomID для сокет-подписки.<br/>
+Необходимо подписаться на событие 'data' в данной комнате.<br/>
+Сокет присылает объекты {incomingDonationsObject}
 ```
 incomingDonationsObject: {
     realWorldIdentifier, amount, note, tags, date, address
@@ -166,34 +174,9 @@ incomingDonationsObject: {
 	}
 }
 ```
-Вернет JSON-массив, в котором содержатся {charityEventObject} или false <br/>
-Ответ на запрос-пример: <br/>
-```
-{
-    "data": [
-        {
-            "name": "Test Charity Event",
-            "payed": "0",
-            "target": "200",
-            "raised": "100",
-            "tags": "0x23",
-            "date": "2018-2-8 11:45:51",
-            "address": "0xB211452e4FdEEd73Eeb9f32496D904C3C3132B8B"
-        },
-        {
-            "name": "Test event 2",
-            "payed": "0",
-            "target": "10000",
-            "raised": "100",
-            "tags": "0x06",
-            "date": "2018-2-8 17:58:33",
-            "address": "0x5b98d4a897e01E4acb8396375Ff1Fe78d876A190"
-        },
-        false
-    ]
-}
-```
-У данной организации три CharityEvent, но под предложенный фильтр подходят только два (третий - false).
+Вернет roomID для сокет-подписки.<br/>
+Необходимо подписаться на событие 'data' в данной комнате.<br/>
+Сокет присылает объекты {charityEventObject} или false (если charityEvent не соответствет фильтру)<br/>
 
 ### POST /api/dapp/getIncomingDonation
 Как POST /api/dapp/getCharityEvents только для IncomingDonation

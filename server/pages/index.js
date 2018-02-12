@@ -4,8 +4,8 @@ import getUser from '../utils/getUser.js';
 const router = new Router();
 
 router
-  .get('/', getUser(), async (ctx) => {
-    await ctx.render('index');
+  .get('/testAPI', getUser(), async (ctx) => {
+    await ctx.render('testAPI');
   });
 
 export default router.routes();
