@@ -5,6 +5,7 @@ const fs = require('fs');
 const config = require('config');
 
 const ADDRESS = config.get('address');
+const DIRS = config.get('dirs');
 
 rp.defaults({
   simple: false,
@@ -18,18 +19,18 @@ console.log(process.env.NODE_ENV);
 
 describe('--------Common tests-----------', ()=> {
   it('Сервер отвечает на запросы', (done)=> {
-    request(mainURL, (err, resp, body) => {
+    request(mainURL+'/testAPI', (err, resp, body) => {
       if (err) return done(err);
       assert.equal(resp.statusCode, 200);
       done();
     });
   });
 
-  it('Корректно отдает index.ejs', (done)=> {
-    request(mainURL, (err, resp, body) => {
+  it('Корректно отдает testAPI.ejs', (done)=> {
+    request(mainURL+'/testAPI', (err, resp, body) => {
       if (err) return done(err);
-      // const file = fs.readFileSync(DIRS.public + '/index.ejs', {encoding: 'utf-8'});
-      assert.equal(body.indexOf('Welcome to OpenCharityDonatorsCab!')!=-1, true);
+      const file = fs.readFileSync(DIRS.public + '/testAPI.ejs', {encoding: 'utf-8'});
+      assert.equal(body, file);
       done();
     });
   });
@@ -37,7 +38,7 @@ describe('--------Common tests-----------', ()=> {
   it('HTML Ошибки при запросе /hello', (done)=> {
     request(mainURL+'/hello', (err, resp, body) => {
       if (err) return done(err);
-      assert.equal(resp.statusCode, 404);
+      assert.equal(body, 'DonatorsCab');
       done();
     });
   });

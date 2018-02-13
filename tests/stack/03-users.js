@@ -98,7 +98,7 @@ describe('--------Регистрация пользователя и измен�
       }
     };
     const response = await rp(options);
-    assert.equal(response.indexOf('<!doctype html>'), 0);
+    assert.equal(response, 'DonatorsCab');
   });
 });
 
@@ -142,7 +142,7 @@ describe('--------Вход с новым паролем, запрос данны
       }
     };
     const response = await rp(options);
-    assert.equal(response.indexOf('<!doctype html>'), 0);
+    assert.equal(response, 'DonatorsCab');
   });
 });
 
@@ -160,7 +160,6 @@ describe('--------Восстановление пароля, удаление п
     const response = await rp.post(options);
     let boo = true;
     const link = JSON.parse(response).data;
-    console.log(link);
     boo = link.indexOf(mainURL+'/api/user/setNewPassword?token=')==0 && boo;
     boo = link.replace(mainURL+'/api/user/setNewPassword?token=','').length==172 && boo;
     temptoken = (boo) ? link.replace(mainURL+'/api/user/setNewPassword?token=','') : '';

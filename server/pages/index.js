@@ -6,6 +6,9 @@ const router = new Router();
 router
   .get('/testAPI', getUser(), async (ctx) => {
     await ctx.render('testAPI');
+  })
+  .get('*', async (ctx) => {
+    ctx.body = 'DonatorsCab';
   });
 
 export default router.routes();

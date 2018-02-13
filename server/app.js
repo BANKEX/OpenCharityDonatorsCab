@@ -8,7 +8,7 @@ import modules from 'modules';
 const app = new Koa();
 inits();
 middlewares(app);
-app.use(pages);
 app.use(modules);
+app.use(pages);
 
 export default app;
