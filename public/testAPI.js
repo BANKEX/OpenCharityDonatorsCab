@@ -159,7 +159,7 @@ const getCharityEvent1 = () => {
 };
 
 const getIncomingDonation1 = () => {
-  respCE1.innerHTML = '';
+  respID1.innerHTML = '';
   const xhr = new XMLHttpRequest();
   xhr.open('get', '/api/dapp/getIncomingDonation/'+hashID1.value);
   xhr.send();

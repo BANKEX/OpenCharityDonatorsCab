@@ -8,7 +8,7 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
-  <script src="testAPI.js"></script>
+
   <title>OpenCharityDonatorsCab</title>
   <style>
     .resp {
@@ -29,7 +29,7 @@
         <input class="form-control" type="text" placeholder="firstName" id="firstNameSU">
         <input class="form-control" type="text" placeholder="lastName" id="lastNameSU">
         <input class="form-control" type="password" placeholder="password" id="passwordSU">
-        <button class="btn btn-classic" onClick="userSignup()">Send</button>
+        <button class="btn btn-success" onClick="userSignup()">Send</button>
       </div>
       <div class="col-sm-6 resp" id="respSU"></div>
     </div>
@@ -39,7 +39,7 @@
       <div class="col-sm-6">
         <input class="form-control" type="text" placeholder="email" id="emailLG">
         <input class="form-control" type="password" placeholder="password" id="passwordLG">
-        <button class="btn btn-classic" onClick="userLogin()">Send</button>
+        <button class="btn btn-success" onClick="userLogin()">Send</button>
       </div>
       <div class="col-sm-6 resp" id="respLG"></div>
     </div>
@@ -47,7 +47,7 @@
     <div class="row">
       <h3>User logout</h3>
       <div class="col-sm-6">
-        <button class="btn btn-classic" onClick="userLogout()">Send</button>
+        <button class="btn btn-success" onClick="userLogout()">Send</button>
       </div>
       <div class="col-sm-6 resp" id="respLGT"></div>
     </div>
@@ -55,7 +55,7 @@
     <div class="row">
       <h3>User get info</h3>
       <div class="col-sm-6">
-        <button class="btn btn-classic" onClick="userGet()">Send</button>
+        <button class="btn btn-success" onClick="userGet()">Send</button>
       </div>
       <div class="col-sm-6 resp" id="respGT"></div>
     </div>
@@ -69,7 +69,7 @@
         <input class="form-control" type="text" placeholder="trans" id="transCH">
         <input class="form-control" type="password" placeholder="password" id="passwordCH">
         <input class="form-control" type="password" placeholder="new password" id="newpasswordCH">
-        <button class="btn btn-classic" onClick="userChange()">Send</button>
+        <button class="btn btn-success" onClick="userChange()">Send</button>
       </div>
       <div class="col-sm-6 resp" id="respCH"></div>
     </div>
@@ -78,7 +78,7 @@
       <h3>User delete</h3>
       <div class="col-sm-6">
         <input class="form-control" type="password" placeholder="password" id="passwordDL">
-        <button class="btn btn-classic" onClick="userDelete()">Send</button>
+        <button class="btn btn-success" onClick="userDelete()">Send</button>
       </div>
       <div class="col-sm-6 resp" id="respDL"></div>
     </div>
@@ -87,7 +87,7 @@
       <h3>User forgot</h3>
       <div class="col-sm-6">
         <input class="form-control" type="text" placeholder="email" id="emailFG">
-        <button class="btn btn-classic" onClick="userForgot()">Send</button>
+        <button class="btn btn-success" onClick="userForgot()">Send</button>
       </div>
       <div class="col-sm-6 resp" id="respFG"></div>
     </div>
@@ -96,7 +96,7 @@
     <div class="row">
       <h3>Dapp getOrganization</h3>
       <div class="col-sm-6">
-        <button class="btn btn-classic" onClick="getOrganization()">Send</button>
+        <button class="btn btn-success" onClick="getOrganization()">Send</button>
       </div>
       <div class="col-sm-6 resp" id="respORG"></div>
     </div>
@@ -104,7 +104,7 @@
     <div class="row">
       <h3>Dapp getCharityEvents</h3>
       <div class="col-sm-6">
-        <button class="btn btn-classic" onClick="getCharityEvents()">Send</button>
+        <button class="btn btn-success" onClick="getCharityEvents()">Send</button>
       </div>
       <div class="col-sm-6 resp" id="respCE"></div>
     </div>
@@ -112,7 +112,7 @@
     <div class="row">
       <h3>Dapp getIncomingDonations</h3>
       <div class="col-sm-6">
-        <button class="btn btn-classic" onClick="getIncomingDonations()">Send</button>
+        <button class="btn btn-success" onClick="getIncomingDonations()">Send</button>
       </div>
       <div class="col-sm-6 resp" id="respID"></div>
     </div>
@@ -121,7 +121,7 @@
       <h3>Dapp getCharityEvent/:hash</h3>
       <div class="col-sm-6">
         <input class="form-control" type="text" placeholder="hashCE" id="hashCE1">
-        <button class="btn btn-classic" onClick="getCharityEvent1()">Send</button>
+        <button class="btn btn-success" onClick="getCharityEvent1()">Send</button>
       </div>
       <div class="col-sm-6 resp" id="respCE1"></div>
     </div>
@@ -130,7 +130,7 @@
       <h3>Dapp getIncomingDonation/:hash</h3>
       <div class="col-sm-6">
         <input class="form-control" type="text" placeholder="hashID" id="hashID1">
-        <button class="btn btn-classic" onClick="getIncomingDonation1()">Send</button>
+        <button class="btn btn-success" onClick="getIncomingDonation1()">Send</button>
       </div>
       <div class="col-sm-6 resp" id="respID1"></div>
     </div>
@@ -139,7 +139,7 @@
       <h3>Dapp filter charityEvent</h3>
       <div class="col-sm-6">
         <textarea class="form-control" id="filterCE" rows="4">{}</textarea>
-        <button class="btn btn-classic" onClick="filterCharityEvent()">Send</button>
+        <button class="btn btn-success" onClick="filterCharityEvent()">Send</button>
       </div>
       <div class="col-sm-6 resp" id="respFCE"></div>
     </div>
@@ -148,11 +148,12 @@
       <h3>Dapp filter incomingDonation</h3>
       <div class="col-sm-6">
         <textarea class="form-control" id="filterID" rows="4">{}</textarea>
-        <button class="btn btn-classic" onClick="filterIncomingDonation()">Send</button>
+        <button class="btn btn-success" onClick="filterIncomingDonation()">Send</button>
       </div>
       <div class="col-sm-6 resp" id="respFID"></div>
     </div>
 
   </div>
+  <script src="../testAPI.js"></script>
 </body>
 </html>

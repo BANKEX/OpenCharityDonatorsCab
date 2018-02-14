@@ -3,7 +3,7 @@ import pick from 'lodash.pick';
 import AppError from '../../../utils/AppErrors.js';
 import app from '../../../app';
 import uuid from 'uuid/v4';
-const organizations = ['0xc4e24e6b25fb81e3aae568c3e1d7da04ccebd762'];
+const organizations = ['0xe379894535aa72706396f9a3e1db6f3f5e4c1c15'];
 
 export default {
   async getOrganization(ctx) {

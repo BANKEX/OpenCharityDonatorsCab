@@ -13,7 +13,7 @@ rp.defaults({
 });
 
 const mainURL = ADDRESS.external;
-const organizations = ['0xc4e24e6b25fb81e3aae568c3e1d7da04ccebd762'];
+const organizations = ['0xe379894535aa72706396f9a3e1db6f3f5e4c1c15'];
 let charityEventCount, incomingDonationCount;
 const CE=[], ID=[];
 const socket = io(mainURL);
@@ -107,7 +107,7 @@ socket.on('connect', () => {
     it('Фильтр getCharityEvents', (done) => {
       const body = {
         name: {
-          enum: [CE[0].name, CE[1].name, CE[2].name],
+          enum: [CE[0].name, CE[1].name],
           include: "Test",
         },
         target: {

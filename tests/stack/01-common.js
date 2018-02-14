@@ -19,7 +19,7 @@ console.log(process.env.NODE_ENV);
 
 describe('--------Common tests-----------', ()=> {
   it('Сервер отвечает на запросы', (done)=> {
-    request(mainURL+'/testAPI', (err, resp, body) => {
+    request(mainURL+'/api/testAPI', (err, resp, body) => {
       if (err) return done(err);
       assert.equal(resp.statusCode, 200);
       done();
@@ -27,7 +27,7 @@ describe('--------Common tests-----------', ()=> {
   });
 
   it('Корректно отдает testAPI.ejs', (done)=> {
-    request(mainURL+'/testAPI', (err, resp, body) => {
+    request(mainURL+'/api/testAPI', (err, resp, body) => {
       if (err) return done(err);
       const file = fs.readFileSync(DIRS.public + '/testAPI.ejs', {encoding: 'utf-8'});
       assert.equal(body, file);
@@ -36,7 +36,7 @@ describe('--------Common tests-----------', ()=> {
   });
 
   it('HTML Ошибки при запросе /hello', (done)=> {
-    request(mainURL+'/hello', (err, resp, body) => {
+    request(mainURL+'/api/hello', (err, resp, body) => {
       if (err) return done(err);
       assert.equal(body, 'DonatorsCab');
       done();

@@ -9,4 +9,4 @@ dirs:
 mongoURI: 'mongodb://user:password@ds119268.mlab.com:19268/opch-test'
 dapp:
   provider: 'http://52.166.13.111:8535'
-  token: '0x7f1dc0f5f8dafd9715ea51f6c11b92929b2dbdea'
+  token: '0x6a183381d14371b4a228cca37802c09bd166ba9e'
