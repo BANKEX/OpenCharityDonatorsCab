@@ -88,17 +88,12 @@ describe('--------Регистрация пользователя и измен�
     assert.equal(userUpdated.email, userUpdated.email.toLowerCase());
   });
 
-  it('Пользователь выходит', async () => {
-    const options = {
-      method: 'GET',
-      uri: mainURL + '/api/user/logout',
-      headers: {
-        'Content-Type' : 'application/json',
-        'Authorization' : token
-      }
-    };
-    const response = await rp(options);
-    assert.equal(response, 'DonatorsCab');
+  it('Пользователь выходит', (done)=> {
+    request(mainURL+'/api/user/logout?jwt='+token, (err, resp, body) => {
+      if (err) return done(err);
+      assert.equal(resp.statusCode, 200);
+      done();
+    });
   });
 });
 
@@ -132,17 +127,12 @@ describe('--------Вход с новым паролем, запрос данны
     assert.equal(userLoaded.email, userLoaded.email.toLowerCase());
   });
 
-  it('Пользователь выходит', async () => {
-    const options = {
-      method: 'GET',
-      uri: mainURL + '/api/user/logout',
-      headers: {
-        'Content-Type' : 'application/json',
-        'Authorization' : token
-      }
-    };
-    const response = await rp(options);
-    assert.equal(response, 'DonatorsCab');
+  it('Пользователь выходит', (done)=> {
+    request(mainURL+'/api/user/logout?jwt='+token, (err, resp, body) => {
+      if (err) return done(err);
+      assert.equal(resp.statusCode, 200);
+      done();
+    });
   });
 });
 
