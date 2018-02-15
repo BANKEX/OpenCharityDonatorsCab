@@ -61,13 +61,15 @@ deploy_stage:
     - echo "$DOCKER_CERT" > $DOCKER_CERT_PATH/cert.pem
     - echo "$DOCKER_KEY" > $DOCKER_CERT_PATH/key.pem
     - docker login -u $DOCKER_USER -p $DOCKER_TOKEN
-    - echo "IMAGE=$IMAGE" > .env ; echo "NODE_ENV=$NODE_ENV" >> .env; echo "NODE_PATH=$NODE_PATH" >> .env; echo "VIRTUAL_HOST=$SERVERNAME" >> .env ; echo "LETSENCRYPT_HOST=$SERVERNAME" >> .env; echo "LETSENCRYPT_EMAIL=$EMAIL" >> .env
+    - echo "IMAGE=$IMAGE" > .env ; echo "NODE_ENV=$NODE_ENV" >> .env; echo "NODE_PATH=$NODE_PATH" >> .env
     - echo "MONGODB_ADMIN_PASS=$MONGODB_ADMIN_PASS" >> .env; echo "MONGODB_STAGE_PASS=$MONGODB_STAGE_PASS" >> .env
   script:
     - docker-compose -f docker/docker-compose.yml down
-    - docker rmi $IMAGE
+    - docker rmi $IMAGE || echo "image not exist"
     - docker pull $IMAGE
-    - docker-compose -f docker/docker-compose.yml up -d
+    - docker-compose -f docker/docker-compose.yml up -d donators_mongodb
+    - sleep 15
+    - docker-compose -f docker/docker-compose.yml up -d oc_donators_cab
   environment:
     name: staging
     url: https://donatorscab.staging.bankex.team
@@ -108,13 +110,15 @@ deploy_prod:
     - echo "$DOCKER_CERT" > $DOCKER_CERT_PATH/cert.pem
     - echo "$DOCKER_KEY" > $DOCKER_CERT_PATH/key.pem
     - docker login -u $DOCKER_USER -p $DOCKER_TOKEN
-    - echo "IMAGE=$IMAGE" > .env ; echo "NODE_ENV=$NODE_ENV" >> .env; echo "NODE_PATH=$NODE_PATH" >> .env; echo "VIRTUAL_HOST=$SERVERNAME" >> .env ; echo "LETSENCRYPT_HOST=$SERVERNAME" >> .env; echo "LETSENCRYPT_EMAIL=$EMAIL" >> .env
+    - echo "IMAGE=$IMAGE" > .env ; echo "NODE_ENV=$NODE_ENV" >> .env; echo "NODE_PATH=$NODE_PATH" >> .env
     - echo "MONGODB_ADMIN_PASS=$MONGODB_ADMIN_PASS" >> .env; echo "MONGODB_PROD_PASS=$MONGODB_PROD_PASS" >> .env
   script:
     - docker-compose -f docker/docker-compose-prod.yml down
-    - docker rmi $IMAGE
+    - docker rmi $IMAGE || echo "image not exist"
     - docker pull $IMAGE
-    - docker-compose -f docker/docker-compose-prod.yml up -d
+    - docker-compose -f docker/docker-compose.yml up -d donators_mongodb
+    - sleep 15
+    - docker-compose -f docker/docker-compose.yml up -d oc_donators_cab
   environment:
     name: production
     url: https://donatorscab.bankex.team
