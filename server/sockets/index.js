@@ -2,6 +2,7 @@ const sockets = {};
 const users = [];
 
 export default ({socket}) => {
+  console.log('connected');
   socket.on('login', (us) => {
     const index = users.indexOf(us);
     if (index==-1) users.push(us);

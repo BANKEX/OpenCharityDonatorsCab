@@ -17,9 +17,8 @@ const organizations = ['0xe379894535aa72706396f9a3e1db6f3f5e4c1c15'];
 let charityEventCount, incomingDonationCount;
 const CE=[], ID=[];
 const socket = io(mainURL, {
-  path: '/api'
+  path: '/api/ws'
 });
-console.log(socket);
 
 socket.on('error', () => {
   console.log(error);

@@ -1,4 +1,4 @@
-const socket = io(ws);
+const socket = io({path: '/api/ws'});
 
 const userSignup = () => {
   respSU.innerHTML = '';

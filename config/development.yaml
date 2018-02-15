@@ -1,8 +1,7 @@
 env: development
 address:
   internal: 'http://127.0.0.1:8080'
-  external: 'https://donatorscab.staging.bankex.team'
-  ws: '/'
+  external: 'http://127.0.0.1:8080'
 dirs:
   main: 'C:/NodeJS/oc_donators_cab'
   public: 'C:/NodeJS/oc_donators_cab/public/'

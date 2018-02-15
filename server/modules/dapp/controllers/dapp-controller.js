@@ -3,6 +3,7 @@ import pick from 'lodash.pick';
 import AppError from '../../../utils/AppErrors.js';
 import app from '../../../app';
 import uuid from 'uuid/v4';
+import {io} from '../../../server';
 const organizations = ['0xe379894535aa72706396f9a3e1db6f3f5e4c1c15'];
 
 export default {
@@ -17,7 +18,7 @@ export default {
     ctx.res.end(room);
     DappService.getCharityEventAddressList(organizations[0], async (address) => {
       const ce = await DappService.singleCharityEvent(organizations[0], address);
-      app.io.broadcast(room, JSON.stringify(ce));
+      io.emit(room, JSON.stringify(ce));
     });
   },
 
@@ -27,7 +28,7 @@ export default {
     ctx.res.end(room);
     DappService.getIncomingDonationAddressList(organizations[0], async (address) => {
       const id = await DappService.singleIncomingDonation(organizations[0], address);
-      app.io.broadcast(room, JSON.stringify(id));
+      io.emit(room, JSON.stringify(id));
     });
   },
   
@@ -53,7 +54,7 @@ export default {
     DappService.getCharityEventAddressList(organizations[0], async (address) => {
       const ce = await DappService.singleCharityEvent(organizations[0], address);
       const filtered = (filtering) ? FilterService.filter(ce, fields) : ce;
-      app.io.broadcast(room, JSON.stringify(filtered));
+      io.emit(room, JSON.stringify(filtered));
     });
   },
 
@@ -69,7 +70,7 @@ export default {
     DappService.getIncomingDonationAddressList(organizations[0], async (address) => {
       const id = await DappService.singleIncomingDonation(organizations[0], address);
       const filtered = (filtering) ? FilterService.filter(id, fields) : id;
-      app.io.broadcast(room, JSON.stringify(filtered));
+      io.emit(room, JSON.stringify(filtered));
     });
   },
 };
