@@ -10,7 +10,6 @@ router
   })
   .get('/api/testAPI', getUser(), async (ctx) => {
     ctx.state.ws = ADDRESS.ws;
-    console.log(ADDRESS.ws);
     await ctx.render('testAPI');
   })
   .get('*', async (ctx) => {

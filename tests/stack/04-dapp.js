@@ -16,7 +16,10 @@ const mainURL = ADDRESS.external;
 const organizations = ['0xe379894535aa72706396f9a3e1db6f3f5e4c1c15'];
 let charityEventCount, incomingDonationCount;
 const CE=[], ID=[];
-const socket = io(mainURL+ADDRESS.ws);
+const socket = io(mainURL, {
+  path: '/api'
+});
+console.log(socket);
 
 socket.on('error', () => {
   console.log(error);
