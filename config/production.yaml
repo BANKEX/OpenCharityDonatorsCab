@@ -2,6 +2,7 @@ env: production
 address:
   internal: 'http://0.0.0.0:80'
   external: 'https://donatorscab.bankex.team'
+  ws: '/api'
 dirs:
   main: '/oc_donators_cab/'
   public: '/oc_donators_cab/public/'

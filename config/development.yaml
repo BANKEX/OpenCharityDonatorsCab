@@ -2,6 +2,7 @@ env: development
 address:
   internal: 'http://127.0.0.1:8080'
   external: 'http://127.0.0.1:8080'
+  ws: '/'
 dirs:
   main: 'C:/NodeJS/oc_donators_cab'
   public: 'C:/NodeJS/oc_donators_cab/public/'

@@ -1,4 +1,4 @@
-const socket = io();
+const socket = io(ws);
 
 const userSignup = () => {
   respSU.innerHTML = '';

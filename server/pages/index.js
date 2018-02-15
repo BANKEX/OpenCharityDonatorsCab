@@ -1,5 +1,6 @@
 import Router from 'koa-router';
 import getUser from '../utils/getUser.js';
+import { ADDRESS } from 'configuration';
 
 const router = new Router();
 
@@ -8,6 +9,8 @@ router
     ctx.body = 'DonatorsCabFront';
   })
   .get('/api/testAPI', getUser(), async (ctx) => {
+    ctx.state.ws = ADDRESS.ws;
+    console.log(ADDRESS.ws);
     await ctx.render('testAPI');
   })
   .get('*', async (ctx) => {

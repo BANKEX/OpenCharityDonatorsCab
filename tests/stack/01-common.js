@@ -30,7 +30,7 @@ describe('--------Common tests-----------', ()=> {
     request(mainURL+'/api/testAPI', (err, resp, body) => {
       if (err) return done(err);
       const file = fs.readFileSync(DIRS.public + '/testAPI.ejs', {encoding: 'utf-8'});
-      assert.equal(body, file);
+      assert.equal(body.replace(/const ws = \'.*\';/, ''), file.replace(/const ws = \'.*\';/, ''));
       done();
     });
   });
