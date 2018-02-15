@@ -13,9 +13,6 @@ services:
     environment:
       NODE_ENV: $NODE_ENV
       NODE_PATH: $NODE_PATH
-      VIRTUAL_HOST: $VIRTUAL_HOST
-      LETSENCRYPT_HOST: $LETSENCRYPT_HOST
-      LETSENCRYPT_EMAIL: $LETSENCRYPT_EMAIL
     command: npm run production
     depends_on:
       - donators_mongodb
