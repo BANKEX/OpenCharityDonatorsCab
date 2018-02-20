@@ -7,7 +7,7 @@ dirs:
   public: '/oc_donators_cab/public/'
   abi: '/oc_donators_cab/abi/'
 mongoURI: 'mongodb://opch:testpass@donators_mongodb:27017/opch-test'
-metaServer: 'https://meta.staging.bankex.team/'
+metaServer: 'https://meta.staging.bankex.team'
 dapp:
   provider: 'http://52.166.13.111:8535'
   ws: 'wss://wsprovider.staging.bankex.team:8636'
