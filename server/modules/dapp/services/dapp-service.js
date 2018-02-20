@@ -1,72 +1,155 @@
 import {DIRS, DAPP} from 'configuration';
+import SearchService from './search-service';
+import { Organization } from '../models';
+import { io } from '../../../server';
 import Web3 from 'web3';
 
-const web3 = new Web3();
-web3.setProvider(new web3.providers.HttpProvider(DAPP.provider));
+const web3 = new Web3(new Web3.providers.WebsocketProvider(DAPP.ws));
 const abi = (type) => (require(DIRS.abi+type).abi);
-const TOKEN = new web3.eth.Contract(abi('OpenCharityToken.json'), DAPP.token);
+setInterval(() => {
+  web3.eth.getBlockNumber().then(console.log);
+}, 1000*60);
+const TOKENcontract = new web3.eth.Contract(abi('OpenCharityToken.json'), DAPP.token);
 
-const getDate = async (organizationAddress, address, type) => {
+
+const getLastBlock = async () => {
+  return await web3.eth.getBlockNumber();
+};
+
+const subscribe = async (_ORGAddressList, fromBlock) => {
+  _ORGAddressList.forEach(async (ORGaddress) => {
+    const ORGcontract = new web3.eth.Contract(abi('Organization.json'), ORGaddress);
+
+    ORGcontract.events.CharityEventAdded({ fromBlock: 0 })
+      .on('data', async (event) => {
+        const { timestamp } = await web3.eth.getBlock(event.blockHash);
+        const date = (new Date(timestamp * 1000)).toLocaleString();
+        const { organization, charityEvent } = event.returnValues;
+        const dataForSearch = await singleCharityEvent(charityEvent);
+        dataForSearch.address = charityEvent.toLowerCase();
+        dataForSearch.date = date;
+        SearchService.addDataToIndex(dataForSearch);
+        if (event.blockNumber>fromBlock) {
+          const orgFromDB = await Organization.findOne({ORGaddress: organization.toLowerCase()});
+          if (orgFromDB) {
+            const { _id, CEAddressList } = orgFromDB;
+            const forPush = JSON.stringify({
+              CEaddress: charityEvent.toLowerCase(),
+              date: date,
+            });
+            CEAddressList.push(forPush);
+            await Organization.update({ _id }, { CEAddressList });
+            io.emit('newCharityEvent', JSON.stringify(dataForSearch));
+          } else {
+            console.error('Organization not found');
+          }
+        }
+      })
+      .on('error', console.error);
+
+    ORGcontract.events.IncomingDonationAdded({ fromBlock: 0 })
+      .on('data', async (event) => {
+        const { timestamp } = await web3.eth.getBlock(event.blockHash);
+        const date = (new Date(timestamp * 1000)).toLocaleString();
+        const { organization, incomingDonation } = event.returnValues;
+        const dataForSearch = await singleIncomingDonation(incomingDonation);
+        dataForSearch.address = incomingDonation.toLowerCase();
+        dataForSearch.date = date;
+        SearchService.addDataToIndex(dataForSearch);
+        if (event.blockNumber>fromBlock) {
+          const orgFromDB = await Organization.findOne({ORGaddress: organization.toLowerCase()});
+          if (orgFromDB) {
+            const { _id, IDAddressList } = orgFromDB;
+            const forPush = JSON.stringify({
+              IDaddress: incomingDonation.toLowerCase(),
+              date: date,
+            });
+            IDAddressList.push(forPush);
+            await Organization.update({ _id }, { IDAddressList });
+            io.emit('newIncomingDonation', JSON.stringify(dataForSearch));
+          } else {
+            console.error('Organization not found');
+          }
+        }
+      })
+      .on('error', console.error);
+  });
+};
+
+const getDate = async (ORGaddress, XXaddress, type) => {
   const eventTypes = ['CharityEventAdded', 'IncomingDonationAdded'];
   const types = ['charityEvent', 'incomingDonation'];
   const index = types.indexOf(type);
-  if (index==-1) return false;
-  const organization = new web3.eth.Contract(abi('Organization.json'), organizationAddress);
-  const allPastEvents = await organization.getPastEvents(eventTypes[index], {
-    fromBlock: 0,
-    toBlock: 'latest',
-  });
-  const { blockHash } = allPastEvents.find((el) => {
-    return (el.returnValues[type] == address);
+  const ORGcontract = new web3.eth.Contract(abi('Organization.json'), ORGaddress);
+  const allPastEvents = await ORGcontract.getPastEvents(eventTypes[index], {fromBlock: 0});
+  const { blockHash } = allPastEvents.find((elem) => {
+    return (elem.returnValues[type] == XXaddress);
   });
   const { timestamp } = await web3.eth.getBlock(blockHash);
   return (new Date(timestamp * 1000)).toLocaleString();
 };
 
+// addressList
+const getOrganizationAddressList = async () => {
+  return [
+    '0xbb8251c7252b6fec412a0a99995ebc1a28e4e103',
+    '0xc9afa3e4e78a678ffb836c4062547b1dc8dd592f',
+    '0xe379894535aa72706396f9a3e1db6f3f5e4c1c15',
+  ];
+};
+const getCharityEventAddressList = async (ORGaddress) => {
+  const ORGcontract = new web3.eth.Contract(abi('Organization.json'), ORGaddress);
+  const charityEventCount = await ORGcontract.methods.charityEventCount().call();
+  const CEList = [];
+  for (let i = 0; i < charityEventCount; i++) {
+    CEList.push(await ORGcontract.methods.charityEventIndex(i).call());
+  }
+  return CEList;
+};
+const getIncomingDonationAddressList = async (ORGaddress) => {
+  const ORGcontract = new web3.eth.Contract(abi('Organization.json'), ORGaddress);
+  const incomingDonationCount = await ORGcontract.methods.incomingDonationCount().call();
+  const IDList = [];
+  for (let i = 0; i < incomingDonationCount; i++) {
+    IDList.push(await ORGcontract.methods.incomingDonationIndex(i).call());
+  }
+  return IDList;
+};
+
+// single
+const singleOrganization = async (ORGaddress) => {
+  const ORGcontract = new web3.eth.Contract(abi('Organization.json'), ORGaddress);
+  const name = await ORGcontract.methods.name().call();
+  const charityEventCount = await ORGcontract.methods.charityEventCount().call();
+  const incomingDonationCount = await ORGcontract.methods.incomingDonationCount().call();
+  return { name, charityEventCount, incomingDonationCount };
+};
+const singleCharityEvent = async (CEaddress) => {
+  const CEcontract = new web3.eth.Contract(abi('CharityEvent.json'), CEaddress);
+  const name = await CEcontract.methods.name().call();
+  const payed = await CEcontract.methods.payed().call();
+  const target = await CEcontract.methods.target().call();
+  const tags = await CEcontract.methods.tags().call();
+  const raised = await TOKENcontract.methods.balanceOf(CEaddress).call();
+  return { name, payed, target, raised, tags };
+};
+const singleIncomingDonation = async (IDaddress) => {
+  const IDcontract = new web3.eth.Contract(abi('IncomingDonation.json'), IDaddress);
+  const realWorldIdentifier = await IDcontract.methods.realWorldIdentifier().call();
+  const note = await IDcontract.methods.note().call();
+  const tags = await IDcontract.methods.tags().call();
+  const amount = await TOKENcontract.methods.balanceOf(IDaddress).call();
+  return { realWorldIdentifier, amount, note, tags };
+};
 
 export default {
-  getOrganization: async (address) => {
-    const organization = new web3.eth.Contract(abi('Organization.json'), address);
-    const name = await organization.methods.name().call();
-    const charityEventCount = await organization.methods.charityEventCount().call();
-    const incomingDonationCount = await organization.methods.incomingDonationCount().call();
-    return { name, charityEventCount, incomingDonationCount, address };
-  },
-
-  getCharityEventAddressList: async (organizationAddress, send) => {
-    const organization = new web3.eth.Contract(abi('Organization.json'), organizationAddress);
-    const charityEventCount = await organization.methods.charityEventCount().call();
-    for (let i = 0; i < charityEventCount; i++) {
-      organization.methods.charityEventIndex(i).call().then(send);
-    }
-  },
-
-  getIncomingDonationAddressList: async (organizationAddress, send) => {
-    const organization = new web3.eth.Contract(abi('Organization.json'), organizationAddress);
-    const incomingDonationCount = await organization.methods.incomingDonationCount().call();
-    for (let i = 0; i < incomingDonationCount; i++) {
-      organization.methods.incomingDonationIndex(i).call().then(send);
-    }
-  },
-
-  singleCharityEvent: async (organizationAddress, address) => {
-    const contract = new web3.eth.Contract(abi('CharityEvent.json'), address);
-    const name = await contract.methods.name().call();
-    const payed = await contract.methods.payed().call();
-    const target = await contract.methods.target().call();
-    const tags = await contract.methods.tags().call();
-    const raised = await TOKEN.methods.balanceOf(address).call();
-    const date = await getDate(organizationAddress, address, 'charityEvent');
-    return { name, payed, target, raised, tags, date, address };
-  },
-
-  singleIncomingDonation: async (organizationAddress, address) => {
-    const contract = new web3.eth.Contract(abi('IncomingDonation.json'), address);
-    const realWorldIdentifier = await contract.methods.realWorldIdentifier().call();
-    const note = await contract.methods.note().call();
-    const tags = await contract.methods.tags().call();
-    const amount = await TOKEN.methods.balanceOf(address).call();
-    const date = await getDate(organizationAddress, address, 'incomingDonation');
-    return { realWorldIdentifier, amount, note, tags, date, address };
-  },
+  getLastBlock,
+  subscribe,
+  getDate,
+  getOrganizationAddressList,
+  getCharityEventAddressList,
+  getIncomingDonationAddressList,
+  singleOrganization,
+  singleCharityEvent,
+  singleIncomingDonation,
 };

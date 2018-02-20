@@ -1,10 +1,10 @@
 import app from 'app';
 import { ADDRESS } from 'configuration';
 import url from 'url';
-const internalURL = url.parse(ADDRESS.internal);
 import Socket from 'socket.io';
 import socketsApp from 'sockets';
 
+const internalURL = url.parse(ADDRESS.internal);
 const server = (process.env.NODE_ENV === 'test')
   ? app.callback()
   : app.listen(internalURL.port, internalURL.hostname, (err) => {
@@ -16,13 +16,8 @@ app.on('error', (err) => {
 });
 
 const io = new Socket();
-io.attach(server, {
-  path: '/api/ws',
-});
-// app.io = io;
-io.on('connection', () => {
-  console.log('connected');
-});
+io.attach(server, {path: '/api/ws'});
+io.on('connection', socketsApp);
 
 export default server;
 

@@ -1,5 +1,4 @@
 import Koa from 'koa';
-
 import inits from 'inits';
 import middlewares from 'middlewares';
 import pages from 'pages';

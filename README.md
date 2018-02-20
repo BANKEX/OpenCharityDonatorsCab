@@ -32,7 +32,7 @@
 
 ## Страница тестирования API
 По адресу /api/testAPI доступен интерфейс тестирования всех функций API.<br/>
-Все фронтэнд-функции для работы с API см. в /public/testAPI.js
+Все фронтэнд-функции для работы с API см. в /public/api/testAPI.js
 
 ## Работа с пользователями
 
@@ -125,11 +125,32 @@
 Возвращает 'Ok'.
 
 ## Работа с DAPP
+> Подписка на сокеты '/api/ws'
+    const socket = io({path: '/api/ws'});
 
-### GET /api/dapp/getOrganization
-Вернет JSON единственной организации {data: organization}
+### GET /api/dapp/getOrganizations
+Вернет JSON-массив всех организаций:
+```
+    {
+        "CEAddressList":[
+            "{\"CEaddress\":\"0x4fEfEB18f51D658ab7Bf71f7613196F9401AF87f\",\"date\":\"2018-2-18 18:55:15\"}",
+            "{\"CEaddress\":\"0x36C9723fae0DB884ed216c2b86B09C3206C4b15C\",\"date\":\"2018-2-18 18:59:22\"}",
+            "{\"CEaddress\":\"0x01cc0d6f28eF1910069D3B81c70B5ea4a8A39B4F\",\"date\":\"2018-2-18 19:20:13\"}",
+            "{\"CEaddress\":\"0x1195d3E480Af739d632e498b8C968eAcC460aF83\",\"date\":\"2018-2-18 19:39:06\"}",
+            "{\"CEaddress\":\"0x354161f3d92158D8740C2E5f5D8088366299292C\",\"date\":\"2018-2-18 19:45:29\"}"
+        ],
+        "IDAddressList":[],
+        "name":"Staging Test Organization 2",
+        "charityEventCount":5,
+        "incomingDonationCount":0,
+        "ORGaddress":"0xc9afa3e4e78a678ffb836c4062547b1dc8dd592f"
+    }
+```
+CEAddressList - массив всех charityEvent (только адрес и дата) данной организации - это СТРОКА JSON. Ее надо парсить в объект!
 
-### GET /api/dapp/getCharityEvents
+### GET /api/dapp/getCharityEvents/:org
+Получить все charityEvents данной организации.<br/>
+Принимает адрес организации в :org.<br/>
 Вернет roomID для сокет-подписки.<br/>
 Необходимо подписаться на событие 'data' в данной комнате.<br/>
 Сокет присылает объекты {charityEventObject}
@@ -138,24 +159,26 @@ charityEventObject: {
     name, payed, target, raised, tags, date, address
 }
 ```
-### GET /api/dapp/getIncomingDonations
-Вернет roomID для сокет-подписки.<br/>
-Необходимо подписаться на событие 'data' в данной комнате.<br/>
-Сокет присылает объекты {incomingDonationsObject}
+По окончании списка придет data = 'close'. Рекомендуется удалить listener.
+
+### GET /api/dapp/getIncomingDonations/:org
+Как GET /api/dapp/getCharityEvents/:org только для IncomingDonation
 ```
 incomingDonationsObject: {
     realWorldIdentifier, amount, note, tags, date, address
 }
 ```
 ### GET /api/dapp/getCharityEvent/:hash
-Вернет JSON данного CharityEvent по hash {data: {charityEventObject}}
+Вернет JSON данного CharityEvent по hash {charityEventObject}
 
 ### GET /api/dapp/getIncomingDonation/:hash
-Вернет JSON данного IncomingDonation по hash {data: {incomingDonationsObject}}
+Вернет JSON данного IncomingDonation по hash {incomingDonationsObject}
 
 ### POST /api/dapp/getCharityEvents
 Выдает отфильтрованные CharityEvents.<br/>
 Принимает content-type application/json и application/x-www-form-urlencoded.<br/>
+JSON запроса может включать ORGaddress (один элемент или массив элементов). Если ORGaddress == undefined, фильтрация производится по всем организаиям.<br/>
+Фильтрация производится по всем полям {charityEventObject} <br/>
 Фильтрация производится по трем параметрам: <br/>
 1. include (значение строка) - поле содержит данную подстроку.
 2. enum (значение массив строк) - поле равно одному из значений массива.
@@ -163,6 +186,10 @@ incomingDonationsObject: {
 Пример тела запроса: <br/>
 ```
 {
+    "ORGaddress": [
+        "0xe379894535aa72706396f9a3e1db6f3f5e4c1c15",
+        "0xbb8251c7252b6fec412a0a99995ebc1a28e4e103"
+    ],
 	"date": {
 		"range": ["2018-2-8 11:40:51", "2018-2-10 11:45:51"]
 	},
@@ -177,6 +204,13 @@ incomingDonationsObject: {
 Вернет roomID для сокет-подписки.<br/>
 Необходимо подписаться на событие 'data' в данной комнате.<br/>
 Сокет присылает объекты {charityEventObject} или false (если charityEvent не соответствет фильтру)<br/>
+По окончании списка придет data = 'close'. Рекомендуется удалить listener.
 
 ### POST /api/dapp/getIncomingDonation
 Как POST /api/dapp/getCharityEvents только для IncomingDonation
+
+###Онлайн-подписка на новые charityEvents и incomingDonations
+```
+socket.on('newCharityEvent', console.log);
+socket.on('newIncomingDonation', console.log);
+```

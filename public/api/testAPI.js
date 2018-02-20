@@ -100,51 +100,56 @@ const userForgot = () => {
   };
 };
 
-const getOrganization = () => {
-  respORG.innerHTML = '';
-  const xhr = new XMLHttpRequest();
-  xhr.open('get', '/api/dapp/getOrganization');
-  xhr.send();
-  xhr.onload = (event) => {
-    respORG.innerHTML = event.target.responseText;
-  };
+const addData = (div, data) => {
+  const d = document.createElement('div');
+  d.style.whiteSpace = 'nowrap';
+  d.innerHTML = data;
+  div.appendChild(d);
 };
 
-const addDataCE = (data) => {
-  respCE.innerHTML = respCE.innerHTML + data + ',';
+const socketResponse = (event, div) => {
+  console.log(event.target.responseText);
+  const dataListener = (data) => {
+    if (data!='close') {
+      addData(div, data);
+    } else {
+      socket.removeEventListener(event.target.responseText, dataListener);
+      console.log(event.target.responseText + ' - removed');
+    }
+  };
+
+  socket.on(event.target.responseText, dataListener);
+};
+
+const getOrganizations = () => {
+  respORG.innerHTML = '';
+  const xhr = new XMLHttpRequest();
+  xhr.open('get', '/api/dapp/getOrganizations');
+  xhr.send();
+  xhr.onload = (event) => {
+    JSON.parse(event.target.responseText).forEach((elem) => {
+      addData(respORG, JSON.stringify(elem));
+    });
+  };
 };
 
 const getCharityEvents = () => {
   respCE.innerHTML = '';
   const xhr = new XMLHttpRequest();
-  xhr.open('get', '/api/dapp/getCharityEvents');
+  xhr.open('get', '/api/dapp/getCharityEvents/'+orgCE.value);
   xhr.send();
   xhr.onload = (event) => {
-    console.log(event.target.responseText);
-    socket.on(event.target.responseText, addDataCE);
-    setTimeout((listener) => {
-      socket.removeListener(listener, addDataCE);
-      console.log('socket removed - ' + listener);
-    },20000, event.target.responseText);
+    socketResponse(event, respCE);
   };
-};
-
-const addDataID = (data) => {
-  respID.innerHTML = respID.innerHTML + data + ',';
 };
 
 const getIncomingDonations = () => {
   respID.innerHTML = '';
   const xhr = new XMLHttpRequest();
-  xhr.open('get', '/api/dapp/getIncomingDonations');
+  xhr.open('get', '/api/dapp/getIncomingDonations/'+orgID.value);
   xhr.send();
   xhr.onload = (event) => {
-    console.log(event.target.responseText);
-    socket.on(event.target.responseText, addDataID);
-    setTimeout((listener) => {
-      socket.removeListener(listener, addDataID);
-      console.log('socket removed - ' + listener);
-    },20000, event.target.responseText);
+    socketResponse(event, respID);
   };
 };
 
@@ -168,10 +173,6 @@ const getIncomingDonation1 = () => {
   };
 };
 
-const addDataFCE = (data) => {
-  respFCE.innerHTML = respFCE.innerHTML + data + ',';
-};
-
 const filterCharityEvent = () => {
   respFCE.innerHTML = '';
   const xhr = new XMLHttpRequest();
@@ -180,17 +181,8 @@ const filterCharityEvent = () => {
   const body = JSON.parse(filterCE.value);
   xhr.send(JSON.stringify(body));
   xhr.onload = (event) => {
-    console.log(event.target.responseText);
-    socket.on(event.target.responseText, addDataFCE);
-    setTimeout((listener) => {
-      socket.removeListener(listener, addDataFCE);
-      console.log('socket removed - ' + listener);
-    },20000, event.target.responseText);
+    socketResponse(event, respFCE);
   };
-};
-
-const addDataFID = (data) => {
-  respFID.innerHTML = respFID.innerHTML + data + ',';
 };
 
 const filterIncomingDonation = () => {
@@ -201,11 +193,28 @@ const filterIncomingDonation = () => {
   const body = JSON.parse(filterID.value);
   xhr.send(JSON.stringify(body));
   xhr.onload = (event) => {
-    console.log(event.target.responseText);
-    socket.on(event.target.responseText, addDataFID);
-    setTimeout((listener) => {
-      socket.removeListener(listener, addDataFID);
-      console.log('socket removed - ' + listener);
-    },20000, event.target.responseText);
+    socketResponse(event, respFID);
   };
 };
+
+const search = () => {
+  respSI.innerHTML = '';
+  const xhr = new XMLHttpRequest();
+  xhr.open('get', '/api/dapp/search/'+textSI.value);
+  xhr.send();
+  xhr.onload = (event) => {
+    respSI.innerHTML = event.target.responseText;
+  };
+};
+
+socket.on('newCharityEvent', (data) => {
+  console.log(data);
+  newEventCE.style.display = 'block';
+  newEventCE.innerHTML = Number(newEventCE.innerHTML)+1;
+});
+
+socket.on('newIncomingDonation', (data) => {
+  console.log(data);
+  newEventID.style.display = 'block';
+  newEventID.innerHTML = Number(newEventID.innerHTML)+1;
+});

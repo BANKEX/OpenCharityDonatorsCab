@@ -1,7 +1,7 @@
 const sockets = {};
 const users = [];
 
-export default ({socket}) => {
+export default (socket) => {
   console.log('connected');
   socket.on('login', (us) => {
     const index = users.indexOf(us);

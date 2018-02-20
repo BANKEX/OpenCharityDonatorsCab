@@ -15,9 +15,30 @@
       overflow-x: scroll;
       min-height: 100px;
     }
+    .ev {
+      position: fixed;
+      height: 20px;
+      width: 20px;
+      left: 20px;
+      border-radius: 30px;
+      color: white;
+      margin-top: auto;
+    }
+    .newCE {
+      top: 20px;
+      background-color: orangered;
+      display: none;
+    }
+    .newID {
+      top: 50px;
+      background-color: cadetblue;
+      display: none;
+    }
   </style>
 </head>
 <body>
+  <div class="ev newCE" align="center" id="newEventCE">0</div>
+  <div class="ev newID" align="center" id="newEventID">0</div>
   <div class="container">
     <h1>OpenCharityDonatorsCab testAPI</h1>
 
@@ -94,9 +115,9 @@
 
     <h2>DAPP API</h2>
     <div class="row">
-      <h3>Dapp getOrganization</h3>
+      <h3>Dapp getOrganizations</h3>
       <div class="col-sm-6">
-        <button class="btn btn-success" onClick="getOrganization()">Send</button>
+        <button class="btn btn-success" onClick="getOrganizations()">Send</button>
       </div>
       <div class="col-sm-6 resp" id="respORG"></div>
     </div>
@@ -104,6 +125,7 @@
     <div class="row">
       <h3>Dapp getCharityEvents</h3>
       <div class="col-sm-6">
+        <input class="form-control" type="text" placeholder="orgAddress" id="orgCE">
         <button class="btn btn-success" onClick="getCharityEvents()">Send</button>
       </div>
       <div class="col-sm-6 resp" id="respCE"></div>
@@ -112,6 +134,7 @@
     <div class="row">
       <h3>Dapp getIncomingDonations</h3>
       <div class="col-sm-6">
+        <input class="form-control" type="text" placeholder="orgAddress" id="orgID">
         <button class="btn btn-success" onClick="getIncomingDonations()">Send</button>
       </div>
       <div class="col-sm-6 resp" id="respID"></div>
@@ -151,6 +174,15 @@
         <button class="btn btn-success" onClick="filterIncomingDonation()">Send</button>
       </div>
       <div class="col-sm-6 resp" id="respFID"></div>
+    </div>
+
+    <div class="row">
+      <h3>Search metadata</h3>
+      <div class="col-sm-6">
+        <input class="form-control" type="text" placeholder="text" id="textSI">
+        <button class="btn btn-success" onClick="search()">Send</button>
+      </div>
+      <div class="col-sm-6 resp" id="respSI"></div>
     </div>
 
   </div>

@@ -5,13 +5,14 @@ import dappErrors from './errors';
 const router = new Router({ prefix: '/dapp' });
 
 router
-  .get('/getOrganization', dappErrors(), controller.getOrganization)
-  .get('/getCharityEvents', dappErrors(), controller.getCharityEvents)
-  .get('/getIncomingDonations', dappErrors(), controller.getIncomingDonations)
+  .get('/getOrganizations', dappErrors(), controller.getOrganizations)
+  .get('/getCharityEvents/:org', dappErrors(), controller.getCharityEvents)
+  .get('/getIncomingDonations/:org', dappErrors(), controller.getIncomingDonations)
   .get('/getCharityEvent/:hash', dappErrors(), controller.getCharityEvent)
   .get('/getIncomingDonation/:hash', dappErrors(), controller.getIncomingDonation)
   .post('/getCharityEvents', dappErrors(), controller.filterCharityEvents)
   .post('/getIncomingDonations', dappErrors(), controller.filterIncomingDonation)
+  .get('/search/:text', dappErrors(), controller.search)
 ;
 
 export default router.routes();

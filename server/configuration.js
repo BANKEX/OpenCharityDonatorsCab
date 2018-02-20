@@ -5,11 +5,14 @@ const JWT = config.get('jwt');
 const DIRS = config.get('dirs');
 const MONGO_URI = config.get('mongoURI');
 const DAPP = config.get('dapp');
-
+const META = config.get('metaServer');
+  
+  
 export {
   ADDRESS,
   JWT,
   DIRS,
   MONGO_URI,
   DAPP,
+  META,
 };

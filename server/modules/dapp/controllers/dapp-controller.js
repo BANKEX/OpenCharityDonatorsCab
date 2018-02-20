@@ -1,77 +1,125 @@
-import { DappService, FilterService } from '../services';
+import { DappService, FilterService, SearchService } from '../services';
 import pick from 'lodash.pick';
 import AppError from '../../../utils/AppErrors.js';
-import app from '../../../app';
+import { io } from '../../../server';
 import uuid from 'uuid/v4';
-import {io} from '../../../server';
-const organizations = ['0xe379894535aa72706396f9a3e1db6f3f5e4c1c15'];
+import { Organization } from '../models';
+import { syncOrganizations, refreshLists, doWithAllCE, doWithAllID, getDateFromDB } from '../helpers';
+
+syncOrganizations().then(async (list) => {
+  await refreshLists(list);
+  const lastBlock = await DappService.getLastBlock();
+  await DappService.subscribe(list, lastBlock);
+  setInterval(() => {
+    syncOrganizations().then(refreshLists);
+  }, 1000*60*10);
+});
 
 export default {
-  async getOrganization(ctx) {
-    const data = await DappService.getOrganization(organizations[0]);
-    ctx.body = { data };
+  async getOrganizations(ctx) {
+    ctx.body = await Organization.find().select({__v: 0, _id: 0});
   },
 
   async getCharityEvents(ctx) {
-    const room = uuid();
-    ctx.status = 200;
-    ctx.res.end(room);
-    DappService.getCharityEventAddressList(organizations[0], async (address) => {
-      const ce = await DappService.singleCharityEvent(organizations[0], address);
-      io.emit(room, JSON.stringify(ce));
-    });
+    const orgFromDB = await Organization.findOne({ ORGaddress: ctx.params.org });
+    if (orgFromDB) {
+      const room = uuid();
+      ctx.status = 200;
+      ctx.res.end(room);
+      let i=0;
+      doWithAllCE(orgFromDB, (charityEvent) => {
+        io.emit(room, JSON.stringify(charityEvent));
+        i++;
+        if (i==orgFromDB.charityEventCount) io.emit(room, 'close');
+      });
+    }
   },
 
   async getIncomingDonations(ctx) {
-    const room = uuid();
-    ctx.status = 200;
-    ctx.res.end(room);
-    DappService.getIncomingDonationAddressList(organizations[0], async (address) => {
-      const id = await DappService.singleIncomingDonation(organizations[0], address);
-      io.emit(room, JSON.stringify(id));
-    });
+    const orgFromDB = await Organization.findOne({ ORGaddress: ctx.params.org });
+    if (orgFromDB) {
+      const room = uuid();
+      ctx.status = 200;
+      ctx.res.end(room);
+      let i=0;
+      doWithAllID(orgFromDB, (incomingDonation) => {
+        io.emit(room, JSON.stringify(incomingDonation));
+        i++;
+        if (i==orgFromDB.incomingDonationCount) io.emit(room, 'close');
+      });
+    }
   },
-  
+
   async getCharityEvent(ctx) {
-    const data = await DappService.singleCharityEvent(organizations[0], ctx.params.hash);
-    ctx.body = { data };
+    const charityEvent = await DappService.singleCharityEvent(ctx.params.hash);
+    const ext = await getDateFromDB(ctx.params.hash);
+    charityEvent.date = ext.date;
+    charityEvent.address = ext.CEaddress;
+    ctx.body = charityEvent;
   },
   
   async getIncomingDonation(ctx) {
-    const data = await DappService.singleIncomingDonation(organizations[0], ctx.params.hash);
-    ctx.body = { data };
+    const incomingDonation = await DappService.singleIncomingDonation(ctx.params.hash);
+    const ext = await getDateFromDB(ctx.params.hash);
+    incomingDonation.date = ext.date;
+    incomingDonation.address = ext.IDaddress;
+    ctx.body = incomingDonation;
   },
   
   async filterCharityEvents(ctx) {
     if (ctx.request.header['content-type']!='application/json' &&
       ctx.request.header['content-type']!='application/x-www-form-urlencoded') throw new AppError(400, 10);
-
     const room = uuid();
     ctx.status = 200;
     ctx.res.end(room);
+
     const fields = pick(ctx.request.body, FilterService.cardCharityEvent);
     const filtering = Object.getOwnPropertyNames(fields).length != 0;
-    DappService.getCharityEventAddressList(organizations[0], async (address) => {
-      const ce = await DappService.singleCharityEvent(organizations[0], address);
-      const filtered = (filtering) ? FilterService.filter(ce, fields) : ce;
-      io.emit(room, JSON.stringify(filtered));
+    const ORGsearch = (!ctx.request.body.ORGaddress)
+      ? {}
+      : {ORGaddress: ctx.request.body.ORGaddress};
+    const ORGList = await Organization.find(ORGsearch);
+    let i=0;
+    let allCE=0;
+    ORGList.forEach((orgFromDB) => {
+      allCE+=orgFromDB.charityEventCount;
+      doWithAllCE(orgFromDB, (charityEvent) => {
+        const filtered = (filtering) ? FilterService.filter(charityEvent, fields) : charityEvent;
+        io.emit(room, JSON.stringify(filtered));
+        i++;
+        if (i==allCE) io.emit(room, 'close');
+      });
     });
   },
 
   async filterIncomingDonation(ctx) {
     if (ctx.request.header['content-type']!='application/json' &&
       ctx.request.header['content-type']!='application/x-www-form-urlencoded') throw new AppError(400, 10);
-
     const room = uuid();
     ctx.status = 200;
     ctx.res.end(room);
+
     const fields = pick(ctx.request.body, FilterService.cardIncomingDonation);
     const filtering = Object.getOwnPropertyNames(fields).length != 0;
-    DappService.getIncomingDonationAddressList(organizations[0], async (address) => {
-      const id = await DappService.singleIncomingDonation(organizations[0], address);
-      const filtered = (filtering) ? FilterService.filter(id, fields) : id;
-      io.emit(room, JSON.stringify(filtered));
+    const ORGsearch = (!ctx.request.body.ORGaddress)
+      ? {}
+      : {ORGaddress: ctx.request.body.ORGaddress};
+    const ORGList = await Organization.find(ORGsearch);
+    let i=0;
+    let allID=0;
+    ORGList.forEach((orgFromDB) => {
+      allID+=orgFromDB.incomingDonationCount;
+      doWithAllID(orgFromDB, (incomingDonation) => {
+        const filtered = (filtering) ? FilterService.filter(incomingDonation, fields) : incomingDonation;
+        io.emit(room, JSON.stringify(filtered));
+        i++;
+        if (i==allID) io.emit(room, 'close');
+      });
     });
+  },
+
+  async search(ctx) {
+    ctx.body = await SearchService.search(ctx.params.text);
   },
 };
 

@@ -5,6 +5,7 @@ const config = require('config');
 const io = require('socket.io-client');
 
 const ADDRESS = config.get('address');
+const META = config.get('metaServer');
 
 rp.defaults({
   simple: false,
@@ -13,8 +14,7 @@ rp.defaults({
 });
 
 const mainURL = ADDRESS.external;
-const organizations = ['0xe379894535aa72706396f9a3e1db6f3f5e4c1c15'];
-let charityEventCount, incomingDonationCount;
+let organizations, testOrg;
 const CE=[], ID=[];
 const socket = io(mainURL, {
   path: '/api/ws'
@@ -26,58 +26,60 @@ socket.on('error', () => {
 
 socket.on('connect', () => {
   describe('--------Запросы к DAPP-----------', () => {
-    it('Запрос getOrganization', async () => {
+    it('Запрос getOrganizations', async () => {
       const options = {
         method: 'GET',
-        uri: mainURL + '/api/dapp/getOrganization'
+        uri: mainURL + '/api/dapp/getOrganizations'
       };
       const response = await rp(options);
-      const responseData = JSON.parse(response).data;
-      charityEventCount = responseData.charityEventCount;
-      incomingDonationCount = responseData.incomingDonationCount;
-      assert.equal(responseData.address, organizations[0]);
-      assert.notEqual(responseData.name, undefined);
-      assert.notEqual(responseData.charityEventCount, undefined);
-      assert.notEqual(responseData.incomingDonationCount, undefined);
+      organizations = JSON.parse(response);
+      testOrg = organizations.find((elem) => (elem.ORGaddress=='0xe379894535aa72706396f9a3e1db6f3f5e4c1c15'));
+      assert.equal(response.indexOf('0xe379894535aa72706396f9a3e1db6f3f5e4c1c15')!=-1, true);
     });
 
     it('Запрос getCharityEvents', (done) => {
       let counter=0;
-      request(mainURL + '/api/dapp/getCharityEvents', (err, resp, body) => {
+      request(mainURL + '/api/dapp/getCharityEvents/'+testOrg.ORGaddress, (err, resp, body) => {
         if (err) return done(err);
         socket.on(body, (dt) => {
-          const data = JSON.parse(dt);
-          CE.push(data);
-          counter++;
-          process.stdout.write('.');
-          assert.notEqual(data.name, undefined);
-          assert.notEqual(data.payed, undefined);
-          assert.notEqual(data.target, undefined);
-          assert.notEqual(data.raised, undefined);
-          assert.notEqual(data.tags, undefined);
-          assert.notEqual(data.date, undefined);
-          assert.notEqual(data.address, undefined);
-          if (counter==charityEventCount) done();
+          if (dt!='close') {
+            const data = JSON.parse(dt);
+            CE.push(data);
+            counter++;
+            process.stdout.write('.');
+            assert.notEqual(data.name, undefined);
+            assert.notEqual(data.payed, undefined);
+            assert.notEqual(data.target, undefined);
+            assert.notEqual(data.raised, undefined);
+            assert.notEqual(data.tags, undefined);
+            assert.notEqual(data.date, undefined);
+            assert.notEqual(data.address, undefined);
+          } else {
+            if (counter == testOrg.charityEventCount) done();
+          }
         });
       });
     });
 
     it('Запрос getIncomingDonations', (done) => {
       let counter=0;
-      request(mainURL + '/api/dapp/getIncomingDonations', (err, resp, body) => {
+      request(mainURL + '/api/dapp/getIncomingDonations/'+testOrg.ORGaddress, (err, resp, body) => {
         if (err) return done(err);
         socket.on(body, (dt) => {
-          const data = JSON.parse(dt);
-          ID.push(data);
-          counter++;
-          process.stdout.write('.');
-          assert.notEqual(data.realWorldIdentifier, undefined);
-          assert.notEqual(data.amount, undefined);
-          assert.notEqual(data.note, undefined);
-          assert.notEqual(data.tags, undefined);
-          assert.notEqual(data.date, undefined);
-          assert.notEqual(data.address, undefined);
-          if (counter==incomingDonationCount) done();
+          if (dt!='close') {
+            const data = JSON.parse(dt);
+            ID.push(data);
+            counter++;
+            process.stdout.write('.');
+            assert.notEqual(data.realWorldIdentifier, undefined);
+            assert.notEqual(data.amount, undefined);
+            assert.notEqual(data.note, undefined);
+            assert.notEqual(data.tags, undefined);
+            assert.notEqual(data.date, undefined);
+            assert.notEqual(data.address, undefined);
+          } else {
+            if (counter == testOrg.incomingDonationCount) done();
+          }
         });
       });
 
@@ -89,12 +91,14 @@ socket.on('connect', () => {
         uri: mainURL + '/api/dapp/getCharityEvent/' + CE[0].address
       };
       const response = await rp(options);
-      const responseData = JSON.parse(response).data;
+      const responseData = JSON.parse(response);
       assert.equal(responseData.name, CE[0].name);
       assert.equal(responseData.target, CE[0].target);
+      assert.equal(responseData.payed, CE[0].payed);
       assert.equal(responseData.raised, CE[0].raised);
       assert.equal(responseData.tags, CE[0].tags);
       assert.equal(responseData.date, CE[0].date);
+      assert.equal(responseData.address, CE[0].address);
     });
 
     it('Запрос getIncomingDonation/hash', async () => {
@@ -103,15 +107,18 @@ socket.on('connect', () => {
         uri: mainURL + '/api/dapp/getIncomingDonation/' + ID[0].address
       };
       const response = await rp(options);
-      const responseData = JSON.parse(response).data;
+      const responseData = JSON.parse(response);
       assert.equal(responseData.realWorldIdentifier, ID[0].realWorldIdentifier);
       assert.equal(responseData.note, ID[0].note);
+      assert.equal(responseData.amount, ID[0].amount);
       assert.equal(responseData.tags, ID[0].tags);
       assert.equal(responseData.date, ID[0].date);
+      assert.equal(responseData.address, ID[0].address);
     });
 
     it('Фильтр getCharityEvents', (done) => {
       const body = {
+        ORGaddress: testOrg.ORGaddress,
         name: {
           enum: [CE[0].name, CE[1].name],
           include: "Test",
@@ -135,21 +142,40 @@ socket.on('connect', () => {
       rp.post(options)
         .then((body) => {
           socket.on(body, (dt) => {
-            const data = JSON.parse(dt);
-            counter++;
-            process.stdout.write('.');
-            if (data!==false) {
-              test = test && (data.name.toLowerCase().indexOf('test') != -1);
-              test = test && (Number(data.target) >= 100 && Number(data.target) <= 110);
-              test = test && (data.name.toLowerCase() == CE[0].name.toLowerCase() || data.name.toLowerCase() == CE[1].name.toLowerCase() || data.name.toLowerCase() == CE[2].name.toLowerCase())
+            if (dt!='close') {
+              const data = JSON.parse(dt);
+              counter++;
+              process.stdout.write('.');
+              if (data !== false) {
+                test = test && (data.name.toLowerCase().indexOf('test') != -1);
+                test = test && (Number(data.target) >= 100 && Number(data.target) <= 110);
+                test = test && (data.name.toLowerCase() == CE[0].name.toLowerCase() || data.name.toLowerCase() == CE[1].name.toLowerCase() || data.name.toLowerCase() == CE[2].name.toLowerCase())
+              }
+              assert.equal(test, true);
+            } else {
+              if (counter == testOrg.charityEventCount) {
+                socket.disconnect();
+                done();
+              }
             }
-            assert.equal(test, true);
-            if (counter==charityEventCount) {socket.disconnect();done();}
           });
         })
         .catch((err) => {
           if (err) return done(err);
         });
+    });
+
+    it('Запрос search/:text', async () => {
+      const text = 'test';
+      const options = {
+        method: 'GET',
+        uri: mainURL + '/api/dapp/search/'+text
+      };
+      const response = await rp(options);
+      const respObj = JSON.parse(response);
+      if (Object.getOwnPropertyNames(respObj).length!=0) {
+        assert.equal(response.indexOf(text)!=-1, true);
+      }
     });
   });
 });
