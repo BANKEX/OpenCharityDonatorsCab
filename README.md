@@ -4,20 +4,6 @@
 1. склонировать репозиторий
 2. npm install
 3. настроить файлы config: development.yaml, staging.yaml и production.yaml
-```
-    env: development
-    address:
-      internal: 'http://127.0.0.1:8080'
-      external: 'https://donatorscab.staging.bankex.team'
-    dirs:
-      main: 'C:/NodeJS/oc_donators_cab'
-      public: 'C:/NodeJS/oc_donators_cab/public/'
-      abi: 'C:/NodeJS/oc_donators_cab/abi/'
-    mongoURI: 'mongodb://user:password@ds119268.mlab.com:19268/opch-test'
-    dapp:
-      provider: 'http://52.166.13.111:8535'
-      token: '0x7f1dc0f5f8dafd9715ea51f6c11b92929b2dbdea'
-```
 4. Для запуска в development-окружении: npm run development
 5. Для запуска в окружениях staging | production:
     * создать пустую папку build в корне проекта
@@ -183,23 +169,23 @@ JSON запроса может включать ORGaddress (один элеме�
 1. include (значение строка) - поле содержит данную подстроку.
 2. enum (значение массив строк) - поле равно одному из значений массива.
 3. range (значение массив из двух элементов либо чисел, либо дат) - поле укладывается в указанный диапазон
-Пример тела запроса: <br/>
+Пример тела запроса:
 ```
-{
-    "ORGaddress": [
-        "0xe379894535aa72706396f9a3e1db6f3f5e4c1c15",
-        "0xbb8251c7252b6fec412a0a99995ebc1a28e4e103"
-    ],
-	"date": {
-		"range": ["2018-2-8 11:40:51", "2018-2-10 11:45:51"]
-	},
-	"name": {
-		"include": "test"
-	},
-	"tags": {
-		"enum": ["0x23", "0x06"]
-	}
-}
+    {
+        "ORGaddress": [
+            "0xe379894535aa72706396f9a3e1db6f3f5e4c1c15",
+            "0xbb8251c7252b6fec412a0a99995ebc1a28e4e103"
+        ],
+        "date": {
+            "range": ["2018-2-8 11:40:51", "2018-2-10 11:45:51"]
+        },
+        "name": {
+            "include": "test"
+        },
+        "tags": {
+            "enum": ["0x23", "0x06"]
+        }
+    }
 ```
 Вернет roomID для сокет-подписки.<br/>
 Необходимо подписаться на событие 'data' в данной комнате.<br/>
@@ -209,7 +195,7 @@ JSON запроса может включать ORGaddress (один элеме�
 ### POST /api/dapp/getIncomingDonation
 Как POST /api/dapp/getCharityEvents только для IncomingDonation
 
-###Онлайн-подписка на новые charityEvents и incomingDonations
+### Онлайн-подписка на новые charityEvents и incomingDonations
 ```
 socket.on('newCharityEvent', console.log);
 socket.on('newIncomingDonation', console.log);
