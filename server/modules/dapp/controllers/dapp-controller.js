@@ -4,7 +4,7 @@ import AppError from '../../../utils/AppErrors.js';
 import { io } from '../../../server';
 import uuid from 'uuid/v4';
 import { Organization } from '../models';
-import { syncOrganizations, refreshLists, doWithAllCE, doWithAllID, getDateFromDB } from '../helpers';
+import { syncOrganizations, refreshLists, doWithAllCE, doWithAllID, getDataFromDB } from '../helpers';
 
 syncOrganizations().then(async (list) => {
   await refreshLists(list);
@@ -52,17 +52,19 @@ export default {
 
   async getCharityEvent(ctx) {
     const charityEvent = await DappService.singleCharityEvent(ctx.params.hash);
-    const ext = await getDateFromDB(ctx.params.hash);
+    const ext = await getDataFromDB(ctx.params.hash);
     charityEvent.date = ext.date;
     charityEvent.address = ext.CEaddress;
+    charityEvent.ORGaddress = ext.ORGaddress;
     ctx.body = charityEvent;
   },
   
   async getIncomingDonation(ctx) {
     const incomingDonation = await DappService.singleIncomingDonation(ctx.params.hash);
-    const ext = await getDateFromDB(ctx.params.hash);
+    const ext = await getDataFromDB(ctx.params.hash);
     incomingDonation.date = ext.date;
     incomingDonation.address = ext.IDaddress;
+    incomingDonation.ORGaddress = ext.ORGaddress;
     ctx.body = incomingDonation;
   },
   

@@ -42,6 +42,7 @@ const doWithAllCE = (org, callback) => {
     const charityEvent = await DappService.singleCharityEvent(CEelem.CEaddress);
     charityEvent.address = CEelem.CEaddress;
     charityEvent.date = CEelem.date;
+    charityEvent.ORGaddress = org.ORGaddress;
     callback(charityEvent);
   });
 };
@@ -52,11 +53,12 @@ const doWithAllID = (org, callback) => {
     const incomingDonation = await DappService.singleIncomingDonation(IDelem.IDaddress);
     incomingDonation.address = IDelem.IDaddress;
     incomingDonation.date = IDelem.date;
+    incomingDonation.ORGaddress = org.ORGaddress;
     callback(incomingDonation);
   });
 };
 
-const getDateFromDB = async (address) => {
+const getDataFromDB = async (address) => {
   const org = await Organization.findOne().or([{
       CEAddressList: new RegExp(address, 'i'),
     }, {
@@ -65,7 +67,9 @@ const getDateFromDB = async (address) => {
   );
   const obj = org.CEAddressList.find((elem) => (elem.indexOf(address)!=-1)) ||
     org.IDAddressList.find((elem) => (elem.indexOf(address)!=-1));
-  return JSON.parse(obj);
+  const ext = JSON.parse(obj);
+  ext.ORGaddress = org.ORGaddress;
+  return ext;
 };
 
 export {
@@ -73,5 +77,5 @@ export {
   refreshLists,
   doWithAllCE,
   doWithAllID,
-  getDateFromDB,
+  getDataFromDB,
 };

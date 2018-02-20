@@ -142,7 +142,7 @@ CEAddressList - массив всех charityEvent (только адрес и �
 Сокет присылает объекты {charityEventObject}
 ```
 charityEventObject: {
-    name, payed, target, raised, tags, date, address
+    name, payed, target, raised, tags, date, address, ORGaddress
 }
 ```
 По окончании списка придет data = 'close'. Рекомендуется удалить listener.
@@ -151,7 +151,7 @@ charityEventObject: {
 Как GET /api/dapp/getCharityEvents/:org только для IncomingDonation
 ```
 incomingDonationsObject: {
-    realWorldIdentifier, amount, note, tags, date, address
+    realWorldIdentifier, amount, note, tags, date, address, ORGaddress
 }
 ```
 ### GET /api/dapp/getCharityEvent/:hash
@@ -169,6 +169,7 @@ JSON запроса может включать ORGaddress (один элеме�
 1. include (значение строка) - поле содержит данную подстроку.
 2. enum (значение массив строк) - поле равно одному из значений массива.
 3. range (значение массив из двух элементов либо чисел, либо дат) - поле укладывается в указанный диапазон
+<br/>
 Пример тела запроса:
 ```
     {
