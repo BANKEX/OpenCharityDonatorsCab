@@ -165,11 +165,15 @@ socket.on('connect', () => {
         });
     });
 
-    it('Запрос search/:text', async () => {
+    it('Запрос search/', async () => {
       const text = 'test';
       const options = {
-        method: 'GET',
-        uri: mainURL + '/api/dapp/search/'+text
+        method: 'POST',
+        uri: mainURL + '/api/dapp/search',
+        body: JSON.stringify({text: text}),
+        headers: {
+          'Content-Type' : 'application/json'
+        }
       };
       const response = await rp(options);
       const respObj = JSON.parse(response);

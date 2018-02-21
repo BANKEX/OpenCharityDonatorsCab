@@ -1,6 +1,12 @@
 import { META } from 'configuration';
 import rp from 'request-promise';
 
+rp.defaults({
+  simple: false,
+  resolveWithFullResponse: true,
+  encoding: 'utf-8',
+});
+
 export default {
   addDataToIndex: async (data) => {
     const options = {
@@ -18,8 +24,10 @@ export default {
 
   search: async (data) => {
     const options = {
-      method: 'GET',
-      uri: META + '/api/meta/search/'+data,
+      method: 'POST',
+      uri: META + '/api/meta/search/',
+      body: JSON.stringify(data),
+      headers: {'Content-Type': 'application/json'},
     };
     try {
       return await rp(options);

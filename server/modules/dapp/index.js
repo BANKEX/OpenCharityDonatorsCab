@@ -12,7 +12,7 @@ router
   .get('/getIncomingDonation/:hash', dappErrors(), controller.getIncomingDonation)
   .post('/getCharityEvents', dappErrors(), controller.filterCharityEvents)
   .post('/getIncomingDonations', dappErrors(), controller.filterIncomingDonation)
-  .get('/search/:text', dappErrors(), controller.search)
+  .post('/search', dappErrors(), controller.search)
 ;
 
 export default router.routes();

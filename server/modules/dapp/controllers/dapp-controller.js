@@ -121,7 +121,9 @@ export default {
   },
 
   async search(ctx) {
-    ctx.body = await SearchService.search(ctx.params.text);
+    if (ctx.request.header['content-type']!='application/json' &&
+      ctx.request.header['content-type']!='application/x-www-form-urlencoded') throw new AppError(400, 10);
+    ctx.body = await SearchService.search(ctx.request.body);
   },
 };
 
