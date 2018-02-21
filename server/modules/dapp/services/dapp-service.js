@@ -38,7 +38,8 @@ const subscribe = async (_ORGAddressList, fromBlock) => {
               date: date,
             });
             CEAddressList.push(forPush);
-            await Organization.update({ _id }, { CEAddressList });
+            let charityEventCount = orgFromDB.charityEventCount+1;
+            await Organization.update({ _id }, { CEAddressList, charityEventCount });
             io.emit('newCharityEvent', JSON.stringify(dataForSearch));
           } else {
             console.error('Organization not found');
@@ -65,7 +66,8 @@ const subscribe = async (_ORGAddressList, fromBlock) => {
               date: date,
             });
             IDAddressList.push(forPush);
-            await Organization.update({ _id }, { IDAddressList });
+            let incomingDonationCount = orgFromDB.incomingDonationCount+1;
+            await Organization.update({ _id }, { IDAddressList, incomingDonationCount });
             io.emit('newIncomingDonation', JSON.stringify(dataForSearch));
           } else {
             console.error('Organization not found');
