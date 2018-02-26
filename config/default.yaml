@@ -5,5 +5,5 @@ jwt:
 intervals:
   dapp:
     refreshOrganization: 900000
-    checkConnection: 120000
-    reconnection: 10000
+    checkConnection: 10000
+    reconnection: 3000
