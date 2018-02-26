@@ -4,16 +4,7 @@ import AppError from '../../../utils/AppErrors.js';
 import { io } from '../../../server';
 import uuid from 'uuid/v4';
 import { Organization } from '../models';
-import { syncOrganizations, refreshLists, doWithAllCE, doWithAllID, getDataFromDB } from '../helpers';
-
-syncOrganizations().then(async (list) => {
-  await refreshLists(list);
-  const lastBlock = await DappService.getLastBlock();
-  await DappService.subscribe(list, lastBlock);
-  setInterval(() => {
-    syncOrganizations().then(refreshLists);
-  }, 1000*60*10);
-});
+import { doWithAllCE, doWithAllID, getDataFromDB } from '../helpers';
 
 export default {
   async getOrganizations(ctx) {
@@ -126,4 +117,3 @@ export default {
     ctx.body = await SearchService.search(ctx.request.body);
   },
 };
-

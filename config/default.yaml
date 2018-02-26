@@ -2,3 +2,8 @@ jwt:
   secret: 'veryBigSecret'
   exp: 604800
   temporaryTokenExp: 1200
+intervals:
+  dapp:
+    refreshOrganization: 900000
+    checkConnection: 120000
+    reconnection: 10000

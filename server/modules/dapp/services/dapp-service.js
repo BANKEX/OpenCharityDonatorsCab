@@ -1,27 +1,52 @@
-import {DIRS, DAPP} from 'configuration';
+import { DIRS, DAPP, INTERVALS } from 'configuration';
 import SearchService from './search-service';
 import { Organization } from '../models';
 import { io } from '../../../server';
+import init from '../init';
 import Web3 from 'web3';
-
-const web3 = new Web3(new Web3.providers.WebsocketProvider(DAPP.ws));
 const abi = (type) => (require(DIRS.abi+type).abi);
-setInterval(() => {
-  web3.eth.getBlockNumber().then(console.log);
-}, 1000*60);
-const TOKENcontract = new web3.eth.Contract(abi('OpenCharityToken.json'), DAPP.token);
 
+let web3 = new Web3(new Web3.providers.WebsocketProvider(DAPP.ws));
+let TOKENcontract = new web3.eth.Contract(abi('OpenCharityToken.json'), DAPP.token);
+let int = setInterval(async () => {
+  await web3.eth.getBlockNumber().then(console.log);
+}, INTERVALS.dapp.checkConnection);
 
-const getLastBlock = async () => {
-  return await web3.eth.getBlockNumber();
+const reconnect = () => {
+  const reconInt = setInterval(async () => {
+    web3 = new Web3(new Web3.providers.WebsocketProvider(DAPP.ws));
+    TOKENcontract = new web3.eth.Contract(abi('OpenCharityToken.json'), DAPP.token);
+    try {
+      await web3.eth.getBlockNumber().then(console.log);
+      console.log('socket reconnect');
+      clearInterval(reconInt);
+      init();
+    } catch (err) {
+      console.log('socket connection lost');
+    }
+  }, INTERVALS.dapp.reconnection);
 };
 
-const subscribe = async (_ORGAddressList, fromBlock) => {
+const subscribe = (_ORGAddressList, fromBlock) => {
+  web3.eth.subscribe('logs', {}, async (error, log) => {
+    if (error) {
+      if (error.type == 'close') {
+        console.log('socket connection lost');
+        clearInterval(int);
+        reconnect();
+      }
+    } else {
+      console.log(log);
+    }
+  });
+
   _ORGAddressList.forEach(async (ORGaddress) => {
+    console.log('listeners for '+ORGaddress);
     const ORGcontract = new web3.eth.Contract(abi('Organization.json'), ORGaddress);
 
     ORGcontract.events.CharityEventAdded({ fromBlock: 0 })
       .on('data', async (event) => {
+        console.log(new Date().toLocaleString());
         const { timestamp } = await web3.eth.getBlock(event.blockHash);
         const date = (new Date(timestamp * 1000)).toLocaleString();
         const { organization, charityEvent } = event.returnValues;
@@ -38,7 +63,7 @@ const subscribe = async (_ORGAddressList, fromBlock) => {
               date: date,
             });
             CEAddressList.push(forPush);
-            let charityEventCount = orgFromDB.charityEventCount+1;
+            const charityEventCount = orgFromDB.charityEventCount+1;
             await Organization.update({ _id }, { CEAddressList, charityEventCount });
             io.emit('newCharityEvent', JSON.stringify(dataForSearch));
           } else {
@@ -46,10 +71,15 @@ const subscribe = async (_ORGAddressList, fromBlock) => {
           }
         }
       })
-      .on('error', console.error);
+      .on('error', (err) => {
+        console.log(new Date().toLocaleString());
+        // console.error(err);
+        // web3 = new Web3(new Web3.providers.WebsocketProvider(DAPP.ws));
+      });
 
     ORGcontract.events.IncomingDonationAdded({ fromBlock: 0 })
       .on('data', async (event) => {
+        console.log(new Date().toLocaleString());
         const { timestamp } = await web3.eth.getBlock(event.blockHash);
         const date = (new Date(timestamp * 1000)).toLocaleString();
         const { organization, incomingDonation } = event.returnValues;
@@ -66,7 +96,7 @@ const subscribe = async (_ORGAddressList, fromBlock) => {
               date: date,
             });
             IDAddressList.push(forPush);
-            let incomingDonationCount = orgFromDB.incomingDonationCount+1;
+            const incomingDonationCount = orgFromDB.incomingDonationCount+1;
             await Organization.update({ _id }, { IDAddressList, incomingDonationCount });
             io.emit('newIncomingDonation', JSON.stringify(dataForSearch));
           } else {
@@ -74,10 +104,17 @@ const subscribe = async (_ORGAddressList, fromBlock) => {
           }
         }
       })
-      .on('error', console.error);
+      .on('error', (err) => {
+        console.log(new Date().toLocaleString());
+        // console.error(err);
+        // web3 = new Web3(new Web3.providers.WebsocketProvider(DAPP.ws));
+      });
   });
 };
 
+const getLastBlock = async () => {
+  return await web3.eth.getBlockNumber();
+};
 const getDate = async (ORGaddress, XXaddress, type) => {
   const eventTypes = ['CharityEventAdded', 'IncomingDonationAdded'];
   const types = ['charityEvent', 'incomingDonation'];

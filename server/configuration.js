@@ -6,6 +6,7 @@ const DIRS = config.get('dirs');
 const MONGO_URI = config.get('mongoURI');
 const DAPP = config.get('dapp');
 const META = config.get('metaServer');
+const INTERVALS = config.get('intervals');
   
   
 export {
@@ -15,4 +16,5 @@ export {
   MONGO_URI,
   DAPP,
   META,
+  INTERVALS,
 };
