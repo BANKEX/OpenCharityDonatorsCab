@@ -48,7 +48,7 @@ const UserSchema = new Schema({
   timestamps: true,
 });
 
-UserSchema.statics.createFields = ['email', 'firstName', 'lastName', 'password'];
+UserSchema.statics.createFields = ['email', 'firstName', 'lastName'];
 UserSchema.statics.changeFields = ['firstName', 'lastName', 'tags', 'trans'];
 
 UserSchema.pre('save', function(next) {

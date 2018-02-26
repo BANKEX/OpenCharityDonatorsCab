@@ -95,8 +95,9 @@ const userForgot = () => {
   };
   xhr.send(JSON.stringify(body));
   xhr.onload = (event) => {
-    const link = JSON.parse(event.target.responseText).data;
-    respFG.innerHTML = '<a href="'+link+'" target="_blank">'+link+'</a>';
+    // const link = JSON.parse(event.target.responseText).data;
+    // respFG.innerHTML = '<a href="'+link+'" target="_blank">'+link+'</a>';
+    respFG.innerHTML = event.target.responseText;
   };
 };
 

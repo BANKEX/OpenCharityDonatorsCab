@@ -27,8 +27,10 @@
 Вернет ошибку если пользователь уже авторизован.<br/>
 Принимает content-type application/json и application/x-www-form-urlencoded.<br/>
 В JSON должны находиться обзательные поля для создания пользователя.<br/>
-В данный момент это ['email', 'firstName', 'lastName', 'password']<br/>
-Возвращает JSON-объект {data: user}
+В данный момент это ['email', 'firstName', 'lastName']<br/>
+При успешной регистрации генерируется случайный пароль и отправляется на указанный email.
+Возвращает 'Ok'.
+Ok - не гарантирует доставки письма или ошибки при несуществующем email.
 
 ### POST /api/user/login
 Авторизация пользователя на сервер.<br/>
@@ -63,7 +65,6 @@
         "email": "asd@asd.asd",
         "firstName": "Пётр",
         "lastName": "Иванов",
-        "hash": "d347487c-cb2f-47f1-a7a5-964876e70861"
     }
 }
 ```
@@ -93,17 +94,18 @@
 
 ### POST /api/user/forgot
 Пользователь забыл пароль, ввел в поле свой email, отправил данные.<br/>
-Формирует временный токен (время жизни 20 минут).<br/>
 Вернет ошибку если пользователь авторизован.<br/>
 Принимает content-type application/json и application/x-www-form-urlencoded.<br/>
 Обязательное поле email.<br/>
-Сейчас возвращает JSON {data: link}, позже будет отправлять email пользователю и возвращать Ok.
+Отправляет на email пользователя новый пароль.
+Возвращает Ok.
+Ok - не гарантирует доставки письма или ошибки при несуществующем email.
 
-### GET /api/user/setNewPassword?token=...
+### GET /api/user/setNewPassword?token=... - !deprecated!
 При переходе по ссылке в письме (о забывании пароля) отдает страницу для ввода нового пароля<br/>
 Вернет ошибку если пользователь авторизован или истекло время жизни временного токена.<br/>
 
-### POST /api/user/setNewPassword?token=...
+### POST /api/user/setNewPassword?token=... - !deprecated!
 Изменяет пароль на новый.<br/>
 Вернет ошибку если пользователь авторизован или истекло время жизни временного токена.<br/>
 Принимает content-type application/json и application/x-www-form-urlencoded.<br/>

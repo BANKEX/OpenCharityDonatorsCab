@@ -7,8 +7,8 @@ const MONGO_URI = config.get('mongoURI');
 const DAPP = config.get('dapp');
 const META = config.get('metaServer');
 const INTERVALS = config.get('intervals');
-  
-  
+const EMAIL = config.get('email');
+
 export {
   ADDRESS,
   JWT,
@@ -17,4 +17,5 @@ export {
   DAPP,
   META,
   INTERVALS,
+  EMAIL,
 };

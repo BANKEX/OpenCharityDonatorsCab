@@ -5,6 +5,8 @@ import AppError from '../../../utils/AppErrors.js';
 import {JWT, ADDRESS} from 'configuration';
 import { User } from '../models';
 import { UserService } from '../services';
+import mail from '../../../services/email-service';
+import { generateKey } from '../services/helpers';
 
 function setToken(ctx, user) {
   const payload = {
@@ -19,16 +21,16 @@ function setToken(ctx, user) {
 
 export default {
   async signup(ctx) {
-    if (ctx.request.header['content-type']!='application/json' &&
-      ctx.request.header['content-type']!='application/x-www-form-urlencoded') throw new AppError(400, 10);
+    if (ctx.request.header['content-type'] != 'application/json' &&
+      ctx.request.header['content-type'] != 'application/x-www-form-urlencoded') throw new AppError(400, 10);
     if (ctx.user) throw new AppError(401, 102);
 
     const userData = pick(ctx.request.body, User.createFields);
+    const newPassword = generateKey(10);
+    userData.password = newPassword;
     const { _id } = await UserService.createUser(userData);
-    const user = await UserService.getUserWithPublicFields({ _id });
-
-    ctx.status = 201;
-    ctx.body = { data: user };
+    const user = await UserService.getUserWithPublicFields({_id});
+    ctx.body = await mail(user, 'passwordCreate', { newPassword });
   },
 
   async login(ctx) {
@@ -62,10 +64,15 @@ export default {
     if (!email) throw new AppError(406, 601);
     const user = await User.findOne({ email });
     if (!user) throw new AppError(406, 104);
-    const tempToken = await UserService.setTempToken(user._id);
-    const tempLink = `${ADDRESS.external}/api/user/setNewPassword?token=${tempToken}`;
-    // send email to user.email with tempLink
-    ctx.body = { data: tempLink };
+    const newPassword = generateKey(10);
+    const userData = {};
+    userData.password = newPassword;
+    await UserService.updateUser(userData, user._id);
+    
+    // const tempToken = await UserService.setTempToken(user._id);
+    // const linkPasswordForgot = `${ADDRESS.external}/api/user/setNewPassword?token=${tempToken}`;
+    // await mail(user, 'passwordForgot', { linkPasswordForgot });
+    ctx.body = await mail(user, 'passwordForgot', { newPassword });
   },
 
   async setNewPasswordData(ctx) {
