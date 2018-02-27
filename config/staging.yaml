@@ -7,7 +7,7 @@ dirs:
   public: '/oc_donators_cab/public/'
   abi: '/oc_donators_cab/abi/'
 mongoURI: 'mongodb://opch:testpass@donators_mongodb:27017/opch-test'
-metaServer: 'https://meta.staging.bankex.team'
+metaServer: 'https://opencharity.staging.bankex.team'
 dapp:
   ws: 'wss://wsprovider.staging.bankex.team:8636'
   token: '0x6a183381d14371b4a228cca37802c09bd166ba9e'
