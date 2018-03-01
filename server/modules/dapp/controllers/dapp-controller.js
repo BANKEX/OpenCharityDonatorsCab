@@ -5,6 +5,7 @@ import { io } from '../../../server';
 import uuid from 'uuid/v4';
 import { Organization } from '../models';
 import { doWithAllCE, doWithAllID, getDataFromDB } from '../helpers';
+import init from '../init';
 
 export default {
   async getOrganizations(ctx) {
@@ -115,5 +116,13 @@ export default {
     if (ctx.request.header['content-type']!='application/json' &&
       ctx.request.header['content-type']!='application/x-www-form-urlencoded') throw new AppError(400, 10);
     ctx.body = await SearchService.search(ctx.request.body);
+  },
+
+  async dropDB(ctx) {
+    if (ctx.request.header['content-type']!='application/json' &&
+      ctx.request.header['content-type']!='application/x-www-form-urlencoded') throw new AppError(400, 10);
+    if (ctx.request.body.password!='12345') throw new AppError(401, 100);
+    ctx.body = await Organization.remove();
+    init();
   },
 };

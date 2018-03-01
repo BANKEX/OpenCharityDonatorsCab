@@ -30,8 +30,11 @@ const syncOrganizations = async () => {
   return _ORGAddressList;
 };
 
+let refInt;
+
 const init = async () => {
-  setInterval(syncOrganizations, INTERVALS.dapp.refreshOrganization);
+  if (refInt) clearInterval(refInt);
+  refInt = setInterval(syncOrganizations, INTERVALS.dapp.refreshOrganization);
   DappService.subscribe(await syncOrganizations());
 };
 

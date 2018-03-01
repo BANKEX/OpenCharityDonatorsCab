@@ -216,6 +216,18 @@ const search = () => {
   };
 };
 
+
+const dropDB = () => {
+  respDrop.innerHTML = '';
+  const xhr = new XMLHttpRequest();
+  xhr.open('post', '/api/dapp/dropDB');
+  xhr.setRequestHeader('content-type', 'application/json');
+  xhr.send(JSON.stringify({password: passDrop.value}));
+  xhr.onload = (event) => {
+    respDrop.innerHTML = event.target.responseText;
+  };
+};
+
 socket.on('newCharityEvent', (data) => {
   console.log(data);
   newEventCE.style.display = 'block';
