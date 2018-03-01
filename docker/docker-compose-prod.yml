@@ -10,7 +10,7 @@ services:
     container_name: oc_donators_cab
     restart: always
     volumes:
-      - contracts:/opt/abi
+      - contracts:/oc_donators_cab/abi
     expose:
       - "80"
     environment:
