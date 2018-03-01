@@ -33,8 +33,8 @@ socket.on('connect', () => {
       };
       const response = await rp(options);
       organizations = JSON.parse(response);
-      testOrg = organizations.find((elem) => (elem.ORGaddress=='0xe379894535aa72706396f9a3e1db6f3f5e4c1c15'));
-      assert.equal(response.indexOf('0xe379894535aa72706396f9a3e1db6f3f5e4c1c15')!=-1, true);
+      testOrg = organizations.find((elem) => (elem.ORGaddress=='0xbe08f7884ff4e31b4c77a5b6ed7f4fcae0440d0b'));
+      assert.equal(response.indexOf('0xbe08f7884ff4e31b4c77a5b6ed7f4fcae0440d0b')!=-1, true);
     });
 
     it('Запрос getCharityEvents', (done) => {

@@ -4,8 +4,8 @@ import { Organization } from '../models';
 const doWithAllCE = (org, callback) => {
   org.CEAddressList.forEach(async (elem) => {
     const CEelem = JSON.parse(elem);
-    const charityEvent = await DappService.singleCharityEvent(CEelem.CEaddress);
-    charityEvent.address = CEelem.CEaddress;
+    const charityEvent = await DappService.singleCharityEvent(CEelem.charityEvent);
+    charityEvent.address = CEelem.charityEvent;
     charityEvent.date = CEelem.date;
     charityEvent.ORGaddress = org.ORGaddress;
     callback(charityEvent);
@@ -15,8 +15,8 @@ const doWithAllCE = (org, callback) => {
 const doWithAllID = (org, callback) => {
   org.IDAddressList.forEach(async (elem) => {
     const IDelem = JSON.parse(elem);
-    const incomingDonation = await DappService.singleIncomingDonation(IDelem.IDaddress);
-    incomingDonation.address = IDelem.IDaddress;
+    const incomingDonation = await DappService.singleIncomingDonation(IDelem.incomingDonation);
+    incomingDonation.address = IDelem.incomingDonation;
     incomingDonation.date = IDelem.date;
     incomingDonation.ORGaddress = org.ORGaddress;
     callback(incomingDonation);

@@ -45,7 +45,7 @@ export default {
     const charityEvent = await DappService.singleCharityEvent(ctx.params.hash);
     const ext = await getDataFromDB(ctx.params.hash);
     charityEvent.date = ext.date;
-    charityEvent.address = ext.CEaddress;
+    charityEvent.address = ext.charityEvent;
     charityEvent.ORGaddress = ext.ORGaddress;
     ctx.body = charityEvent;
   },
@@ -54,7 +54,7 @@ export default {
     const incomingDonation = await DappService.singleIncomingDonation(ctx.params.hash);
     const ext = await getDataFromDB(ctx.params.hash);
     incomingDonation.date = ext.date;
-    incomingDonation.address = ext.IDaddress;
+    incomingDonation.address = ext.incomingDonation;
     incomingDonation.ORGaddress = ext.ORGaddress;
     ctx.body = incomingDonation;
   },
