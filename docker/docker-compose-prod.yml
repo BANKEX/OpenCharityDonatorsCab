@@ -2,12 +2,15 @@ version: '3'
 
 volumes:
     mongodb_data:
+    contracts:
 
 services:
   oc_donators_cab:
     image: ${IMAGE}
     container_name: oc_donators_cab
     restart: always
+    volumes:
+      - contracts:/opt/abi
     expose:
       - "80"
     environment:
