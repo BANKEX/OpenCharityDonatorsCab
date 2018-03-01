@@ -448,7 +448,7 @@
       },
       {
         "attributes": {
-          "SourceUnit": 919,
+          "SourceUnit": 913,
           "absolutePath": "/C/NodeJS/gitHub/oc_client/node_modules/zeppelin-solidity/contracts/token/MintableToken.sol",
           "file": "../node_modules/zeppelin-solidity/contracts/token/MintableToken.sol",
           "scope": 147,
@@ -464,24 +464,24 @@
       {
         "attributes": {
           "contractDependencies": [
-            576,
-            662,
-            794,
-            823,
-            918,
-            1164
+            570,
+            656,
+            788,
+            817,
+            912,
+            1158
           ],
           "contractKind": "contract",
           "documentation": "@title Open Charity Mintable token\r\n@dev Extends zeppelin Mintable token.\r\nAdd mintAgents to manage addresses that can mint new tokens\r",
           "fullyImplemented": true,
           "linearizedBaseContracts": [
             146,
-            918,
-            576,
-            1164,
-            662,
-            794,
-            823
+            912,
+            570,
+            1158,
+            656,
+            788,
+            817
           ],
           "name": "OpenCharityMintableToken",
           "scope": 147
@@ -498,7 +498,7 @@
                 "attributes": {
                   "contractScope": null,
                   "name": "MintableToken",
-                  "referencedDeclaration": 918,
+                  "referencedDeclaration": 912,
                   "type": "contract MintableToken"
                 },
                 "id": 3,
@@ -723,7 +723,7 @@
                       "overloadedDeclarations": [
                         null
                       ],
-                      "referencedDeclaration": 550,
+                      "referencedDeclaration": 544,
                       "type": "modifier ()",
                       "value": "onlyOwner"
                     },
@@ -749,7 +749,7 @@
                       "overloadedDeclarations": [
                         null
                       ],
-                      "referencedDeclaration": 851,
+                      "referencedDeclaration": 845,
                       "type": "modifier ()",
                       "value": "canMint"
                     },
@@ -941,7 +941,7 @@
               "payable": false,
               "scope": 146,
               "stateMutability": "nonpayable",
-              "superFunction": 898,
+              "superFunction": 892,
               "visibility": "public"
             },
             "children": [
@@ -1076,7 +1076,7 @@
                       "overloadedDeclarations": [
                         null
                       ],
-                      "referencedDeclaration": 851,
+                      "referencedDeclaration": 845,
                       "type": "modifier ()",
                       "value": "canMint"
                     },
@@ -1110,7 +1110,7 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 798,
+                              "referencedDeclaration": 792,
                               "type": "uint256",
                               "value": "totalSupply"
                             },
@@ -1146,7 +1146,7 @@
                                   "isPure": false,
                                   "lValueRequested": false,
                                   "member_name": "add",
-                                  "referencedDeclaration": 519,
+                                  "referencedDeclaration": 513,
                                   "type": "function (uint256,uint256) pure returns (uint256)"
                                 },
                                 "children": [
@@ -1156,7 +1156,7 @@
                                       "overloadedDeclarations": [
                                         null
                                       ],
-                                      "referencedDeclaration": 798,
+                                      "referencedDeclaration": 792,
                                       "type": "uint256",
                                       "value": "totalSupply"
                                     },
@@ -1227,7 +1227,7 @@
                                   "overloadedDeclarations": [
                                     null
                                   ],
-                                  "referencedDeclaration": 589,
+                                  "referencedDeclaration": 583,
                                   "type": "mapping(address => uint256)",
                                   "value": "balances"
                                 },
@@ -1282,7 +1282,7 @@
                                   "isPure": false,
                                   "lValueRequested": false,
                                   "member_name": "add",
-                                  "referencedDeclaration": 519,
+                                  "referencedDeclaration": 513,
                                   "type": "function (uint256,uint256) pure returns (uint256)"
                                 },
                                 "children": [
@@ -1302,7 +1302,7 @@
                                           "overloadedDeclarations": [
                                             null
                                           ],
-                                          "referencedDeclaration": 589,
+                                          "referencedDeclaration": 583,
                                           "type": "mapping(address => uint256)",
                                           "value": "balances"
                                         },
@@ -1395,7 +1395,7 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 837,
+                              "referencedDeclaration": 831,
                               "type": "function (address,uint256)",
                               "value": "Mint"
                             },
@@ -1477,7 +1477,7 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 822,
+                              "referencedDeclaration": 816,
                               "type": "function (address,address,uint256)",
                               "value": "Transfer"
                             },
@@ -1760,7 +1760,7 @@
                       "overloadedDeclarations": [
                         null
                       ],
-                      "referencedDeclaration": 851,
+                      "referencedDeclaration": 845,
                       "type": "modifier ()",
                       "value": "canMint"
                     },
@@ -1794,7 +1794,7 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 798,
+                              "referencedDeclaration": 792,
                               "type": "uint256",
                               "value": "totalSupply"
                             },
@@ -1830,7 +1830,7 @@
                                   "isPure": false,
                                   "lValueRequested": false,
                                   "member_name": "add",
-                                  "referencedDeclaration": 519,
+                                  "referencedDeclaration": 513,
                                   "type": "function (uint256,uint256) pure returns (uint256)"
                                 },
                                 "children": [
@@ -1840,7 +1840,7 @@
                                       "overloadedDeclarations": [
                                         null
                                       ],
-                                      "referencedDeclaration": 798,
+                                      "referencedDeclaration": 792,
                                       "type": "uint256",
                                       "value": "totalSupply"
                                     },
@@ -1911,7 +1911,7 @@
                                   "overloadedDeclarations": [
                                     null
                                   ],
-                                  "referencedDeclaration": 589,
+                                  "referencedDeclaration": 583,
                                   "type": "mapping(address => uint256)",
                                   "value": "balances"
                                 },
@@ -1966,7 +1966,7 @@
                                   "isPure": false,
                                   "lValueRequested": false,
                                   "member_name": "add",
-                                  "referencedDeclaration": 519,
+                                  "referencedDeclaration": 513,
                                   "type": "function (uint256,uint256) pure returns (uint256)"
                                 },
                                 "children": [
@@ -1986,7 +1986,7 @@
                                           "overloadedDeclarations": [
                                             null
                                           ],
-                                          "referencedDeclaration": 589,
+                                          "referencedDeclaration": 583,
                                           "type": "mapping(address => uint256)",
                                           "value": "balances"
                                         },
@@ -2079,7 +2079,7 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 837,
+                              "referencedDeclaration": 831,
                               "type": "function (address,uint256)",
                               "value": "Mint"
                             },
@@ -2161,7 +2161,7 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 822,
+                              "referencedDeclaration": 816,
                               "type": "function (address,address,uint256)",
                               "value": "Transfer"
                             },
@@ -2378,7 +2378,7 @@
                                       "overloadedDeclarations": [
                                         null
                                       ],
-                                      "referencedDeclaration": 1176,
+                                      "referencedDeclaration": 1170,
                                       "type": "msg",
                                       "value": "msg"
                                     },
@@ -2431,7 +2431,7 @@
                                       "overloadedDeclarations": [
                                         null
                                       ],
-                                      "referencedDeclaration": 1180,
+                                      "referencedDeclaration": 1174,
                                       "type": "function () pure",
                                       "value": "revert"
                                     },
@@ -2490,5 +2490,5 @@
   },
   "networks": {},
   "schemaVersion": "1.0.1",
-  "updatedAt": "2018-02-08T07:23:48.055Z"
+  "updatedAt": "2018-03-01T12:03:09.890Z"
 }

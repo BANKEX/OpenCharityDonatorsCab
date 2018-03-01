@@ -540,7 +540,7 @@
       },
       {
         "attributes": {
-          "SourceUnit": 752,
+          "SourceUnit": 746,
           "absolutePath": "/C/NodeJS/gitHub/oc_client/node_modules/zeppelin-solidity/contracts/token/DetailedERC20.sol",
           "file": "../node_modules/zeppelin-solidity/contracts/token/DetailedERC20.sol",
           "scope": 191,
@@ -555,7 +555,7 @@
       },
       {
         "attributes": {
-          "SourceUnit": 718,
+          "SourceUnit": 712,
           "absolutePath": "/C/NodeJS/gitHub/oc_client/node_modules/zeppelin-solidity/contracts/token/BurnableToken.sol",
           "file": "../node_modules/zeppelin-solidity/contracts/token/BurnableToken.sol",
           "scope": 191,
@@ -587,29 +587,29 @@
         "attributes": {
           "contractDependencies": [
             146,
-            576,
-            662,
-            717,
-            751,
-            794,
-            823,
-            918,
-            1164
+            570,
+            656,
+            711,
+            745,
+            788,
+            817,
+            912,
+            1158
           ],
           "contractKind": "contract",
           "documentation": null,
           "fullyImplemented": true,
           "linearizedBaseContracts": [
             190,
-            717,
+            711,
             146,
-            918,
-            576,
-            1164,
-            662,
-            751,
-            794,
-            823
+            912,
+            570,
+            1158,
+            656,
+            745,
+            788,
+            817
           ],
           "name": "OpenCharityToken",
           "scope": 191
@@ -626,7 +626,7 @@
                 "attributes": {
                   "contractScope": null,
                   "name": "DetailedERC20",
-                  "referencedDeclaration": 751,
+                  "referencedDeclaration": 745,
                   "type": "contract DetailedERC20"
                 },
                 "id": 152,
@@ -672,7 +672,7 @@
                 "attributes": {
                   "contractScope": null,
                   "name": "BurnableToken",
-                  "referencedDeclaration": 717,
+                  "referencedDeclaration": 711,
                   "type": "contract BurnableToken"
                 },
                 "id": 156,
@@ -801,7 +801,7 @@
                       "overloadedDeclarations": [
                         null
                       ],
-                      "referencedDeclaration": 751,
+                      "referencedDeclaration": 745,
                       "type": "type(contract DetailedERC20)",
                       "value": "DetailedERC20"
                     },
@@ -916,7 +916,7 @@
                                   "overloadedDeclarations": [
                                     null
                                   ],
-                                  "referencedDeclaration": 1176,
+                                  "referencedDeclaration": 1170,
                                   "type": "msg",
                                   "value": "msg"
                                 },
@@ -1014,7 +1014,7 @@
                                   "overloadedDeclarations": [
                                     null
                                   ],
-                                  "referencedDeclaration": 1176,
+                                  "referencedDeclaration": 1170,
                                   "type": "msg",
                                   "value": "msg"
                                 },
@@ -1170,5 +1170,5 @@
   },
   "networks": {},
   "schemaVersion": "1.0.1",
-  "updatedAt": "2018-02-08T07:23:48.039Z"
+  "updatedAt": "2018-03-01T12:03:09.893Z"
 }

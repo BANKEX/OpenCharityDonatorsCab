@@ -32,7 +32,7 @@
       "absolutePath": "/C/NodeJS/gitHub/oc_client/contracts/app/lib/Tools.sol",
       "exportedSymbols": {
         "Tools": [
-          422
+          416
         ]
       }
     },
@@ -46,7 +46,7 @@
             ".17"
           ]
         },
-        "id": 401,
+        "id": 395,
         "name": "PragmaDirective",
         "src": "0:24:5"
       },
@@ -62,10 +62,10 @@
           "documentation": null,
           "fullyImplemented": true,
           "linearizedBaseContracts": [
-            422
+            416
           ],
           "name": "Tools",
-          "scope": 423
+          "scope": 417
         },
         "children": [
           {
@@ -78,7 +78,7 @@
               ],
               "name": "isEmptyString",
               "payable": false,
-              "scope": 422,
+              "scope": 416,
               "stateMutability": "pure",
               "superFunction": null,
               "visibility": "public"
@@ -90,7 +90,7 @@
                     "attributes": {
                       "constant": false,
                       "name": "str",
-                      "scope": 421,
+                      "scope": 415,
                       "stateVariable": false,
                       "storageLocation": "memory",
                       "type": "string memory",
@@ -103,17 +103,17 @@
                           "name": "string",
                           "type": "string storage pointer"
                         },
-                        "id": 402,
+                        "id": 396,
                         "name": "ElementaryTypeName",
                         "src": "115:6:5"
                       }
                     ],
-                    "id": 403,
+                    "id": 397,
                     "name": "VariableDeclaration",
                     "src": "115:17:5"
                   }
                 ],
-                "id": 404,
+                "id": 398,
                 "name": "ParameterList",
                 "src": "114:19:5"
               },
@@ -123,7 +123,7 @@
                     "attributes": {
                       "constant": false,
                       "name": "",
-                      "scope": 421,
+                      "scope": 415,
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "bool",
@@ -136,17 +136,17 @@
                           "name": "bool",
                           "type": "bool"
                         },
-                        "id": 405,
+                        "id": 399,
                         "name": "ElementaryTypeName",
                         "src": "155:4:5"
                       }
                     ],
-                    "id": 406,
+                    "id": 400,
                     "name": "VariableDeclaration",
                     "src": "155:4:5"
                   }
                 ],
-                "id": 407,
+                "id": 401,
                 "name": "ParameterList",
                 "src": "154:6:5"
               },
@@ -155,7 +155,7 @@
                   {
                     "attributes": {
                       "assignments": [
-                        409
+                        403
                       ]
                     },
                     "children": [
@@ -163,7 +163,7 @@
                         "attributes": {
                           "constant": false,
                           "name": "emptyTest",
-                          "scope": 421,
+                          "scope": 415,
                           "stateVariable": false,
                           "storageLocation": "memory",
                           "type": "bytes memory",
@@ -176,12 +176,12 @@
                               "name": "bytes",
                               "type": "bytes storage pointer"
                             },
-                            "id": 408,
+                            "id": 402,
                             "name": "ElementaryTypeName",
                             "src": "172:5:5"
                           }
                         ],
-                        "id": 409,
+                        "id": 403,
                         "name": "VariableDeclaration",
                         "src": "172:22:5"
                       },
@@ -215,7 +215,7 @@
                               "type": "type(bytes storage pointer)",
                               "value": "bytes"
                             },
-                            "id": 410,
+                            "id": 404,
                             "name": "ElementaryTypeNameExpression",
                             "src": "197:5:5"
                           },
@@ -225,27 +225,27 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 403,
+                              "referencedDeclaration": 397,
                               "type": "string memory",
                               "value": "str"
                             },
-                            "id": 411,
+                            "id": 405,
                             "name": "Identifier",
                             "src": "203:3:5"
                           }
                         ],
-                        "id": 412,
+                        "id": 406,
                         "name": "FunctionCall",
                         "src": "197:10:5"
                       }
                     ],
-                    "id": 413,
+                    "id": 407,
                     "name": "VariableDeclarationStatement",
                     "src": "172:35:5"
                   },
                   {
                     "attributes": {
-                      "functionReturnParameters": 407
+                      "functionReturnParameters": 401
                     },
                     "children": [
                       {
@@ -292,16 +292,16 @@
                                       "overloadedDeclarations": [
                                         null
                                       ],
-                                      "referencedDeclaration": 409,
+                                      "referencedDeclaration": 403,
                                       "type": "bytes memory",
                                       "value": "emptyTest"
                                     },
-                                    "id": 414,
+                                    "id": 408,
                                     "name": "Identifier",
                                     "src": "226:9:5"
                                   }
                                 ],
-                                "id": 415,
+                                "id": 409,
                                 "name": "MemberAccess",
                                 "src": "226:16:5"
                               },
@@ -318,42 +318,42 @@
                                   "type": "int_const 0",
                                   "value": "0"
                                 },
-                                "id": 416,
+                                "id": 410,
                                 "name": "Literal",
                                 "src": "246:1:5"
                               }
                             ],
-                            "id": 417,
+                            "id": 411,
                             "name": "BinaryOperation",
                             "src": "226:21:5"
                           }
                         ],
-                        "id": 418,
+                        "id": 412,
                         "name": "TupleExpression",
                         "src": "225:23:5"
                       }
                     ],
-                    "id": 419,
+                    "id": 413,
                     "name": "Return",
                     "src": "218:30:5"
                   }
                 ],
-                "id": 420,
+                "id": 414,
                 "name": "Block",
                 "src": "161:95:5"
               }
             ],
-            "id": 421,
+            "id": 415,
             "name": "FunctionDefinition",
             "src": "92:164:5"
           }
         ],
-        "id": 422,
+        "id": 416,
         "name": "ContractDefinition",
         "src": "69:192:5"
       }
     ],
-    "id": 423,
+    "id": 417,
     "name": "SourceUnit",
     "src": "0:261:5"
   },
@@ -363,5 +363,5 @@
   },
   "networks": {},
   "schemaVersion": "1.0.1",
-  "updatedAt": "2018-02-08T07:23:48.043Z"
+  "updatedAt": "2018-03-01T12:03:09.896Z"
 }
