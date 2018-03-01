@@ -5,7 +5,7 @@ RUN mkdir /oc_donators_cab
 
 WORKDIR /oc_donators_cab
 
-ADD /abi /oc_donators_cab/abi
+RUN mkdir /oc_donators_cab/abi
 ADD /build /oc_donators_cab/build
 ADD /config /oc_donators_cab/config
 ADD /public /oc_donators_cab/public
