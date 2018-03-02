@@ -217,14 +217,45 @@ const search = () => {
 };
 
 
-const dropDB = () => {
-  respDrop.innerHTML = '';
+const getUsers = () => {
+  respUS.innerHTML = '';
   const xhr = new XMLHttpRequest();
-  xhr.open('post', '/api/dapp/dropDB');
-  xhr.setRequestHeader('content-type', 'application/json');
-  xhr.send(JSON.stringify({password: passDrop.value}));
+  xhr.open('get', '/api/db/users');
+  xhr.send();
   xhr.onload = (event) => {
-    respDrop.innerHTML = event.target.responseText;
+    respUS.innerHTML = event.target.responseText;
+  };
+};
+
+const dropUS = () => {
+  respDropUS.innerHTML = '';
+  const xhr = new XMLHttpRequest();
+  xhr.open('post', '/api/db/dropUsers');
+  xhr.setRequestHeader('content-type', 'application/json');
+  xhr.send(JSON.stringify({password: passDropUS.value}));
+  xhr.onload = (event) => {
+    respDropUS.innerHTML = event.target.responseText;
+  };
+};
+
+const getOrgs = () => {
+  respORGs.innerHTML = '';
+  const xhr = new XMLHttpRequest();
+  xhr.open('get', '/api/db/orgs');
+  xhr.send();
+  xhr.onload = (event) => {
+    respORGs.innerHTML = event.target.responseText;
+  };
+};
+
+const dropOrg = () => {
+  respDropOrg.innerHTML = '';
+  const xhr = new XMLHttpRequest();
+  xhr.open('post', '/api/db/dropOrgs');
+  xhr.setRequestHeader('content-type', 'application/json');
+  xhr.send(JSON.stringify({password: passDropOrg.value}));
+  xhr.onload = (event) => {
+    respDropOrg.innerHTML = event.target.responseText;
   };
 };
 

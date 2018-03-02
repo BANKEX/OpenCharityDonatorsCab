@@ -185,16 +185,48 @@
       <div class="col-sm-6 resp" id="respSI"></div>
     </div>
 
+
+
+    <h2>DB API</h2>
+
     <div class="row">
-      <h3>Drop database</h3>
+      <h3>GET users</h3>
       <div class="col-sm-6">
-        <input class="form-control" type="password" placeholder="password" id="passDrop">
-        <button class="btn btn-danger" onClick="dropDB()">Drop DB</button>
+        <button class="btn btn-success" onClick="getUsers()">Send</button>
       </div>
-      <div class="col-sm-6 resp" id="respDrop"></div>
+      <div class="col-sm-6 resp" id="respUS"></div>
     </div>
 
+    <div class="row">
+      <h3>Drop users collection</h3>
+      <div class="col-sm-6">
+        <input class="form-control" type="password" placeholder="password" id="passDropUS">
+        <button class="btn btn-danger" onClick="dropUS()">Drop Users</button>
+      </div>
+      <div class="col-sm-6 resp" id="respDropUS"></div>
+    </div>
+
+    <div class="row">
+      <h3>GET organizations</h3>
+      <div class="col-sm-6">
+        <button class="btn btn-success" onClick="getOrgs()">Send</button>
+      </div>
+      <div class="col-sm-6 resp" id="respORGs"></div>
+    </div>
+
+    <div class="row">
+      <h3>Drop organization collection</h3>
+      <div class="col-sm-6">
+        <input class="form-control" type="password" placeholder="password" id="passDropOrg">
+        <button class="btn btn-danger" onClick="dropOrg()">Drop Org</button>
+      </div>
+      <div class="col-sm-6 resp" id="respDropOrg"></div>
+    </div>
+
+
+
   </div>
+
   <script src="testAPI.js"></script>
 </body>
 </html>
