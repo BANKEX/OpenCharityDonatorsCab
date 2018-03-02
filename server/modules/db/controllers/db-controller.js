@@ -17,7 +17,6 @@ export default {
       ctx.request.header['content-type']!='application/x-www-form-urlencoded') throw new AppError(400, 10);
     if (ctx.request.body.password!='qwerty') throw new AppError(401, 100);
     ctx.body = await User.remove();
-    init();
   },
   
   async dropOrgs(ctx) {
