@@ -218,4 +218,5 @@ multiHash актуален только для метаданных. По нем
 ```
 socket.on('newCharityEvent', console.log);
 socket.on('newIncomingDonation', console.log);
+socket.on('moveFunds', console.log);
 ```
