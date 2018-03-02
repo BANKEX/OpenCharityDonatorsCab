@@ -47,6 +47,7 @@ export default {
     charityEvent.date = ext.date;
     charityEvent.address = ext.charityEvent;
     charityEvent.ORGaddress = ext.ORGaddress;
+    charityEvent.history = await DappService.getHistory(ext.ORGaddress, ext.charityEvent, 'CE');
     ctx.body = charityEvent;
   },
   
@@ -56,6 +57,7 @@ export default {
     incomingDonation.date = ext.date;
     incomingDonation.address = ext.incomingDonation;
     incomingDonation.ORGaddress = ext.ORGaddress;
+    incomingDonation.history = await DappService.getHistory(ext.ORGaddress, ext.incomingDonation, 'ID');
     ctx.body = incomingDonation;
   },
   

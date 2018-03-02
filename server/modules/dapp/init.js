@@ -33,7 +33,10 @@ const syncOrganizations = async () => {
 let refInt;
 
 const init = async () => {
-  if (refInt) clearInterval(refInt);
+  if (refInt) {
+    console.log('clear refInt');
+    clearInterval(refInt);
+  }
   refInt = setInterval(syncOrganizations, INTERVALS.dapp.refreshOrganization);
   DappService.subscribe(await syncOrganizations());
 };

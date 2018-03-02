@@ -101,7 +101,7 @@ const subscribe = async (_ORGAddressList) => {
         console.error('Organization not found');
       }
     });
-    ORGcontract.events.FundsMovedToCharityEvent({ fromBlock: 0 }).on('data', async (event) => {
+    ORGcontract.events.FundsMovedToCharityEvent({ fromBlock: 'latest' }).on('data', async (event) => {
       console.log(new Date().toLocaleString());
       const { timestamp } = await web3.eth.getBlock(event.blockHash);
       const date = (new Date(timestamp * 1000)).toLocaleString();
@@ -221,6 +221,29 @@ const singleIncomingDonation = async (IDaddress) => {
   return { realWorldIdentifier, amount, note, tags };
 };
 
+
+const getHistory = async (ORGaddress, address, type) => {
+  const ORGcontract = new web3.eth.Contract(abi('Organization.json'), ORGaddress);
+  const filter = (type=='CE')
+  ? { charityEvent: address }
+  : { incomingDonation: address };
+  const events = await ORGcontract.getPastEvents('FundsMovedToCharityEvent', {
+    fromBlock: 0,
+    filter,
+  });
+  return await Promise.all(events.map(async (event) => {
+    const { timestamp } = await web3.eth.getBlock(event.blockHash);
+    const date = (new Date(timestamp * 1000)).toLocaleString();
+    const transactionHash = event.transactionHash;
+    const { incomingDonation, charityEvent, amount } = event.returnValues;
+    const data = (type=='CE')
+    ? { incomingDonation, amount, date, transactionHash }
+    : { charityEvent, amount, date, transactionHash };
+    return JSON.stringify(data);
+  }));
+};
+
+
 export default {
   subscribe,
   getOrganizationAddressList,
@@ -229,4 +252,5 @@ export default {
   singleOrganization,
   singleCharityEvent,
   singleIncomingDonation,
+  getHistory,
 };

@@ -157,10 +157,14 @@ incomingDonationsObject: {
 }
 ```
 ### GET /api/dapp/getCharityEvent/:hash
-Вернет JSON данного CharityEvent по hash {charityEventObject}
+Вернет JSON данного CharityEvent по hash.<br/>
+Вернет {charityEventObject} расширенный полем history<br/>
+Поле history содержит массив JSON-строк { incomingDonation, amount, date, transactionHash }
 
 ### GET /api/dapp/getIncomingDonation/:hash
-Вернет JSON данного IncomingDonation по hash {incomingDonationsObject}
+Вернет JSON данного IncomingDonation по hash.<br/>
+Вернет {incomingDonationsObject} расширенный полем history<br/>
+Поле history содержит массив JSON-строк { charityEvent, amount, date, transactionHash }
 
 ### POST /api/dapp/getCharityEvents
 Выдает отфильтрованные CharityEvents.<br/>
