@@ -7,10 +7,14 @@ dirs:
   public: '/oc_donators_cab/public/'
   abi: '/oc_donators_cab/abi/'
 mongoURI: 'mongodb://opch:testpass@donators_mongodb:27017/opch-test'
-metaServer: 'https://opencharity.staging.bankex.team'
+metaServer: 'https://opencharity.bankex.team'
 dapp:
-  ws: 'wss://wsprovider.staging.bankex.team:8636'
-  token: '0x6a183381d14371b4a228cca37802c09bd166ba9e'
+  ws: 'https://wsprovider.opencharity.bankex.team'
+  token: '0xa4580bdd864022a3874c57d35bf73d7717c40a48'
+  organizations:
+  - '0x13b07a2848b4baaea2599f37c2471c241d871c6a'
+  - '0x8a4f9982ff799522307854bbec390aabeb8ad8e2'
+  - '0x565bdf1efc1aa43cde7c643f8eee9de8702ce9d9'
 email:
   user: 'EMAIL'
   password: 'PASS'

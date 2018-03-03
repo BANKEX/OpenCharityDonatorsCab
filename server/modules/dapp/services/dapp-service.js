@@ -114,16 +114,7 @@ const subscribe = async (_ORGAddressList) => {
 
 // addressList
 const getOrganizationAddressList = async () => {
-  return [
-    '0xbb8251c7252b6fec412a0a99995ebc1a28e4e103',
-    '0xc9afa3e4e78a678ffb836c4062547b1dc8dd592f',
-    '0xe379894535aa72706396f9a3e1db6f3f5e4c1c15',
-    '0x78a6f275abb6e5ffb95ef9114ec6b605a000ea76',
-    '0x77203ee959ebd7f9ade414969773cdc978eac709',
-    '0x2cc93f96abdc1f0f6b726e6b097d5a20e174d18c',
-    '0xbe08f7884ff4e31b4c77a5b6ed7f4fcae0440d0b',
-    '0x8b8653c12e2017f073fc001b3c93d94e1de5b86f',
-  ];
+  return DAPP.organizations;
 };
 const getCharityEventAddressList = async (ORGaddress) => {
   const ORGcontract = new web3.eth.Contract(abi('Organization.json'), ORGaddress);
