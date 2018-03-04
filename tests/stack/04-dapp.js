@@ -115,6 +115,7 @@ socket.on('connect', () => {
       assert.equal(responseData.tags, ID[0].tags);
       assert.equal(responseData.date, ID[0].date);
       assert.equal(responseData.address, ID[0].address);
+      socket.disconnect();
     });
 /*
     it('Фильтр getCharityEvents', (done) => {
