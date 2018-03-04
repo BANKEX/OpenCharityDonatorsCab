@@ -122,9 +122,9 @@ deploy_prod:
     - docker-compose -f docker/docker-compose-prod.yml down
     - docker rmi $IMAGE || echo "image not exist"
     - docker pull $IMAGE
-    - docker-compose -f docker/docker-compose.yml up -d donators_mongodb
+    - docker-compose -f docker/docker-compose-prod.yml up -d donators_mongodb
     - sleep 15
-    - docker-compose -f docker/docker-compose.yml up -d oc_donators_cab
+    - docker-compose -f docker/docker-compose-prod.yml up -d oc_donators_cab
   environment:
     name: production
     url: https://donatorscab.bankex.team
