@@ -42,7 +42,7 @@ const subscribe = async (_ORGAddressList) => {
         console.error(error);
       }
     } else {
-      console.log(log);
+      console.log('log - ' + new Date().toLocaleString());
     }
   });
 
@@ -74,6 +74,7 @@ const subscribe = async (_ORGAddressList) => {
       } else {
         console.error('Organization not found');
       }
+      console.log(dataForSearch);
     });
     ORGcontract.events.IncomingDonationAdded({ fromBlock: 'latest' }).on('data', async (event) => {
       console.log(new Date().toLocaleString());
@@ -100,6 +101,7 @@ const subscribe = async (_ORGAddressList) => {
       } else {
         console.error('Organization not found');
       }
+      console.log(dataForSearch);
     });
     ORGcontract.events.FundsMovedToCharityEvent({ fromBlock: 'latest' }).on('data', async (event) => {
       console.log(new Date().toLocaleString());
@@ -108,6 +110,7 @@ const subscribe = async (_ORGAddressList) => {
       const ORGaddress = event.address.toLowerCase();
       const { incomingDonation, charityEvent, amount } = event.returnValues;
       io.emit('moveFunds', JSON.stringify({ ORGaddress, incomingDonation, charityEvent, amount, date }));
+      console.log(`${incomingDonation}--(${amount})-->${charityEvent}`);
     });
   });
 };
@@ -117,6 +120,7 @@ const getOrganizationAddressList = async () => {
   return DAPP.organizations;
 };
 const getCharityEventAddressList = async (ORGaddress) => {
+  console.log('getCharityEventAddressList');
   const ORGcontract = new web3.eth.Contract(abi('Organization.json'), ORGaddress);
   const events = await ORGcontract.getPastEvents('CharityEventAdded', {fromBlock: 0});
   return await Promise.all(events.map(async (event) => {
@@ -133,6 +137,7 @@ const getCharityEventAddressList = async (ORGaddress) => {
   }));
 };
 const getIncomingDonationAddressList = async (ORGaddress) => {
+  console.log('getIncomingDonationAddressList');
   const ORGcontract = new web3.eth.Contract(abi('Organization.json'), ORGaddress);
   const events = await ORGcontract.getPastEvents('IncomingDonationAdded', {fromBlock: 0});
   return await Promise.all(events.map(async (event) => {
