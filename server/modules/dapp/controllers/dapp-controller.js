@@ -120,7 +120,7 @@ export default {
   },
   
   async smarts(ctx) {
-    ctx.body = (ctx.params.name == '')
+    ctx.body = (ctx.params.name == 'all')
       ? SmartService.getListFromDir()
       : SmartService.getFile(ctx.params.name);
   },

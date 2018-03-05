@@ -34,8 +34,8 @@ socket.on('connect', () => {
       };
       const response = await rp(options);
       organizations = JSON.parse(response);
-      testOrg = organizations.find((elem) => (elem.ORGaddress==DAPP.organizations[0]));
-      assert.equal(response.indexOf(DAPP.organizations[0])!=-1, true);
+      testOrg = organizations.find((elem) => (elem.ORGaddress=='0x62d45408519e53d795008bc9489e8cccc3db1717'));
+      assert.equal(response.indexOf('0x62d45408519e53d795008bc9489e8cccc3db1717')!=-1, true);
     });
 
     it('Запрос getCharityEvents', (done) => {
