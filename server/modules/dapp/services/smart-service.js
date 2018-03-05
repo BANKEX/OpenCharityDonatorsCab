@@ -11,7 +11,7 @@ rp.defaults({
 const getSClist = async () => {
   const options = {
     method: 'GET',
-    uri: DAPP.smartContacts,
+    uri: DAPP.smartContacts+'/all',
   };
   return await rp(options);
 };
@@ -19,7 +19,7 @@ const getSClist = async () => {
 const getSC = async (name) => {
   const options = {
     method: 'GET',
-    uri: DAPP.smartContacts+'/name',
+    uri: DAPP.smartContacts+'/'+name,
   };
   return await rp(options);
 };
