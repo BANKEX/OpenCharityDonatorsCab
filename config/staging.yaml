@@ -11,10 +11,6 @@ metaServer: 'https://opencharity.staging.bankex.team'
 dapp:
   ws: 'wss://wsprovider.staging.bankex.team:8636'
   token: '0x6a183381d14371b4a228cca37802c09bd166ba9e'
-  organizations:
-  - '0x62d45408519e53d795008bc9489e8cccc3db1717'
-  - '0x01bfd36327b9ff3bae7e801bb1be1091d68bfb21'
-  - '0xa5a6c81e6607ae513e50fc5cc209d9359089cf59'
 email:
   user: 'EMAIL'
   password: 'PASS'

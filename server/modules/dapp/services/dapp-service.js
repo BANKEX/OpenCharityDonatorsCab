@@ -1,5 +1,6 @@
 import { DIRS, DAPP, INTERVALS } from 'configuration';
 import SearchService from './search-service';
+import OrgService from './orgs-service';
 import { Organization } from '../models';
 import { io } from '../../../server';
 import init from '../init';
@@ -117,7 +118,7 @@ const subscribe = async (_ORGAddressList) => {
 
 // addressList
 const getOrganizationAddressList = async () => {
-  return DAPP.organizations;
+  return await OrgService.getOrgs();
 };
 const getCharityEventAddressList = async (ORGaddress) => {
   console.log('getCharityEventAddressList');

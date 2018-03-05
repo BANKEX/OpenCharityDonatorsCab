@@ -7,3 +7,4 @@ intervals:
     refreshOrganization: 3600000
     checkConnection: 120000
     reconnection: 5000
+    refreshSmartContracts: 3600000
