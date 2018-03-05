@@ -1,4 +1,4 @@
-import { DappService, FilterService, SearchService } from '../services';
+import { DappService, FilterService, SearchService, SmartService } from '../services';
 import pick from 'lodash.pick';
 import AppError from '../../../utils/AppErrors.js';
 import { io } from '../../../server';
@@ -117,5 +117,11 @@ export default {
     if (ctx.request.header['content-type']!='application/json' &&
       ctx.request.header['content-type']!='application/x-www-form-urlencoded') throw new AppError(400, 10);
     ctx.body = await SearchService.search(ctx.request.body);
+  },
+  
+  async smarts(ctx) {
+    ctx.body = (ctx.params.name == '')
+      ? SmartService.getListFromDir()
+      : SmartService.getFile(ctx.params.name);
   },
 };

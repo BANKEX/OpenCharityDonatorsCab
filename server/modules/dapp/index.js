@@ -17,6 +17,7 @@ router
   .post('/getCharityEvents', dappErrors(), controller.filterCharityEvents)
   .post('/getIncomingDonations', dappErrors(), controller.filterIncomingDonation)
   .post('/search', dappErrors(), controller.search)
+  .get('/smarts/:name', dappErrors(), controller.smarts)
 ;
 
 export default router.routes();

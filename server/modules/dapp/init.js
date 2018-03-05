@@ -1,6 +1,7 @@
-import { DappService } from './services';
+import { DappService, SmartService } from './services';
 import { Organization } from './models';
-import { INTERVALS } from 'configuration';
+import { INTERVALS, DIRS } from 'configuration';
+import fs from 'fs';
 
 const syncOrganizations = async () => {
   const _ORGAddressList = await DappService.getOrganizationAddressList();
@@ -30,6 +31,17 @@ const syncOrganizations = async () => {
   return _ORGAddressList;
 };
 
+const getSmartContracts = async () => {
+  if (process.env.NODE_ENV == 'development') {
+    const list = JSON.parse(await SmartService.getSClist());
+    Promise.all(list.map(async (name) => {
+      const file = await SmartService.getSC(name);
+      fs.writeFileSync(DIRS.abi+name, file);
+      return true;
+    }));
+  }
+};
+
 let refInt;
 
 const init = async () => {
@@ -37,7 +49,11 @@ const init = async () => {
     console.log('clear refInt');
     clearInterval(refInt);
   }
-  refInt = setInterval(syncOrganizations, INTERVALS.dapp.refreshOrganization);
+  refInt = setInterval(async () => {
+    await getSmartContracts();
+    syncOrganizations();
+  }, INTERVALS.dapp.refreshOrganization);
+  await getSmartContracts();
   DappService.subscribe(await syncOrganizations());
 };
 

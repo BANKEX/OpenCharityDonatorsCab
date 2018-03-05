@@ -5,7 +5,19 @@ import { Organization } from '../models';
 import { io } from '../../../server';
 import init from '../init';
 import Web3 from 'web3';
-const abi = (type) => (require(DIRS.abi+type).abi);
+
+const refreshABI = {};
+
+const abi = (type) => {
+  if (!refreshABI[type]) {
+    refreshABI[type] = setTimeout((type)=>{
+      delete require.cache[require.resolve(DIRS.abi+type)];
+      delete refreshABI[type];
+    }, INTERVALS.refreshSmartContracts, type);
+  }
+
+  return require(DIRS.abi+type).abi;
+};
 
 let web3 = new Web3(new Web3.providers.WebsocketProvider(DAPP.ws));
 let TOKENcontract = new web3.eth.Contract(abi('OpenCharityToken.json'), DAPP.token);
