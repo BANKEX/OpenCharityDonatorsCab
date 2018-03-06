@@ -1,12 +1,9 @@
 import Router from 'koa-router';
 import controller from './controllers/dapp-controller.js';
 import dappErrors from './errors';
-import init from './init';
 import { Organization } from './models';
 
 const router = new Router({ prefix: '/dapp' });
-
-init();
 
 router
   .get('/getOrganizations', dappErrors(), controller.getOrganizations)

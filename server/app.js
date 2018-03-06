@@ -5,9 +5,13 @@ import pages from 'pages';
 import modules from 'modules';
 
 const app = new Koa();
-inits();
-middlewares(app);
-app.use(modules);
-app.use(pages);
+const start = async () => {
+  await inits();
+  middlewares(app);
+  app.use(modules);
+  app.use(pages);
+};
+
+start();
 
 export default app;

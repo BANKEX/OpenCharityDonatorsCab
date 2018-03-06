@@ -7,6 +7,9 @@ import init from '../init';
 import Web3 from 'web3';
 
 const refreshABI = {};
+let web3;
+let TOKENcontract;
+let int;
 
 const abi = (type) => {
   if (!refreshABI[type]) {
@@ -18,10 +21,6 @@ const abi = (type) => {
 
   return require(DIRS.abi+type).abi;
 };
-
-let web3 = new Web3(new Web3.providers.WebsocketProvider(DAPP.ws));
-let TOKENcontract = new web3.eth.Contract(abi('OpenCharityToken.json'), DAPP.token);
-let int;
 
 const reconnect = () => {
   const reconInt = setInterval(async () => {
@@ -39,6 +38,7 @@ const reconnect = () => {
 };
 
 const subscribe = async (_ORGAddressList) => {
+  console.log('subscribe start');
   int = setInterval(async () => {
     await web3.eth.getBlockNumber().then(console.log);
   }, INTERVALS.dapp.checkConnection);
@@ -130,8 +130,11 @@ const subscribe = async (_ORGAddressList) => {
 
 // addressList
 const getOrganizationAddressList = async () => {
+  if (!web3) web3 = new Web3(new Web3.providers.WebsocketProvider(DAPP.ws));
+  if (!TOKENcontract) TOKENcontract = new web3.eth.Contract(abi('OpenCharityToken.json'), DAPP.token);
   return await OrgService.getOrgs();
 };
+
 const getCharityEventAddressList = async (ORGaddress) => {
   console.log('getCharityEventAddressList');
   const ORGcontract = new web3.eth.Contract(abi('Organization.json'), ORGaddress);

@@ -1,12 +1,13 @@
 import { DAPP } from 'configuration';
-import blockchainConnector from '../../services/blockchain-connector.js';
-import server from 'server';
+import Web3 from 'web3';
 
-export default async () => {
-  try {
-    await blockchainConnector(DAPP.ws);
-  } catch (e) {
-    console.log('Server has been closed');
-    server.close();
-  }
+export default () => {
+  return new Promise((resolve, reject) => {
+    const web3 = new Web3(new Web3.providers.WebsocketProvider(DAPP.ws));
+    web3.eth.getBlockNumber((err) => {
+      if (err) reject(err);
+      console.log('Blockchain connected');
+      resolve();
+    });
+  });
 };
