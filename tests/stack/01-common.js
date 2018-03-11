@@ -1,18 +1,9 @@
 const assert = require('assert');
 const request = require('request');
-const rp = require('request-promise');
 const fs = require('fs');
 const config = require('config');
 
 const ADDRESS = config.get('address');
-const DIRS = config.get('dirs');
-
-rp.defaults({
-  simple: false,
-  resolveWithFullResponse: true,
-  encoding: 'utf-8',
-});
-
 const mainURL = ADDRESS.external;
 console.log(mainURL);
 console.log(process.env.NODE_ENV);
@@ -29,7 +20,6 @@ describe('--------Common tests-----------', ()=> {
   it('Корректно отдает testAPI.ejs', (done)=> {
     request(mainURL+'/api/testAPI', (err, resp, body) => {
       if (err) return done(err);
-      // const file = fs.readFileSync(DIRS.public + '/testAPI.ejs', {encoding: 'utf-8'});
       assert.equal(body.indexOf('OpenCharityDonatorsCab')!=-1, true);
       done();
     });

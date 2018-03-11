@@ -1,4 +1,4 @@
-import { DappService, SmartService } from './services';
+import { DappService } from './services';
 import { Organization } from './models';
 import { INTERVALS, DIRS } from 'configuration';
 let refInt;
