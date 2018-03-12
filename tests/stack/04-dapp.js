@@ -158,7 +158,6 @@ socket.on('connect', () => {
             socket.on(body, (dt) => {
               if (dt!='close') {
                 const data = JSON.parse(dt);
-                console.log(data);
                 counter++;
                 process.stdout.write('.');
                 if (data !== false) {
@@ -186,18 +185,17 @@ socket.on('connect', () => {
       const options = {
         method: 'POST',
         uri: mainURL + '/api/dapp/search',
-        body: JSON.stringify({text: text}),
+        body: JSON.stringify({searchRequest: text}),
         headers: {
           'Content-Type' : 'application/json'
         }
       };
       const response = await rp(options);
       const respObj = JSON.parse(response);
-      console.log(respObj);
-      if (Object.getOwnPropertyNames(respObj).length!=0) {
-        console.log(respObj.length);
-        assert.equal(response.indexOf(text)!=-1, true);
-      }
+      respObj.forEach((elem) => {
+        process.stdout.write('.');
+        assert.equal(JSON.stringify(elem).toLowerCase().indexOf(text)!=-1, true);
+      });
     });
   });
 });

@@ -116,7 +116,16 @@ export default {
   async search(ctx) {
     if (ctx.request.header['content-type']!='application/json' &&
       ctx.request.header['content-type']!='application/x-www-form-urlencoded') throw new AppError(400, 10);
-    ctx.body = await SearchService.search(ctx.request.body);
+    const body = ctx.request.body;
+    if (!body.searchRequest) throw new AppError(406, 601);
+    if (typeof body.searchRequest!='string') throw new AppError(406, 620);
+    if (body.type) {
+      if (typeof body.type!='string') throw new AppError(406, 620);
+    }
+    if (body.addition) {
+      if (!Array.isArray(body.addition)) throw new AppError(406, 620);
+    }
+    ctx.body = await SearchService.search(body);
   },
   
   async smarts(ctx) {

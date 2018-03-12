@@ -203,16 +203,26 @@ const search = () => {
   const xhr = new XMLHttpRequest();
   xhr.open('post', '/api/dapp/search');
   xhr.setRequestHeader('content-type', 'application/json');
-  let searchReq;
-  try {
-    searchReq = JSON.parse(textSI.value.toLowerCase())
-  } catch(e) {
-    searchReq = false;
-  }
-  body = (searchReq) ? searchReq : {text: textSI.value.toLowerCase()};
+  body = {
+    searchRequest: textSI.value,
+    type: selSI.value,
+    addition: addSI.value.split(','),
+  };
   xhr.send(JSON.stringify(body));
   xhr.onload = (event) => {
-    respSI.innerHTML = event.target.responseText;
+    try {
+      const resp = JSON.parse(event.target.responseText);
+      console.log(`${resp.length} docs found`);
+      if (resp.length>0) {
+        respSI.innerHTML = resp.map((elem) => {
+          return '<div>' + JSON.stringify(elem) + '</div>';
+        });
+      } else {
+        respSI.innerHTML = 'Nothing ...';
+      }
+    } catch (e){
+      respSI.innerHTML = event.target.responseText;
+    }
   };
 };
 
