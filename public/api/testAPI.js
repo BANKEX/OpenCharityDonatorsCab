@@ -207,6 +207,8 @@ const search = () => {
     searchRequest: textSI.value,
     type: selSI.value,
     addition: addSI.value.split(','),
+    pageSize: Number(sizeSI.value),
+    page: Number(pageSI.value)
   };
   xhr.send(JSON.stringify(body));
   xhr.onload = (event) => {

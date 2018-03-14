@@ -7,4 +7,4 @@ const MetaSchema = new Schema({
   timestamps: false,
 });
 
-export default mongoose.model('charityEvent', MetaSchema);
+export default mongoose.model('Metamap', MetaSchema);

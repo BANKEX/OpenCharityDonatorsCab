@@ -76,6 +76,7 @@ deploy_stage:
     - docker-compose -f docker/docker-compose.yml up -d donators_mongodb
     - sleep 15
     - docker-compose -f docker/docker-compose.yml up -d oc_donators_cab
+    - docker restart donators_front
   environment:
     name: staging
     url: https://donatorscab.staging.bankex.team
@@ -125,6 +126,7 @@ deploy_prod:
     - docker-compose -f docker/docker-compose-prod.yml up -d donators_mongodb
     - sleep 15
     - docker-compose -f docker/docker-compose-prod.yml up -d oc_donators_cab
+    - docker restart donators_front
   environment:
     name: production
     url: https://donatorscab.bankex.team

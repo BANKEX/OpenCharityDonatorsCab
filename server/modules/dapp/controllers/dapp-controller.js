@@ -117,6 +117,7 @@ export default {
     if (ctx.request.header['content-type']!='application/json' &&
       ctx.request.header['content-type']!='application/x-www-form-urlencoded') throw new AppError(400, 10);
     const body = ctx.request.body;
+    console.log(body);
     if (!body.searchRequest) throw new AppError(406, 601);
     if (typeof body.searchRequest!='string') throw new AppError(406, 620);
     if (body.type) {
@@ -124,6 +125,12 @@ export default {
     }
     if (body.addition) {
       if (!Array.isArray(body.addition)) throw new AppError(406, 620);
+    }
+    if (body.pageSize) {
+      if (!Number.isInteger(body.pageSize)) throw new AppError(406, 620);
+    }
+    if (body.page) {
+      if (!Number.isInteger(body.page) || body.page<1) throw new AppError(406, 620);
     }
     ctx.body = await SearchService.search(body);
   },

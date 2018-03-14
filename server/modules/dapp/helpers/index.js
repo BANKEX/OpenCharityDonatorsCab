@@ -14,6 +14,7 @@ const doWithAllCE = (org, callback) => {
 
 const doWithAllID = (org, callback) => {
   org.IDAddressList.forEach(async (elem) => {
+    console.log(elem);
     const IDelem = JSON.parse(elem);
     const incomingDonation = await DappService.singleIncomingDonation(IDelem.incomingDonation);
     incomingDonation.address = IDelem.incomingDonation;

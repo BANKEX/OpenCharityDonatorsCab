@@ -180,7 +180,7 @@
     <div class="row">
       <h3>Search metadata</h3>
       <div class="col-sm-6">
-        <input class="form-control" type="text" placeholder="searchRequest" id="textSI">
+        <input class="form-control" type="text" placeholder="searchRequest" id="textSI" value="*">
         <select id="selSI">
           <option value="" selected>other...</option>
           <option value="charityEvent">charityEvent</option>
@@ -188,6 +188,14 @@
           <option value="organization">organization</option>
         </select>
         <input class="form-control" type="text" placeholder="addition (split comma)" id="addSI">
+        <div class="input-group">
+          <span class="input-group-addon">pageSize</span>
+          <input class="form-control" type="number" id="sizeSI" value="10" step="10">
+        </div>
+        <div class="input-group">
+          <span class="input-group-addon">page</span>
+          <input class="form-control" type="number" id="pageSI" value="1" step="1">
+        </div>
         <button class="btn btn-success" onClick="search()">Send</button>
       </div>
       <div class="col-sm-6 resp" id="respSI"></div>

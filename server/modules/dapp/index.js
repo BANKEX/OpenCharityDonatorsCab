@@ -1,7 +1,7 @@
 import Router from 'koa-router';
 import controller from './controllers/dapp-controller.js';
 import dappErrors from './errors';
-import { Organization } from './models';
+import { Organization, Metamap } from './models';
 
 const router = new Router({ prefix: '/dapp' });
 
@@ -21,5 +21,6 @@ export default router.routes();
 
 export {
   Organization,
+  Metamap,
 };
 

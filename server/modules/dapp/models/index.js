@@ -1,7 +1,7 @@
 import Organization from './organization';
-import MetaMap from './metamap';
+import Metamap from './metamap';
 
 export {
   Organization,
-  MetaMap,
+  Metamap,
 };
