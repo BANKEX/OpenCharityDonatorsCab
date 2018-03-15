@@ -129,7 +129,6 @@ function MetamapObject(objExt) {
   this.hash = objExt.metaStorageHash;
 }
 
-
 const reconnect = () => {
   const reconInt = setInterval(async () => {
     web3 = new Web3(new Web3.providers.WebsocketProvider(DAPP.ws));

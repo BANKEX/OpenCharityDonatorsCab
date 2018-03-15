@@ -3,7 +3,7 @@ import pick from 'lodash.pick';
 import AppError from '../../../utils/AppErrors.js';
 import { io } from '../../../server';
 import uuid from 'uuid/v4';
-import { Organization } from '../models';
+import { Organization, Metamap } from '../models';
 import { doWithAllCE, doWithAllID, getDataFromDB } from '../helpers';
 
 export default {
@@ -117,7 +117,6 @@ export default {
     if (ctx.request.header['content-type']!='application/json' &&
       ctx.request.header['content-type']!='application/x-www-form-urlencoded') throw new AppError(400, 10);
     const body = ctx.request.body;
-    console.log(body);
     if (!body.searchRequest) throw new AppError(406, 601);
     if (typeof body.searchRequest!='string') throw new AppError(406, 620);
     if (body.type) {
@@ -132,7 +131,53 @@ export default {
     if (body.page) {
       if (!Number.isInteger(body.page) || body.page<1) throw new AppError(406, 620);
     }
-    ctx.body = await SearchService.search(body);
+
+    const documents = JSON.parse(await SearchService.search(body));
+    const room = uuid();
+    ctx.body = room;
+
+    console.log(documents);
+
+    const addresses = [];
+    await Promise.all(documents.map(async (doc) => {
+      const docAddress = (doc.id.indexOf('0x')==0)
+        ? doc.id
+        : await Metamap.findOne({ hash: doc.id });
+      
+      if (docAddress) {
+        if (addresses.indexOf(docAddress) == -1) addresses.push(docAddress);
+      } else {
+        console.log('No address');
+      }
+      return true;
+    }));
+
+    if (body.type == 'charityEvent') {
+      let i=0;
+      addresses.forEach(async (address) => {
+        const charityEvent = await DappService.singleCharityEvent(address);
+        const ext = await getDataFromDB(address);
+        charityEvent.date = ext.date;
+        charityEvent.address = ext.charityEvent;
+        charityEvent.ORGaddress = ext.ORGaddress;
+        io.emit(room, JSON.stringify(charityEvent));
+        i++;
+        if (i==addresses.length) io.emit(room, 'close');
+      });
+    }
+    if (body.type == 'incomingDonation') {
+      let i=0;
+      addresses.forEach(async (address) => {
+        const incomingDonation = await DappService.singleIncomingDonation(address);
+        const ext = await getDataFromDB(address);
+        incomingDonation.date = ext.date;
+        incomingDonation.address = ext.incomingDonation;
+        incomingDonation.ORGaddress = ext.ORGaddress;
+        io.emit(room, JSON.stringify(incomingDonation));
+        i++;
+        if (i==addresses.length) io.emit(room, 'close');
+      });
+    }
   },
   
   async smarts(ctx) {

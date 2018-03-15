@@ -1,4 +1,8 @@
 const socket = io({path: '/api/ws'});
+socket.on('connect_error', () => {
+  socket.close();
+  alert('backend not available');
+});
 
 const userSignup = () => {
   respSU.innerHTML = '';
@@ -212,6 +216,8 @@ const search = () => {
   };
   xhr.send(JSON.stringify(body));
   xhr.onload = (event) => {
+    socketResponse(event, respSI);
+    /*
     try {
       const resp = JSON.parse(event.target.responseText);
       console.log(`${resp.length} docs found`);
@@ -225,6 +231,7 @@ const search = () => {
     } catch (e){
       respSI.innerHTML = event.target.responseText;
     }
+    */
   };
 };
 
