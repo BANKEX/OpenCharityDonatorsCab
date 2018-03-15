@@ -1,4 +1,4 @@
-import { Organization, User } from '../';
+import { Organization, User, Metamap } from '../';
 import init from '../../dapp/init';
 import AppError from '../../../utils/AppErrors.js';
  
@@ -26,5 +26,11 @@ export default {
     ctx.body = await Organization.remove();
     init();
   },
-  
+
+  async metaMap(ctx) {
+    ctx.body = await Metamap.find().select({
+      _id: 0,
+      __v: 0,
+    });
+  },
 };
