@@ -15,13 +15,13 @@ export default {
     const orgFromDB = await Organization.findOne({ ORGaddress: ctx.params.org });
     if (orgFromDB) {
       const room = uuid();
-      ctx.status = 200;
-      ctx.res.end(room);
+      const quantity = orgFromDB.charityEventCount;
+      ctx.body = { room, quantity };
       let i=0;
       doWithAllCE(orgFromDB, (charityEvent) => {
         io.emit(room, JSON.stringify(charityEvent));
         i++;
-        if (i==orgFromDB.charityEventCount) io.emit(room, 'close');
+        if (i==quantity) io.emit(room, 'close');
       });
     }
   },
@@ -30,13 +30,13 @@ export default {
     const orgFromDB = await Organization.findOne({ ORGaddress: ctx.params.org });
     if (orgFromDB) {
       const room = uuid();
-      ctx.status = 200;
-      ctx.res.end(room);
+      const quantity = orgFromDB.incomingDonationCount;
+      ctx.body = { room, quantity };
       let i=0;
       doWithAllID(orgFromDB, (incomingDonation) => {
         io.emit(room, JSON.stringify(incomingDonation));
         i++;
-        if (i==orgFromDB.incomingDonationCount) io.emit(room, 'close');
+        if (i==quantity) io.emit(room, 'close');
       });
     }
   },
@@ -64,25 +64,27 @@ export default {
   async filterCharityEvents(ctx) {
     if (ctx.request.header['content-type']!='application/json' &&
       ctx.request.header['content-type']!='application/x-www-form-urlencoded') throw new AppError(400, 10);
-    const room = uuid();
-    ctx.status = 200;
-    ctx.res.end(room);
-
+    
     const fields = pick(ctx.request.body, FilterService.cardCharityEvent);
     const filtering = Object.getOwnPropertyNames(fields).length != 0;
     const ORGsearch = (!ctx.request.body.ORGaddress)
       ? {}
       : {ORGaddress: ctx.request.body.ORGaddress};
     const ORGList = await Organization.find(ORGsearch);
-    let i=0;
-    let allCE=0;
+    const room = uuid();
+    let quantity = 0;
     ORGList.forEach((orgFromDB) => {
-      allCE+=orgFromDB.charityEventCount;
+      quantity += orgFromDB.charityEventCount;
+    });
+    ctx.body = { room, quantity };
+    
+    let i=0;
+    ORGList.forEach((orgFromDB) => {
       doWithAllCE(orgFromDB, (charityEvent) => {
         const filtered = (filtering) ? FilterService.filter(charityEvent, fields) : charityEvent;
         io.emit(room, JSON.stringify(filtered));
         i++;
-        if (i==allCE) io.emit(room, 'close');
+        if (i==quantity) io.emit(room, 'close');
       });
     });
   },
@@ -90,9 +92,6 @@ export default {
   async filterIncomingDonation(ctx) {
     if (ctx.request.header['content-type']!='application/json' &&
       ctx.request.header['content-type']!='application/x-www-form-urlencoded') throw new AppError(400, 10);
-    const room = uuid();
-    ctx.status = 200;
-    ctx.res.end(room);
 
     const fields = pick(ctx.request.body, FilterService.cardIncomingDonation);
     const filtering = Object.getOwnPropertyNames(fields).length != 0;
@@ -100,15 +99,20 @@ export default {
       ? {}
       : {ORGaddress: ctx.request.body.ORGaddress};
     const ORGList = await Organization.find(ORGsearch);
-    let i=0;
-    let allID=0;
+    const room = uuid();
+    let quantity = 0;
     ORGList.forEach((orgFromDB) => {
-      allID+=orgFromDB.incomingDonationCount;
+      quantity += orgFromDB.incomingDonationCount;
+    });
+    ctx.body = { room, quantity };
+    
+    let i=0;
+    ORGList.forEach((orgFromDB) => {
       doWithAllID(orgFromDB, (incomingDonation) => {
         const filtered = (filtering) ? FilterService.filter(incomingDonation, fields) : incomingDonation;
         io.emit(room, JSON.stringify(filtered));
         i++;
-        if (i==allID) io.emit(room, 'close');
+        if (i==quantity) io.emit(room, 'close');
       });
     });
   },
@@ -133,11 +137,6 @@ export default {
     }
 
     const documents = JSON.parse(await SearchService.search(body));
-    const room = uuid();
-    ctx.body = room;
-
-    console.log(documents);
-
     const addresses = [];
     await Promise.all(documents.map(async (doc) => {
       const docAddress = (doc.id.indexOf('0x')==0)
@@ -151,6 +150,10 @@ export default {
       }
       return true;
     }));
+
+    const room = uuid();
+    const quantity = addresses.length;
+    ctx.body = { room, quantity };
 
     if (body.type == 'charityEvent') {
       let i=0;

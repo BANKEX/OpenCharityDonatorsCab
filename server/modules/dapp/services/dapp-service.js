@@ -10,6 +10,7 @@ const refreshABI = {};
 let web3;
 let TOKENcontract;
 let int;
+const MAXBATCH=20;
 
 const abi = (type) => {
   if (!refreshABI[type]) {
@@ -77,8 +78,8 @@ const extractTags = (mask) => {
 
 function DappObject(type, objExt) {
   const titleTypes = {
-    charityEvent: 'name',
-    incomingDonation: 'realWorldIdentifier',
+    '1': 'name',
+    '2': 'realWorldIdentifier',
   };
   this.type = type;
   this.searchDescription = extractTags(objExt.tags);
@@ -148,7 +149,7 @@ const charityEventAdded = async (event) => {
   const charityEventObjectExt = await CharityEventObjectExt(event);
 
   await Metamap.create(new MetamapObject(charityEventObjectExt));
-  await SearchService.addDataToIndex(new DappObject('charityEvent', charityEventObjectExt));
+  await SearchService.addBatchToLine(new DappObject('1', charityEventObjectExt));
 
   const orgFromDB = await Organization.findOne({ ORGaddress: charityEventObjectExt.ORGaddress });
   if (orgFromDB) {
@@ -164,30 +165,22 @@ const charityEventAdded = async (event) => {
 };
 const incomingDonationAdded = async (event) => {
   console.log(new Date().toLocaleString());
-  const { timestamp } = await web3.eth.getBlock(event.blockHash);
-  const date = (new Date(timestamp * 1000)).toLocaleString();
-  const organization = event.address;
-  const { incomingDonation } = event.returnValues;
-  const dataForSearch = await singleIncomingDonation(incomingDonation);
-  dataForSearch.address = incomingDonation;
-  dataForSearch.date = date;
-  dataForSearch.ORGaddress = organization;
-  SearchService.addDataToIndex(dataForSearch);
-  const orgFromDB = await Organization.findOne({ORGaddress: organization});
+  const incomingDonationObjectExt = await IncomingDonationObjectExt(event);
+
+  // await Metamap.create(new MetamapObject(incomingDonationObjectExt));
+  await SearchService.addBatchToLine(new DappObject('2', incomingDonationObjectExt));
+
+  const orgFromDB = await Organization.findOne({ORGaddress: incomingDonationObjectExt.ORGaddress});
   if (orgFromDB) {
     const { _id, IDAddressList } = orgFromDB;
-    const forPush = JSON.stringify({
-      incomingDonation: incomingDonation,
-      date: date,
-    });
-    IDAddressList.push(forPush);
+    IDAddressList.push(incomingDonationObjectExt.forIDaddressList);
     const incomingDonationCount = orgFromDB.incomingDonationCount+1;
     await Organization.update({ _id }, { IDAddressList, incomingDonationCount });
-    io.emit('newIncomingDonation', JSON.stringify(dataForSearch));
+    io.emit('newIncomingDonation', JSON.stringify(incomingDonationObjectExt));
   } else {
     console.error('Organization not found');
   }
-  console.log(dataForSearch);
+  console.log(incomingDonationObjectExt);
 };
 const fundsMovedToCharityEvent = async (event) => {
   console.log(new Date().toLocaleString());
@@ -216,6 +209,7 @@ const getCharityEventAddressList = async (ORGaddress) => {
   console.log('getCharityEventAddressList');
   const ORGcontract = new web3.eth.Contract(abi('Organization.json'), ORGaddress);
   const added = await ORGcontract.getPastEvents('CharityEventAdded', {fromBlock: 0});
+  let batch = [];
   const CEaddressList = await Promise.all(added.map(async (event) => {
     const charityEventObjectExt = await CharityEventObjectExt(event);
     const metamap = await Metamap.findOne({ address: charityEventObjectExt.address });
@@ -223,13 +217,15 @@ const getCharityEventAddressList = async (ORGaddress) => {
       await Metamap.create(new MetamapObject(charityEventObjectExt));
       console.log(`MetaObject created ${charityEventObjectExt.address} - ${charityEventObjectExt.metaStorageHash}`);
     }
-    // console.log(await SearchService.delDataFromIndex([charityEventObjectExt.address])); // if exists
-    setTimeout(() => {
-      SearchService.addDataToIndex(new DappObject('charityEvent', charityEventObjectExt));
-    }, Math.floor(Math.random()*5000));
+    batch.push(new DappObject('1', charityEventObjectExt));
+    if (batch.length==MAXBATCH) {
+      SearchService.addBatchToLine(batch);
+      batch = [];
+    }
     return charityEventObjectExt.forCEaddressList;
   }));
-
+  
+  SearchService.addBatchToLine(batch);
   // const edited = await ORGcontract.getPastEvents('CharityEventEdited', {fromBlock: 0});
   // здесь что-то делаем с edited
   /*
@@ -250,6 +246,7 @@ const getIncomingDonationAddressList = async (ORGaddress) => {
   console.log('getIncomingDonationAddressList');
   const ORGcontract = new web3.eth.Contract(abi('Organization.json'), ORGaddress);
   const added = await ORGcontract.getPastEvents('IncomingDonationAdded', {fromBlock: 0});
+  let batch = [];
   const IDaddressList = await Promise.all(added.map(async (event) => {
     const incomingDonationObjectExt = await IncomingDonationObjectExt(event);
     /*
@@ -259,13 +256,15 @@ const getIncomingDonationAddressList = async (ORGaddress) => {
       console.log(`MetaObject created ${incomingDonationObjectExt.address} - ${incomingDonationObjectExt.metaStorageHash}`);
     }
     */
-    // console.log(await SearchService.delDataFromIndex([charityEventObjectExt.address])); // if exists
-    setTimeout(() => {
-      SearchService.addDataToIndex(new DappObject('incomingDonation', incomingDonationObjectExt));
-    }, Math.floor(Math.random()*5000));
+
+    batch.push(new DappObject('2', incomingDonationObjectExt));
+    if (batch.length==MAXBATCH) {
+      SearchService.addBatchToLine(batch);
+      batch = [];
+    }
     return incomingDonationObjectExt.forIDaddressList;
   }));
-
+  SearchService.addBatchToLine(batch);
   return IDaddressList;
 };
 const subscribe = async (_ORGAddressList) => {

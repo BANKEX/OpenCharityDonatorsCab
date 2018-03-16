@@ -114,16 +114,17 @@ const addData = (div, data) => {
 
 const socketResponse = (event, div) => {
   console.log(event.target.responseText);
+  const { room, quantity } = JSON.parse(event.target.responseText);
   const dataListener = (data) => {
     if (data!='close') {
       addData(div, data);
     } else {
-      socket.removeEventListener(event.target.responseText, dataListener);
-      console.log(event.target.responseText + ' - removed');
+      socket.removeEventListener(room, dataListener);
+      console.log(room + ' - removed');
     }
   };
 
-  socket.on(event.target.responseText, dataListener);
+  socket.on(room, dataListener);
 };
 
 const getOrganizations = () => {
@@ -217,24 +218,8 @@ const search = () => {
   xhr.send(JSON.stringify(body));
   xhr.onload = (event) => {
     socketResponse(event, respSI);
-    /*
-    try {
-      const resp = JSON.parse(event.target.responseText);
-      console.log(`${resp.length} docs found`);
-      if (resp.length>0) {
-        respSI.innerHTML = resp.map((elem) => {
-          return '<div>' + JSON.stringify(elem) + '</div>';
-        });
-      } else {
-        respSI.innerHTML = 'Nothing ...';
-      }
-    } catch (e){
-      respSI.innerHTML = event.target.responseText;
-    }
-    */
   };
 };
-
 
 const getUsers = () => {
   respUS.innerHTML = '';

@@ -42,7 +42,7 @@ socket.on('connect', () => {
         let counter = 0;
         request(mainURL + '/api/dapp/getCharityEvents/' + testOrg.ORGaddress, (err, resp, body) => {
           if (err) return done(err);
-          socket.on(body, (dt) => {
+          socket.on(JSON.parse(body).room, (dt) => {
             if (dt != 'close') {
               const data = JSON.parse(dt);
               CE.push(data);
@@ -71,7 +71,7 @@ socket.on('connect', () => {
         let counter = 0;
         request(mainURL + '/api/dapp/getIncomingDonations/' + testOrg.ORGaddress, (err, resp, body) => {
           if (err) return done(err);
-          socket.on(body, (dt) => {
+          socket.on(JSON.parse(body).room, (dt) => {
             if (dt != 'close') {
               const data = JSON.parse(dt);
               ID.push(data);
@@ -132,7 +132,6 @@ socket.on('connect', () => {
       }
     });
 
-
     it('Фильтр getCharityEvents', (done) => {
       if (testOrg) {
         const body = {
@@ -155,7 +154,7 @@ socket.on('connect', () => {
         let test = true;
         rp.post(options)
           .then((body) => {
-            socket.on(body, (dt) => {
+            socket.on(JSON.parse(body).room, (dt) => {
               if (dt!='close') {
                 const data = JSON.parse(dt);
                 counter++;
@@ -165,10 +164,7 @@ socket.on('connect', () => {
                 }
                 assert.equal(test, true);
               } else {
-                if (counter == testOrg.charityEventCount) {
-                  socket.disconnect();
-                  done();
-                }
+                if (counter == testOrg.charityEventCount) done();
               }
             });
           })
@@ -180,22 +176,39 @@ socket.on('connect', () => {
       }
     });
 
-    it('Запрос search/', async () => {
-      const text = 'test';
+    it('Запрос search/', (done) => {
+      const search = {
+        searchRequest: 'test',
+        type: 'charityEvent',
+        pageSize: 50,
+      };
       const options = {
         method: 'POST',
         uri: mainURL + '/api/dapp/search',
-        body: JSON.stringify({searchRequest: text}),
+        body: JSON.stringify(search),
         headers: {
           'Content-Type' : 'application/json'
         }
       };
-      const response = await rp(options);
-      const respObj = JSON.parse(response);
-      respObj.forEach((elem) => {
-        process.stdout.write('.');
-        assert.equal(JSON.stringify(elem).toLowerCase().indexOf(text)!=-1, true);
-      });
+
+      let counter=0;
+      let test = true;
+      rp.post(options)
+        .then((body) => {
+          socket.on(JSON.parse(body).room, (dt) => {
+            if (dt!='close') {
+              const data = JSON.parse(dt);
+              counter++;
+              if (dt.toLowerCase().indexOf(search.searchRequest)==-1) {process.stdout.write('-')} else {process.stdout.write('+')}
+              assert.equal(data.name!=undefined, true);
+            } else {
+              if (counter==Number(JSON.parse(body).quantity)) done();
+            }
+          });
+        })
+        .catch((err) => {
+          if (err) return done(err);
+        });
     });
   });
 });
