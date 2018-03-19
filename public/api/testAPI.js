@@ -141,28 +141,39 @@ const getOrganizations = () => {
 
 const getCharityEvents = () => {
   respCE.innerHTML = '';
+  const how = (checkCE.checked) ? '?how=db' : '';
   const xhr = new XMLHttpRequest();
-  xhr.open('get', '/api/dapp/getCharityEvents/'+orgCE.value);
+  xhr.open('get', '/api/dapp/getCharityEvents/'+orgCE.value+how);
   xhr.send();
   xhr.onload = (event) => {
-    socketResponse(event, respCE);
+    if (checkCE.checked) {
+      respCE.innerHTML = event.target.responseText;
+    } else {
+      socketResponse(event, respCE);
+    }
   };
 };
 
 const getIncomingDonations = () => {
   respID.innerHTML = '';
+  const how = (checkID.checked) ? '?how=db' : '';
   const xhr = new XMLHttpRequest();
-  xhr.open('get', '/api/dapp/getIncomingDonations/'+orgID.value);
+  xhr.open('get', '/api/dapp/getIncomingDonations/'+orgID.value+how);
   xhr.send();
   xhr.onload = (event) => {
-    socketResponse(event, respID);
+    if (checkID.checked) {
+      respID.innerHTML = event.target.responseText;
+    } else {
+      socketResponse(event, respID);
+    }
   };
 };
 
 const getCharityEvent1 = () => {
   respCE1.innerHTML = '';
+  const how = (checkCE1.checked) ? '?how=db' : '';
   const xhr = new XMLHttpRequest();
-  xhr.open('get', '/api/dapp/getCharityEvent/'+hashCE1.value);
+  xhr.open('get', '/api/dapp/getCharityEvent/'+hashCE1.value+how);
   xhr.send();
   xhr.onload = (event) => {
     respCE1.innerHTML = event.target.responseText;
@@ -171,8 +182,9 @@ const getCharityEvent1 = () => {
 
 const getIncomingDonation1 = () => {
   respID1.innerHTML = '';
+  const how = (checkID1.checked) ? '?how=db' : '';
   const xhr = new XMLHttpRequest();
-  xhr.open('get', '/api/dapp/getIncomingDonation/'+hashID1.value);
+  xhr.open('get', '/api/dapp/getIncomingDonation/'+hashID1.value+how);
   xhr.send();
   xhr.onload = (event) => {
     respID1.innerHTML = event.target.responseText;
@@ -213,11 +225,16 @@ const search = () => {
     type: selSI.value,
     addition: addSI.value.split(','),
     pageSize: Number(sizeSI.value),
-    page: Number(pageSI.value)
+    page: Number(pageSI.value),
+    how: (checkSI.checked) ? 'db' : 'bc'
   };
   xhr.send(JSON.stringify(body));
   xhr.onload = (event) => {
-    socketResponse(event, respSI);
+    if (checkSI.checked) {
+      respSI.innerHTML = event.target.responseText;
+    } else {
+      socketResponse(event, respSI);
+    }
   };
 };
 

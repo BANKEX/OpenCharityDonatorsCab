@@ -3,7 +3,7 @@ import pick from 'lodash.pick';
 import AppError from '../../../utils/AppErrors.js';
 import { io } from '../../../server';
 import uuid from 'uuid/v4';
-import { Organization, Metamap } from '../models';
+import { Organization, Metamap, CharityEvent, IncomingDonation } from '../index';
 import { doWithAllCE, doWithAllID, getDataFromDB } from '../helpers';
 
 export default {
@@ -12,53 +12,85 @@ export default {
   },
 
   async getCharityEvents(ctx) {
-    const orgFromDB = await Organization.findOne({ ORGaddress: ctx.params.org });
-    if (orgFromDB) {
-      const room = uuid();
-      const quantity = orgFromDB.charityEventCount;
-      ctx.body = { room, quantity };
-      let i=0;
-      doWithAllCE(orgFromDB, (charityEvent) => {
-        io.emit(room, JSON.stringify(charityEvent));
-        i++;
-        if (i==quantity) io.emit(room, 'close');
-      });
+    const org = (ctx.params.org=='all') ? {} : { ORGaddress: ctx.params.org };
+
+    if (ctx.query.how == 'db') {
+      ctx.body = await CharityEvent.find(org).select({__v: 0, _id: 0}).sort({date: -1});
+    } else {
+      const orgFromDB = await Organization.find(org);
+      if (orgFromDB.length) {
+        let quantity = 0;
+        orgFromDB.forEach((el) => {
+          quantity += el.charityEventCount;
+        });
+        const room = uuid();
+        ctx.body = { room, quantity };
+
+        let i = 0;
+        orgFromDB.forEach((org) => {
+          doWithAllCE(org, (charityEvent) => {
+            io.emit(room, JSON.stringify(charityEvent));
+            i++;
+            if (i == quantity) io.emit(room, 'close');
+          });
+        });
+      }
     }
   },
 
   async getIncomingDonations(ctx) {
-    const orgFromDB = await Organization.findOne({ ORGaddress: ctx.params.org });
-    if (orgFromDB) {
-      const room = uuid();
-      const quantity = orgFromDB.incomingDonationCount;
-      ctx.body = { room, quantity };
-      let i=0;
-      doWithAllID(orgFromDB, (incomingDonation) => {
-        io.emit(room, JSON.stringify(incomingDonation));
-        i++;
-        if (i==quantity) io.emit(room, 'close');
-      });
+    const org = (ctx.params.org=='all') ? {} : { ORGaddress: ctx.params.org };
+
+    if (ctx.query.how == 'db') {
+      ctx.body = await IncomingDonation.find(org).select({__v: 0, _id: 0}).sort({date: -1});
+    } else {
+      const orgFromDB = await Organization.find(org);
+      if (orgFromDB.length) {
+        let quantity = 0;
+        orgFromDB.forEach((el) => {
+          quantity += el.incomingDonationCount;
+        });
+        const room = uuid();
+        ctx.body = { room, quantity };
+
+        let i = 0;
+        orgFromDB.forEach((org) => {
+          doWithAllID(org, (incomingDonation) => {
+            io.emit(room, JSON.stringify(incomingDonation));
+            i++;
+            if (i == quantity) io.emit(room, 'close');
+          });
+        });
+      }
     }
   },
 
   async getCharityEvent(ctx) {
-    const charityEvent = await DappService.singleCharityEvent(ctx.params.hash);
-    const ext = await getDataFromDB(ctx.params.hash);
-    charityEvent.date = ext.date;
-    charityEvent.address = ext.charityEvent;
-    charityEvent.ORGaddress = ext.ORGaddress;
-    charityEvent.history = await DappService.getHistory(ext.ORGaddress, ext.charityEvent, 'CE');
-    ctx.body = charityEvent;
+    if (ctx.query.how == 'db') {
+      ctx.body = await CharityEvent.findOne({ address: ctx.params.hash }).select({__v: 0, _id: 0});
+    } else {
+      const charityEvent = await DappService.singleCharityEvent(ctx.params.hash);
+      const ext = await getDataFromDB(ctx.params.hash);
+      charityEvent.date = ext.date;
+      charityEvent.address = ext.charityEvent;
+      charityEvent.ORGaddress = ext.ORGaddress;
+      charityEvent.history = await DappService.getHistory(ext.ORGaddress, ext.charityEvent, 'CE');
+      ctx.body = charityEvent;
+    }
   },
   
   async getIncomingDonation(ctx) {
-    const incomingDonation = await DappService.singleIncomingDonation(ctx.params.hash);
-    const ext = await getDataFromDB(ctx.params.hash);
-    incomingDonation.date = ext.date;
-    incomingDonation.address = ext.incomingDonation;
-    incomingDonation.ORGaddress = ext.ORGaddress;
-    incomingDonation.history = await DappService.getHistory(ext.ORGaddress, ext.incomingDonation, 'ID');
-    ctx.body = incomingDonation;
+    if (ctx.query.how == 'db') {
+      ctx.body = await IncomingDonation.findOne({ address: ctx.params.hash }).select({__v: 0, _id: 0});
+    } else {
+      const incomingDonation = await DappService.singleIncomingDonation(ctx.params.hash);
+      const ext = await getDataFromDB(ctx.params.hash);
+      incomingDonation.date = ext.date;
+      incomingDonation.address = ext.incomingDonation;
+      incomingDonation.ORGaddress = ext.ORGaddress;
+      incomingDonation.history = await DappService.getHistory(ext.ORGaddress, ext.incomingDonation, 'ID');
+      ctx.body = incomingDonation;
+    }
   },
   
   async filterCharityEvents(ctx) {
@@ -154,35 +186,44 @@ export default {
       return true;
     }));
 
-    const room = uuid();
-    const quantity = addresses.length;
-    ctx.body = { room, quantity };
+    if (body.how == 'db') {
+      ctx.body = (body.type == 'charityEvent') 
+        ? await CharityEvent.find({ address: addresses}).select({__v: 0, _id: 0}).sort({date: -1})
+        : (body.type == 'incomingDonation') 
+          ? await IncomingDonation.find({ address: addresses}).select({__v: 0, _id: 0}).sort({date: -1})
+          : [];
+    } else {
+      const room = uuid();
+      const quantity = addresses.length;
+      ctx.body = {room, quantity};
+      if (quantity == 0) setTimeout(() => io.emit(room, 'close'), 1000);
 
-    if (body.type == 'charityEvent') {
-      let i=0;
-      addresses.forEach(async (address) => {
-        const charityEvent = await DappService.singleCharityEvent(address);
-        const ext = await getDataFromDB(address);
-        charityEvent.date = ext.date;
-        charityEvent.address = ext.charityEvent;
-        charityEvent.ORGaddress = ext.ORGaddress;
-        io.emit(room, JSON.stringify(charityEvent));
-        i++;
-        if (i==addresses.length) io.emit(room, 'close');
-      });
-    }
-    if (body.type == 'incomingDonation') {
-      let i=0;
-      addresses.forEach(async (address) => {
-        const incomingDonation = await DappService.singleIncomingDonation(address);
-        const ext = await getDataFromDB(address);
-        incomingDonation.date = ext.date;
-        incomingDonation.address = ext.incomingDonation;
-        incomingDonation.ORGaddress = ext.ORGaddress;
-        io.emit(room, JSON.stringify(incomingDonation));
-        i++;
-        if (i==addresses.length) io.emit(room, 'close');
-      });
+      if (body.type == 'charityEvent') {
+        let i = 0;
+        addresses.forEach(async (address) => {
+          const charityEvent = await DappService.singleCharityEvent(address);
+          const ext = await getDataFromDB(address);
+          charityEvent.date = ext.date;
+          charityEvent.address = ext.charityEvent;
+          charityEvent.ORGaddress = ext.ORGaddress;
+          io.emit(room, JSON.stringify(charityEvent));
+          i++;
+          if (i == addresses.length) io.emit(room, 'close');
+        });
+      }
+      if (body.type == 'incomingDonation') {
+        let i = 0;
+        addresses.forEach(async (address) => {
+          const incomingDonation = await DappService.singleIncomingDonation(address);
+          const ext = await getDataFromDB(address);
+          incomingDonation.date = ext.date;
+          incomingDonation.address = ext.incomingDonation;
+          incomingDonation.ORGaddress = ext.ORGaddress;
+          io.emit(room, JSON.stringify(incomingDonation));
+          i++;
+          if (i == addresses.length) io.emit(room, 'close');
+        });
+      }
     }
   },
   

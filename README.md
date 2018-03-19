@@ -137,34 +137,33 @@ Ok - не гарантирует доставки письма или ошибк
 CEAddressList - массив всех charityEvent (только адрес и дата) данной организации - это СТРОКА JSON. Ее надо парсить в объект!
 
 ### GET /api/dapp/getCharityEvents/:org
-Получить все charityEvents данной организации.<br/>
-Принимает адрес организации в :org.<br/>
-Вернет roomID для сокет-подписки.<br/>
-Необходимо подписаться на событие 'data' в данной комнате.<br/>
-Сокет присылает объекты {charityEventObject}
+Получить все charityEvents указанной организации или всех организаций.<br/>
+Принимает адрес организации в :org или 'all'.<br/>
+При указании дополнительного параметра how=db будет использовать кэш базы данных. Иначе будет обращение к блокчейн.<br/>
+Пример: `/api/dapp/getCharityEvents/all?how=db`<br/>
+При запросе к DB вернет массив {charityEventObject}.<br/>
+При запросе к блокчейн вернет объект { roomID, quantity } для сокет-подписки. Необходимо подписаться на событие 'data' в данной комнате. Сокет присылает объекты {charityEventObject}
 ```
-charityEventObject: {
-    name, payed, target, raised, tags, date, address, ORGaddress
-}
+charityEventObject: { name, payed, target, raised, metaStorageHash, tags, date, address, ORGaddress }
 ```
 По окончании списка придет data = 'close'. Рекомендуется удалить listener.
 
 ### GET /api/dapp/getIncomingDonations/:org
 Как GET /api/dapp/getCharityEvents/:org только для IncomingDonation
 ```
-incomingDonationsObject: {
-    realWorldIdentifier, amount, note, tags, date, address, ORGaddress
-}
+incomingDonationsObject: { realWorldIdentifier, amount, note, tags, date, address, ORGaddress }
 ```
 ### GET /api/dapp/getCharityEvent/:hash
 Вернет JSON данного CharityEvent по hash.<br/>
 Вернет {charityEventObject} расширенный полем history<br/>
-Поле history содержит массив JSON-строк { incomingDonation, amount, date, transactionHash }
+Поле history содержит массив JSON-строк { incomingDonation, amount, date, transactionHash }<br/>
+Запрос из кэша DB осуществляется аналогчно getCharityEvents.
 
 ### GET /api/dapp/getIncomingDonation/:hash
 Вернет JSON данного IncomingDonation по hash.<br/>
 Вернет {incomingDonationsObject} расширенный полем history<br/>
-Поле history содержит массив JSON-строк { charityEvent, amount, date, transactionHash }
+Поле history содержит массив JSON-строк { charityEvent, amount, date, transactionHash }<br/>
+Запрос из кэша DB осуществляется аналогчно getCharityEvents.
 
 ### POST /api/dapp/getCharityEvents
 Выдает отфильтрованные CharityEvents.<br/>
@@ -205,14 +204,14 @@ JSON запроса может включать ORGaddress (один элеме�
 ### POST /api/dapp/search
 Ищет запрос в проиндексированных данных.<br/>
 Принимает content-type application/json и application/x-www-form-urlencoded.<br/>
-Запрос может быть двух видов:
-1. Обычный текстовый запрос. Например, строка 'космос текст' найдет все документы где в теле упоминаются оба этих слова.
-2. Запрос JSON по правилам библиотеки search-index (https://github.com/fergiemcdowall/search-index/blob/master/docs/search.md)
-Возвращает объект вида:
-```
-    {multiHash: {document}, multiHash: {document}, ...}
-```
-multiHash актуален только для метаданных. По нему можно найти соответствующий документ на метасервере.
+Принимает поля:
+    * searchRequest(String) - пользовательский запрос как есть
+    * type - одно из [organization, charityEvent, incomingDonation]
+    * addition (Array of Strings)- дополнительные данные от фронтэнд (например, адрес организации)
+    * pageSize (Integer)- размер страницы вывода результатов
+    * page (Integer) - страница
+    * how - метод получения информации: 'db' - из кэша DB, иначе - из блокчейн.
+Возвращает данные аналогчно getCharityEvents: либо массив из DB, либо сокет-подписка.
 
 ### Онлайн-подписка на новые charityEvents и incomingDonations
 ```
