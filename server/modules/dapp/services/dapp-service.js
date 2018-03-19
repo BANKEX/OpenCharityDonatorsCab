@@ -137,7 +137,7 @@ const getOrganizationAddressList = async () => {
   return await OrgService.getOrgs();
 };
 const getCharityEventAddressList = async (ORGaddress) => {
-  console.log('getCharityEventAddressList');
+  // console.log('getCharityEventAddressList');
   const ORGcontract = new web3.eth.Contract(abi('Organization.json'), ORGaddress);
   const added = await ORGcontract.getPastEvents('CharityEventAdded', {fromBlock: 0});
   let batch = [];
@@ -182,7 +182,7 @@ const getCharityEventAddressList = async (ORGaddress) => {
   return CEaddressList;
 };
 const getIncomingDonationAddressList = async (ORGaddress) => {
-  console.log('getIncomingDonationAddressList');
+  // console.log('getIncomingDonationAddressList');
   const ORGcontract = new web3.eth.Contract(abi('Organization.json'), ORGaddress.toLowerCase());
   const added = await ORGcontract.getPastEvents('IncomingDonationAdded', {fromBlock: 0});
   let batch = [];
@@ -212,7 +212,7 @@ const getIncomingDonationAddressList = async (ORGaddress) => {
   return IDaddressList;
 };
 const subscribe = async (_ORGAddressList) => {
-  console.log('subscribe start');
+  // console.log('subscribe start');
   int = setInterval(async () => {
     await web3.eth.getBlockNumber().then(console.log);
   }, INTERVALS.dapp.checkConnection);
@@ -234,7 +234,7 @@ const subscribe = async (_ORGAddressList) => {
   });
 
   _ORGAddressList.forEach(async (ORGaddress) => {
-    console.log('listeners for '+ORGaddress);
+    // console.log('listeners for '+ORGaddress);
     const ORGcontract = new web3.eth.Contract(abi('Organization.json'), ORGaddress);
     ORGcontract.events.CharityEventAdded({ fromBlock: 'latest' }).on('data', charityEventAdded);
     ORGcontract.events.IncomingDonationAdded({ fromBlock: 'latest' }).on('data', incomingDonationAdded);

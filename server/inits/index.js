@@ -9,14 +9,18 @@ import server from 'server';
 export default async () => {
   return new Promise(async (resolve, reject) => {
     try {
-      await dapp();
       await mongo();
       if (process.env.NODE_ENV == 'development') {
         if (!fs.existsSync(DIRS.abi)) fs.mkdirSync(DIRS.abi);
         await smart();
       }
-      await dappInit();
-      resolve();
+      try {
+        await dapp();
+        await dappInit();
+        resolve();
+      } catch (err) {
+        resolve();
+      }
     } catch (e) {
       console.log(e);
       console.log('Server has been closed');

@@ -11,11 +11,11 @@ const syncOrganizations = async () => {
     const orgFromDB = await Organization.findOne({ ORGaddress });
     if (orgFromDB) {
       await Organization.update({ ORGaddress }, orgData);
-      console.log('updated '+ORGaddress);
+      // console.log('updated '+ORGaddress);
     } else {
       orgData.ORGaddress = ORGaddress;
       await Organization.create(orgData);
-      console.log('created ' +ORGaddress);
+      // console.log('created ' +ORGaddress);
     }
     return true;
   }));
@@ -24,7 +24,7 @@ const syncOrganizations = async () => {
     const CEAddressList = await DappService.getCharityEventAddressList(ORGaddress);
     const IDAddressList = await DappService.getIncomingDonationAddressList(ORGaddress);
     await Organization.update({ORGaddress}, { CEAddressList, IDAddressList });
-    console.log('refresh lists ' + ORGaddress);
+    // console.log('refresh lists ' + ORGaddress);
     return true;
   }));
   

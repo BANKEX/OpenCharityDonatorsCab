@@ -6,11 +6,9 @@ export default (mongoUri) => {
   return mongoose
     .connect(mongoUri)
     .then((mongodb) => {
-      console.log('Mongo connected');
       return mongodb;
     })
     .catch((err) => {
-      console.log('Mongo connection failed');
       throw err;
     });
 };

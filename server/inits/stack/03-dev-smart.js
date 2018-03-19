@@ -25,11 +25,19 @@ const getSC = async (name) => {
 };
 
 export default async () => {
+  process.stdout.write('SmartContracts...');
+  const int = setInterval(() => {
+    process.stdout.write('.');
+  }, 200);
+  
   const list = JSON.parse(await getSClist());
   await Promise.all(list.map(async (name) => {
     const file = await getSC(name);
     fs.writeFileSync(DIRS.abi+name, file);
     return true;
   }));
-  console.log('Smart contracts reloaded');
+  
+  clearInterval(int);
+  process.stdout.write('reloaded');
+  console.log('');
 };

@@ -12,6 +12,6 @@ const start = async () => {
   app.use(pages);
 };
 
-start();
+setTimeout(start, 1000);
 
 export default app;
