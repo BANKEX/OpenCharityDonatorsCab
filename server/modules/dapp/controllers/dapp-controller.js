@@ -137,11 +137,14 @@ export default {
     }
 
     const documents = JSON.parse(await SearchService.search(body));
+
     const addresses = [];
     await Promise.all(documents.map(async (doc) => {
-      const docAddress = (doc.id.indexOf('0x')==0)
-        ? doc.id
-        : await Metamap.findOne({ hash: doc.id });
+      let docAddress = doc.id;
+      if (doc.id.indexOf('Qm')==0) {
+        const metamap = await Metamap.findOne({ hash: doc.id });
+        docAddress = (metamap) ? metamap.address : false;
+      }
       
       if (docAddress) {
         if (addresses.indexOf(docAddress) == -1) addresses.push(docAddress);
