@@ -127,6 +127,15 @@ const socketResponse = (event, div) => {
   socket.on(room, dataListener);
 };
 
+const printArray = (text) => {
+  const arr = JSON.parse(text);
+  let ret='';
+  arr.forEach((el) => {
+    ret += '<div>'+ JSON.stringify(el) + '</div>';
+  });
+  return ret;
+};
+
 const getOrganizations = () => {
   respORG.innerHTML = '';
   const xhr = new XMLHttpRequest();
@@ -147,7 +156,7 @@ const getCharityEvents = () => {
   xhr.send();
   xhr.onload = (event) => {
     if (checkCE.checked) {
-      respCE.innerHTML = event.target.responseText;
+      respCE.innerHTML = printArray(event.target.responseText);
     } else {
       socketResponse(event, respCE);
     }
@@ -162,7 +171,7 @@ const getIncomingDonations = () => {
   xhr.send();
   xhr.onload = (event) => {
     if (checkID.checked) {
-      respID.innerHTML = event.target.responseText;
+      respID.innerHTML = printArray(event.target.responseText);
     } else {
       socketResponse(event, respID);
     }
@@ -231,7 +240,7 @@ const search = () => {
   xhr.send(JSON.stringify(body));
   xhr.onload = (event) => {
     if (checkSI.checked) {
-      respSI.innerHTML = event.target.responseText;
+      respSI.innerHTML = printArray(event.target.responseText);
     } else {
       socketResponse(event, respSI);
     }

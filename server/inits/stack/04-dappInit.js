@@ -5,7 +5,7 @@ export default async () => {
     const int = setInterval(() => {
         process.stdout.write('.');
     }, 200);
-    await init();
+    await init(true);
     clearInterval(int);
     process.stdout.write('done');
     console.log('');

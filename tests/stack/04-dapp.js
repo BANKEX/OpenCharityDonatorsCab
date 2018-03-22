@@ -32,7 +32,7 @@ socket.on('connect', () => {
       const response = await rp(options);
       organizations = JSON.parse(response);
       testOrg = organizations.find((elem) => (
-        elem.charityEventCount>1 && elem.incomingDonationCount>1
+        elem.charityEventCount>=1 && elem.incomingDonationCount>=1
       ));
       assert.equal(typeof organizations, 'object');
     });

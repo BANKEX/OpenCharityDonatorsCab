@@ -1,9 +1,13 @@
 import { DappService } from './services';
-import { Organization } from './models';
+import { Organization, CharityEvent, IncomingDonation, Metamap } from './models';
 import { INTERVALS, DIRS } from 'configuration';
 let refInt;
 
 const syncOrganizations = async () => {
+  await Organization.remove();
+  await CharityEvent.remove();
+  await IncomingDonation.remove();
+  await Metamap.remove();
   const _ORGAddressList = await DappService.getOrganizationAddressList();
 
   await Promise.all(_ORGAddressList.map(async (ORGaddress) => {
@@ -31,8 +35,12 @@ const syncOrganizations = async () => {
   return _ORGAddressList;
 };
 
-export default async () => {
+export default async (first) => {
   if (refInt) clearInterval(refInt);
   refInt = setInterval(syncOrganizations, INTERVALS.dapp.refreshOrganization);
-  DappService.subscribe(await syncOrganizations());
+  const ORGAddressList = await syncOrganizations();
+  if (first) DappService.subscribe(ORGAddressList);
+
+  // нужна функци переподписки на новые организации по рефрешу.
+  return true;
 };

@@ -23,8 +23,7 @@ export default {
     if (ctx.request.header['content-type']!='application/json' &&
       ctx.request.header['content-type']!='application/x-www-form-urlencoded') throw new AppError(400, 10);
     if (ctx.request.body.password!='organ') throw new AppError(401, 100);
-    ctx.body = await Organization.remove();
-    init();
+    ctx.body = await init();
   },
 
   async metaMap(ctx) {

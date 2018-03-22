@@ -1,6 +1,5 @@
 import { DIRS, DAPP, INTERVALS } from 'configuration';
 import SearchService from './search-service';
-import OrgService from './orgs-service';
 import { Organization, Metamap, CharityEvent, IncomingDonation } from '../index';
 import { io } from '../../../server';
 import init from '../init';
@@ -134,7 +133,7 @@ const getHistory = async (ORGaddress, address, type) => {
 const getOrganizationAddressList = async () => {
   if (!web3) web3 = new Web3(new Web3.providers.WebsocketProvider(DAPP.ws));
   if (!TOKENcontract) TOKENcontract = new web3.eth.Contract(abi('OpenCharityToken.json'), DAPP.token);
-  return await OrgService.getOrgs();
+  return DAPP.organizations;
 };
 const getCharityEventAddressList = async (ORGaddress) => {
   // console.log('getCharityEventAddressList');
@@ -148,7 +147,7 @@ const getCharityEventAddressList = async (ORGaddress) => {
       const metamap = await Metamap.findOne({address: charityEventObjectExt.address});
       if (!metamap) {
         await Metamap.create(new MetamapObject(charityEventObjectExt));
-        console.log(`MetaObject created ${charityEventObjectExt.address} - ${charityEventObjectExt.metaStorageHash}`);
+        // console.log(`MetaObject created ${charityEventObjectExt.address} - ${charityEventObjectExt.metaStorageHash}`);
       }
     }
     // push to search-index
@@ -252,7 +251,7 @@ const reconnect = () => {
       await web3.eth.getBlockNumber().then(console.log);
       console.log('socket reconnected');
       clearInterval(reconInt);
-      init();
+      init(true);
     } catch (err) {
       console.log('socket connection lost');
     }
