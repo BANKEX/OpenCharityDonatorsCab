@@ -8,6 +8,7 @@ const DAPP = config.get('dapp');
 const META = config.get('metaServer');
 const INTERVALS = config.get('intervals');
 const EMAIL = config.get('email');
+const CORS = config.get('cors');
 
 export {
   ADDRESS,
@@ -18,4 +19,5 @@ export {
   META,
   INTERVALS,
   EMAIL,
+  CORS,
 };

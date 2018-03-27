@@ -20,3 +20,6 @@ email:
   password: 'PASS'
   host: 'EMAILHOST'
   ssl: true
+cors:
+  - 'https://donatorscab.bankex.team'
+  - 'https://opencharity.bankex.team'

@@ -2,9 +2,6 @@ import fs from 'fs';
 
 export default (app) => {
   process.stdout.write('Middleware...');
-  const int = setInterval(() => {
-    process.stdout.write('.');
-  }, 200);
   const stack = fs.readdirSync(__dirname + '/stack').sort();
   stack.forEach((file) => {
     if (file.indexOf('-dev-') == 2) {
@@ -15,9 +12,8 @@ export default (app) => {
     } else {
       // console.log(file);
       require('./stack/' + file).default(app);
+      process.stdout.write('.');
     }
   });
-  clearInterval(int);
-  process.stdout.write('done');
-  console.log('');
+  console.log('done');
 };
