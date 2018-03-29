@@ -7,8 +7,8 @@ dirs:
   public: 'C:/NodeJS/oc_donators_cab/public/'
   abi: 'C:/NodeJS/oc_donators_cab/abi/'
 mongoURI: 'mongodb://user:password@ds123029.mlab.com:23029/oc_donators_cab'
-metaServer: 'https://opencharity.staging.bankex.team'
-# metaServer: 'http://127.0.0.1:8081'
+# metaServer: 'https://opencharity.staging.bankex.team'
+metaServer: 'http://127.0.0.1:8081'
 dapp:
   ws: 'wss://wsprovider.staging.bankex.team:8636'
   token: '0x6a183381d14371b4a228cca37802c09bd166ba9e'
