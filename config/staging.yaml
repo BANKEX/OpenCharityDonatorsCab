@@ -12,9 +12,9 @@ dapp:
   ws: 'wss://wsprovider.staging.bankex.team:8636'
   token: '0x6a183381d14371b4a228cca37802c09bd166ba9e'
   organizations:
-  - '0x47f6aa20C90B81b5b1115B989eD853e9EFA8F5B0'
-  - '0xf51dbaa3264f2dc1a950378416583be7a639ce17'
-  - '0x184435d6c65fd01f3ef4bb1018dc75503c3f802f'
+  - '0x613a9dCBA334C8B75Ba2a1190b3F6498C9af3E01'
+  - '0x0d8d530f578c9816C4415D60821482e74433eDf3'
+  - '0x7037d461Fe08DaF2f9ea6F3A343870c8e94b773E'
 email:
   user: 'EMAIL'
   password: 'PASS'
