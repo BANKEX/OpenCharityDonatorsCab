@@ -40,7 +40,7 @@ socket.on('connect', () => {
     it('Запрос getCharityEvents', (done) => {
       if (testOrg) {
         let counter = 0;
-        request(mainURL + '/api/dapp/getCharityEvents/' + testOrg.ORGaddress, (err, resp, body) => {
+        request(mainURL + '/api/dapp/getCharityEvents/' + testOrg.ORGaddress +'?how=bc', (err, resp, body) => {
           if (err) return done(err);
           socket.on(JSON.parse(body).room, (dt) => {
             if (dt != 'close') {
@@ -69,7 +69,7 @@ socket.on('connect', () => {
     it('Запрос getIncomingDonations', (done) => {
       if (testOrg) {
         let counter = 0;
-        request(mainURL + '/api/dapp/getIncomingDonations/' + testOrg.ORGaddress, (err, resp, body) => {
+        request(mainURL + '/api/dapp/getIncomingDonations/' + testOrg.ORGaddress+'?how=bc', (err, resp, body) => {
           if (err) return done(err);
           socket.on(JSON.parse(body).room, (dt) => {
             if (dt != 'close') {
@@ -97,7 +97,7 @@ socket.on('connect', () => {
       if (testOrg) {
         const options = {
           method: 'GET',
-          uri: mainURL + '/api/dapp/getCharityEvent/' + CE[0].address
+          uri: mainURL + '/api/dapp/getCharityEvent/' + CE[0].address +'?how=bc'
         };
         const response = await rp(options);
         const responseData = JSON.parse(response);
@@ -117,7 +117,7 @@ socket.on('connect', () => {
       if (testOrg) {
         const options = {
           method: 'GET',
-          uri: mainURL + '/api/dapp/getIncomingDonation/' + ID[0].address
+          uri: mainURL + '/api/dapp/getIncomingDonation/' + ID[0].address+'?how=bc'
         };
         const response = await rp(options);
         const responseData = JSON.parse(response);
@@ -175,7 +175,7 @@ socket.on('connect', () => {
         console.log('There is no test organization');
       }
     });
-
+/*
     it('Запрос search/', (done) => {
       const search = {
         searchRequest: 'test',
@@ -210,5 +210,6 @@ socket.on('connect', () => {
           if (err) return done(err);
         });
     });
+    */
   });
 });

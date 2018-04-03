@@ -150,12 +150,12 @@ const getOrganizations = () => {
 
 const getCharityEvents = () => {
   respCE.innerHTML = '';
-  const how = (checkCE.checked) ? '?how=db' : '';
+  const how = (checkCE.checked) ? '?how=bc' : '';
   const xhr = new XMLHttpRequest();
   xhr.open('get', '/api/dapp/getCharityEvents/'+orgCE.value+how);
   xhr.send();
   xhr.onload = (event) => {
-    if (checkCE.checked) {
+    if (!checkCE.checked) {
       respCE.innerHTML = printArray(event.target.responseText);
     } else {
       socketResponse(event, respCE);
@@ -165,12 +165,12 @@ const getCharityEvents = () => {
 
 const getIncomingDonations = () => {
   respID.innerHTML = '';
-  const how = (checkID.checked) ? '?how=db' : '';
+  const how = (checkID.checked) ? '?how=bc' : '';
   const xhr = new XMLHttpRequest();
   xhr.open('get', '/api/dapp/getIncomingDonations/'+orgID.value+how);
   xhr.send();
   xhr.onload = (event) => {
-    if (checkID.checked) {
+    if (!checkID.checked) {
       respID.innerHTML = printArray(event.target.responseText);
     } else {
       socketResponse(event, respID);
@@ -180,7 +180,7 @@ const getIncomingDonations = () => {
 
 const getCharityEvent1 = () => {
   respCE1.innerHTML = '';
-  const how = (checkCE1.checked) ? '?how=db' : '';
+  const how = (checkCE1.checked) ? '?how=bc' : '';
   const xhr = new XMLHttpRequest();
   xhr.open('get', '/api/dapp/getCharityEvent/'+hashCE1.value+how);
   xhr.send();
@@ -191,7 +191,7 @@ const getCharityEvent1 = () => {
 
 const getIncomingDonation1 = () => {
   respID1.innerHTML = '';
-  const how = (checkID1.checked) ? '?how=db' : '';
+  const how = (checkID1.checked) ? '?how=bc' : '';
   const xhr = new XMLHttpRequest();
   xhr.open('get', '/api/dapp/getIncomingDonation/'+hashID1.value+how);
   xhr.send();
@@ -235,11 +235,11 @@ const search = () => {
     addition: addSI.value.split(','),
     pageSize: Number(sizeSI.value),
     page: Number(pageSI.value),
-    how: (checkSI.checked) ? 'db' : 'bc'
+    how: (checkSI.checked) ? 'bc' : 'db'
   };
   xhr.send(JSON.stringify(body));
   xhr.onload = (event) => {
-    if (checkSI.checked) {
+    if (!checkSI.checked) {
       respSI.innerHTML = printArray(event.target.responseText);
     } else {
       socketResponse(event, respSI);

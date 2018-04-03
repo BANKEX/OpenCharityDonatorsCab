@@ -16,6 +16,7 @@ const errorMessages = {
   606: 'Файл не найден',
   620: 'Неверный тип поискового запроса',
   800: 'Запрашиваемый адрес смарт-контракта не обнаружен',
+  801: 'DAPP not available',
 };
 
 function AppError(httpError, appError, errors) {

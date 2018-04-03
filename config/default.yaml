@@ -4,7 +4,6 @@ jwt:
   temporaryTokenExp: 1200
 intervals:
   dapp:
-    refreshOrganization: 3600000
+    reconnection: 10000
     checkConnection: 120000
-    reconnection: 5000
-    refreshSmartContracts: 3600000
+    refreshInitList: 120000

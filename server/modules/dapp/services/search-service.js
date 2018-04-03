@@ -1,14 +1,15 @@
 import { META } from 'configuration';
 import rp from 'request-promise';
 
-const line = [];
-let readyToIndex = true;
-
 rp.defaults({
   simple: false,
   resolveWithFullResponse: true,
   encoding: 'utf-8',
 });
+
+/*
+const line = [];
+let readyToIndex = true;
 
 const addBatchToLine = (data) => {
   line.push(data);
@@ -49,6 +50,7 @@ const delDataFromIndex = async (data) => {
     console.error(e.message);
   }
 };
+*/
 
 const search = async (fields) => {
   const TYPES = ['organization', 'charityEvent', 'incomingDonation'];
@@ -66,7 +68,7 @@ const search = async (fields) => {
 
   const options = {
     method: 'POST',
-    uri: META + '/api/meta/search/',
+    uri: META + '/api/search/search/',
     body: JSON.stringify(data),
     headers: {'Content-Type': 'application/json'},
   };
@@ -78,7 +80,5 @@ const search = async (fields) => {
 };
 
 export default {
-  addBatchToLine,
   search,
-  delDataFromIndex,
 };

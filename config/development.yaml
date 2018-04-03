@@ -5,18 +5,14 @@ address:
 dirs:
   main: 'C:/NodeJS/oc_donators_cab/'
   public: 'C:/NodeJS/oc_donators_cab/public/'
-  abi: 'C:/NodeJS/oc_donators_cab/abi/'
 mongoURI: 'mongodb://user:password@ds123029.mlab.com:23029/oc_donators_cab'
-metaServer: 'https://meta.staging.bankex.team'
-# metaServer: 'http://127.0.0.1:8081'
+# metaServer: 'https://meta.staging.bankex.team'
+# opencharity: 'https://opencharity.staging.bankex.team'
+metaServer: 'http://127.0.0.1:8081'
+opencharity: 'http://127.0.0.1:8082'
 dapp:
   ws: 'wss://wsprovider.staging.bankex.team:8636'
   token: '0x6a183381d14371b4a228cca37802c09bd166ba9e'
-  smartContacts: 'https://donatorscab.staging.bankex.team/api/dapp/smarts'
-  organizations:
-  - '0x613a9dCBA334C8B75Ba2a1190b3F6498C9af3E01'
-  - '0x0d8d530f578c9816C4415D60821482e74433eDf3'
-  - '0x7037d461Fe08DaF2f9ea6F3A343870c8e94b773E'
 email:
   user: 'EMAIL'
   password: 'PASS'

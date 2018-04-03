@@ -1,4 +1,4 @@
-import { DappService } from '../services';
+import DappService from '../../../services/dapp-service';
 import { Organization } from '../models';
 
 const doWithAllCE = (org, callback) => {

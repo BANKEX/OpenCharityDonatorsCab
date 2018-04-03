@@ -5,13 +5,17 @@ import pages from 'pages';
 import modules from 'modules';
 
 const app = new Koa();
-const start = async () => {
+app.state = {
+  dapp: [0, 0],
+  initList: false,
+  web3: false,
+};
+
+app.start = async () => {
   await inits();
   middlewares(app);
   app.use(modules);
   app.use(pages);
 };
-
-setTimeout(start, 1000);
 
 export default app;
