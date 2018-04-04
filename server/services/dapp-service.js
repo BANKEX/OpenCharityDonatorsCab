@@ -3,6 +3,8 @@ import app from 'app';
 import { Organization, CharityEvent, IncomingDonation } from '../modules/dapp';
 
 const init = async () => {
+  app.state.previousORG = app.state.actualORG;
+  app.state.actualORG = app.state.initList.list;
   app.state.token = new app.state.web3.eth.Contract(app.state.initList.abis['OpenCharityToken'], DAPP.token);
   await Promise.all(app.state.initList.list.map(async (ORGaddress) => {
     const orgData = await singleOrganization(ORGaddress);
@@ -27,7 +29,8 @@ const init = async () => {
   await CharityEvent.deleteMany({ORGaddress: { '$nin': app.state.initList.list }});
   await IncomingDonation.deleteMany({ORGaddress: { '$nin': app.state.initList.list }});
 
-  subscribe(app.state.initList.list);
+  const newORG = app.state.actualORG.filter(el => (!app.state.previousORG.includes(el)));
+  subscribe(newORG);
 };
 
 const extractTags = (mask) => {

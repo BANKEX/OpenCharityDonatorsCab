@@ -9,6 +9,8 @@ app.state = {
   dapp: [0, 0],
   initList: false,
   web3: false,
+  previousORG: [],
+  actualORG: [],
 };
 
 app.start = async () => {
