@@ -1,7 +1,3 @@
-jwt:
-  secret: 'veryBigSecret'
-  exp: 604800
-  temporaryTokenExp: 1200
 intervals:
   dapp:
     reconnection: 10000

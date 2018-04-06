@@ -1,4 +1,4 @@
-import { DIRS, DAPP, INTERVALS } from 'configuration';
+import { DAPP, INTERVALS } from 'configuration';
 import app from 'app';
 import { Organization, CharityEvent, IncomingDonation } from '../modules/dapp';
 

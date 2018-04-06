@@ -5,7 +5,6 @@ const config = require('config');
 const io = require('socket.io-client');
 
 const ADDRESS = config.get('address');
-const META = config.get('metaServer');
 const DAPP = config.get('dapp');
 
 rp.defaults({
@@ -21,10 +20,10 @@ const CE=[], ID=[];
 const socket = io(mainURL, { path: '/api/ws' });
 socket.on('error', console.log);
 socket.on('connect', () => {
-  describe('--------Запросы к DAPP-----------', () => {
+  describe('--------DAPP tests-----------', () => {
     after(() => {socket.disconnect()});
 
-    it('Запрос getOrganizations', async () => {
+    it('GET getOrganizations', async () => {
       const options = {
         method: 'GET',
         uri: mainURL + '/api/dapp/getOrganizations'
@@ -37,7 +36,7 @@ socket.on('connect', () => {
       assert.equal(typeof organizations, 'object');
     });
 
-    it('Запрос getCharityEvents', (done) => {
+    it('GET getCharityEvents', (done) => {
       if (testOrg) {
         let counter = 0;
         request(mainURL + '/api/dapp/getCharityEvents/' + testOrg.ORGaddress +'?how=bc', (err, resp, body) => {
@@ -66,7 +65,7 @@ socket.on('connect', () => {
       }
     });
 
-    it('Запрос getIncomingDonations', (done) => {
+    it('GET getIncomingDonations', (done) => {
       if (testOrg) {
         let counter = 0;
         request(mainURL + '/api/dapp/getIncomingDonations/' + testOrg.ORGaddress+'?how=bc', (err, resp, body) => {
@@ -93,7 +92,7 @@ socket.on('connect', () => {
       }
     });
 
-    it('Запрос getCharityEvent/hash', async() => {
+    it('GET getCharityEvent/hash', async() => {
       if (testOrg) {
         const options = {
           method: 'GET',
@@ -113,7 +112,7 @@ socket.on('connect', () => {
       }
     });
 
-    it('Запрос getIncomingDonation/hash', async() => {
+    it('GET getIncomingDonation/hash', async() => {
       if (testOrg) {
         const options = {
           method: 'GET',
@@ -132,7 +131,7 @@ socket.on('connect', () => {
       }
     });
 
-    it('Фильтр getCharityEvents', (done) => {
+    it('POST getCharityEvents', (done) => {
       if (testOrg) {
         const body = {
           ORGaddress: testOrg.ORGaddress,
@@ -175,12 +174,13 @@ socket.on('connect', () => {
         console.log('There is no test organization');
       }
     });
-/*
-    it('Запрос search/', (done) => {
+
+    it('POST search/', (done) => {
       const search = {
         searchRequest: 'test',
         type: 'charityEvent',
         pageSize: 50,
+        how: 'bc',
       };
       const options = {
         method: 'POST',
@@ -210,6 +210,6 @@ socket.on('connect', () => {
           if (err) return done(err);
         });
     });
-    */
+
   });
 });

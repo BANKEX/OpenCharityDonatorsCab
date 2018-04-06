@@ -2,19 +2,20 @@ env: staging
 address:
   internal: 'http://0.0.0.0:80'
   external: 'https://donatorscab.staging.bankex.team'
-dirs:
-  main: '/oc_donators_cab/'
-  public: '/oc_donators_cab/public/'
+jwt:
+  secret: JWTSECRETSTAGE
+  exp: 604800
+  temporaryTokenExp: 1200
 mongoURI: 'mongodb://opch:testpass@donators_mongodb:27017/opch-test'
 metaServer: 'https://meta.staging.bankex.team'
-opencharity: 'https://opencharity.staging.bankex.team'
+openCharity: 'https://opencharity.staging.bankex.team'
 dapp:
   ws: 'wss://wsprovider.staging.bankex.team:8636'
   token: '0x6a183381d14371b4a228cca37802c09bd166ba9e'
 email:
-  user: 'EMAIL'
-  password: 'PASS'
-  host: 'EMAILHOST'
+  user: EMAILSTAGE
+  password: EMAILPASSSTAGE
+  host: EMAILHOSTSTAGE
   ssl: true
 cors:
   - 'https://donatorscab.staging.bankex.team'
