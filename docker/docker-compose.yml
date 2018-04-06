@@ -6,7 +6,7 @@ volumes:
 
 services:
   oc_donators_cab:
-    image: ${IMAGE}
+    image: $CI_REGISTRY_IMAGE
     container_name: oc_donators_cab
     restart: always
     volumes:
