@@ -14,6 +14,14 @@ ADD /tests /oc_donators_cab/tests
 ADD /package.json /oc_donators_cab/package.json
 ADD /node_modules /oc_donators_cab/node_modules
 
+RUN sed -i "s@EMAILSTAGE@$EMAILSTAGE@" /oc_donators_cab/config/staging.yaml
+RUN sed -i "s@EMAILHOSTSTAGE@$EMAILHOSTSTAGE@" /oc_donators_cab/config/staging.yaml
+RUN sed -i "s@EMAILPASSSTAGE@$EMAILPASSSTAGE@" /oc_donators_cab/config/staging.yaml
+RUN sed -i "s@EMAILSTAGE@$EMAILSTAGE@" /oc_donators_cab/config/production.yaml
+RUN sed -i "s@EMAILHOSTSTAGE@$EMAILHOSTSTAGE@" /oc_donators_cab/config/production.yaml
+RUN sed -i "s@EMAILPASSSTAGE@$EMAILPASSSTAGE@" /oc_donators_cab/config/production.yaml
+RUN sed -i "s@JWTSECRETSTAGE@$JWTSECRETSTAGE@" /oc_donators_cab/config/staging.yaml
+RUN sed -i "s@JWTSECRETPROD@$JWTSECRETPROD@" /oc_donators_cab/config/staging.yaml
 RUN sed -i "s@testpass@$MONGODB_STAGE_PASS@" /oc_donators_cab/config/staging.yaml
 RUN sed -i "s@testpass@$MONGODB_PROD_PASS@" /oc_donators_cab/config/production.yaml
 
