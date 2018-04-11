@@ -174,6 +174,7 @@ export default {
     }
 
     const addresses = JSON.parse(await SearchService.search(body));
+    console.log(addresses);
     
     if (ctx.request.body.how == 'bc' && app.state.web3) {
       const room = uuid();

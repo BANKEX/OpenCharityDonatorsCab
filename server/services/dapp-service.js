@@ -3,6 +3,151 @@ import app from 'app';
 import { Organization, CharityEvent, IncomingDonation } from '../modules/dapp';
 
 const init = async () => {
+  const getCharityEventAddressList = async (ORGaddress) => {
+    const ORGcontract = new app.state.web3.eth.Contract(app.state.initList.abis['Organization'], ORGaddress);
+    const added = await ORGcontract.getPastEvents('CharityEventAdded', {fromBlock: 0});
+    const CEaddressList = await Promise.all(added.map(async (event) => {
+      const charityEventObjectExt = await CharityEventObjectExt(event);
+      const ce = await CharityEvent.findOne({address: charityEventObjectExt.address});
+      if (!ce) {
+        await CharityEvent.create(charityEventObjectExt);
+      } else {
+        await CharityEvent.update({address: charityEventObjectExt.address}, charityEventObjectExt);
+      }
+
+      return charityEventObjectExt.forCEaddressList;
+    }));
+    return CEaddressList;
+  };
+  const getIncomingDonationAddressList = async (ORGaddress) => {
+    const ORGcontract = new app.state.web3.eth.Contract(app.state.initList.abis['Organization'], ORGaddress.toLowerCase());
+    const added = await ORGcontract.getPastEvents('IncomingDonationAdded', {fromBlock: 0});
+
+    const IDaddressList = await Promise.all(added.map(async (event) => {
+      const incomingDonationObjectExt = await IncomingDonationObjectExt(event);
+      const id = await IncomingDonation.findOne({address: incomingDonationObjectExt.address});
+      if (!id) {
+        await IncomingDonation.create(incomingDonationObjectExt);
+      } else {
+        await IncomingDonation.update({address: incomingDonationObjectExt.address}, incomingDonationObjectExt);
+      }
+
+      return incomingDonationObjectExt.forIDaddressList;
+    }));
+    // SearchService.addBatchToLine(batch);
+    return IDaddressList;
+  };
+  const subscribe = async (_ORGAddressList) => {
+    const charityEventAdded = async (event) => {
+      console.log(new Date().toLocaleString());
+      console.log('CE added');
+      const ORGaddress = event.address;
+      const { charityEvent } = event.returnValues;
+      const ev = { ORGaddress, charityEvent };
+      console.log(ev);
+
+      const charityEventObjectExt = await CharityEventObjectExt(event);
+      const orgFromDB = await Organization.findOne({ ORGaddress: charityEventObjectExt.ORGaddress });
+      if (orgFromDB) {
+        const { _id, CEAddressList } = orgFromDB;
+        CEAddressList.push(charityEventObjectExt.forCEaddressList);
+        const charityEventCount = orgFromDB.charityEventCount+1;
+        await Organization.update({ _id }, { CEAddressList, charityEventCount });
+        app.io.emit('newCharityEvent', JSON.stringify(charityEventObjectExt));
+      } else {
+        console.error('Organization not found');
+      }
+      const ce = await CharityEvent.findOne({address: charityEventObjectExt.address});
+      if (!ce) {
+        await CharityEvent.create(charityEventObjectExt);
+      } else {
+        console.log('CE already exists');
+      }
+      console.log(charityEventObjectExt);
+    };
+    const incomingDonationAdded = async (event) => {
+      console.log(new Date().toLocaleString());
+      console.log('ID added');
+      const ORGaddress = event.address;
+      const { incomingDonation } = event.returnValues;
+      const ev = { ORGaddress, incomingDonation };
+      console.log(ev);
+
+      const incomingDonationObjectExt = await IncomingDonationObjectExt(event);
+      const orgFromDB = await Organization.findOne({ORGaddress: incomingDonationObjectExt.ORGaddress});
+      if (orgFromDB) {
+        const { _id, IDAddressList } = orgFromDB;
+        IDAddressList.push(incomingDonationObjectExt.forIDaddressList);
+        const incomingDonationCount = orgFromDB.incomingDonationCount+1;
+        await Organization.update({ _id }, { IDAddressList, incomingDonationCount });
+        app.io.emit('newIncomingDonation', JSON.stringify(incomingDonationObjectExt));
+      } else {
+        console.error('Organization not found');
+      }
+      const id = await IncomingDonation.findOne({address: incomingDonationObjectExt.address});
+      if (!id) {
+        await IncomingDonation.create(incomingDonationObjectExt);
+      } else {
+        console.log('ID already exists');
+      }
+      console.log(incomingDonationObjectExt);
+    };
+    const fundsMovedToCharityEvent = async (event) => {
+      console.log(new Date().toLocaleString());
+      const { timestamp } = await app.state.web3.eth.getBlock(event.blockHash);
+      const date = (new Date(timestamp * 1000)).toLocaleString();
+      const ORGaddress = event.address;
+      const { incomingDonation, charityEvent, amount } = event.returnValues;
+      const ce = await CharityEvent.findOne({ address: charityEvent });
+      const id = await IncomingDonation.findOne({ address: incomingDonation });
+      if (ce && id) {
+        await CharityEvent.update({address: ce.address}, {raised: ce.raised + Number(amount)});
+        await IncomingDonation.update({address: id.address}, {amount: id.amount - Number(amount)});
+        app.io.emit('moveFunds', JSON.stringify({ORGaddress, incomingDonation, charityEvent, amount, date}));
+        console.log(`${incomingDonation}--(${amount})-->${charityEvent}`);
+      } else {
+        if (!ce) console.log(charityEvent + ' - CE not in DB');
+        if (!id) console.log(incomingDonation + ' - ID not in DB');
+      }
+    };
+    const metaStorageHashUpdated = async (event) => {
+      console.log(new Date().toLocaleString());
+      console.log('MetaUpdated');
+      const ORGaddress = event.address;
+      const { ownerAddress, metaStorageHash } = event.returnValues;
+      const address = ownerAddress;
+      // edit DB
+      const ev = { ORGaddress, address, metaStorageHash };
+      console.log(ev);
+      console.log(await CharityEvent.update({ address }, { metaStorageHash }));
+      console.log(await IncomingDonation.update({ address }, { metaStorageHash }));
+    };
+    const charityEventEdited = async (event) => {
+      console.log(new Date().toLocaleString());
+      console.log('CEedited');
+      const ORGaddress = event.address;
+      const { charityEvent } = event.returnValues;
+      const ev = { ORGaddress, charityEvent };
+      console.log(ev);
+      const charityEventObjectExt = await CharityEventObjectExt(event);
+      const ce = await CharityEvent.findOne({address: charityEventObjectExt.address});
+      if (!ce) {
+        await CharityEvent.create(charityEventObjectExt);
+      } else {
+        await CharityEvent.update({__id: ce.__id}, charityEventObjectExt);
+      }
+    };
+
+    _ORGAddressList.forEach(async (ORGaddress) => {
+      const ORGcontract = new app.state.web3.eth.Contract(app.state.initList.abis['Organization'], ORGaddress);
+      ORGcontract.events.CharityEventAdded({ fromBlock: 'latest' }).on('data', charityEventAdded);
+      ORGcontract.events.IncomingDonationAdded({ fromBlock: 'latest' }).on('data', incomingDonationAdded);
+      ORGcontract.events.FundsMovedToCharityEvent({ fromBlock: 'latest' }).on('data', fundsMovedToCharityEvent);
+      ORGcontract.events.MetaStorageHashUpdated({ fromBlock: 'latest' }).on('data', metaStorageHashUpdated);
+      ORGcontract.events.CharityEventEdited({ fromBlock: 'latest' }).on('data', charityEventEdited);
+    });
+  };
+
   app.state.previousORG = app.state.actualORG;
   app.state.actualORG = app.state.initList.list;
   app.state.token = new app.state.web3.eth.Contract(app.state.initList.abis['OpenCharityToken'], DAPP.token);
@@ -42,7 +187,7 @@ const CharityEventObjectExt = async (event) => {
   _this.address = event.returnValues.charityEvent;
   _this.ORGaddress = event.address;
   const { timestamp } = await app.state.web3.eth.getBlock(event.blockHash);
-  _this.date = (new Date(timestamp * 1000)).toLocaleString();
+  _this.date = timestamp;
   const charityEventObject = await singleCharityEvent(_this.address);
   Object.getOwnPropertyNames(charityEventObject).forEach((key) => {
     _this[key] = charityEventObject[key];
@@ -58,7 +203,7 @@ const IncomingDonationObjectExt = async (event) => {
   _this.address = event.returnValues.incomingDonation;
   _this.ORGaddress = event.address;
   const { timestamp } = await app.state.web3.eth.getBlock(event.blockHash);
-  _this.date = (new Date(timestamp * 1000)).toLocaleString();
+  _this.date = timestamp;
   const incomingDonationObject = await singleIncomingDonation(_this.address);
   Object.getOwnPropertyNames(incomingDonationObject).forEach((key) => {
     _this[key] = incomingDonationObject[key];
@@ -117,110 +262,6 @@ const getHistory = async (ORGaddress, address, type) => {
     : { charityEvent, amount, date, transactionHash };
     return JSON.stringify(data);
   }));
-};
-
-// only for init
-const getCharityEventAddressList = async (ORGaddress) => {
-  const ORGcontract = new app.state.web3.eth.Contract(app.state.initList.abis['Organization'], ORGaddress);
-  const added = await ORGcontract.getPastEvents('CharityEventAdded', {fromBlock: 0});
-  // let batch = [];
-  const CEaddressList = await Promise.all(added.map(async (event) => {
-    const charityEventObjectExt = await CharityEventObjectExt(event);
-    const ce = await CharityEvent.findOne({address: charityEventObjectExt.address});
-    if (!ce) await CharityEvent.create(charityEventObjectExt);
-
-    return charityEventObjectExt.forCEaddressList;
-  }));
-
-  // const edited = await ORGcontract.getPastEvents('CharityEventEdited', {fromBlock: 0});
-  // здесь что-то делаем с edited
-  /*
-  const metaUpdated = await ORGcontract.getPastEvents('MetaStorageHashUpdated', {fromBlock: 0});
-  const update = await Promise.all(metaUpdated.map(async (event) => {
-    console.log(event);
-    const ORGaddress = event.address;
-    const { ownerAddress, metaStorageHash } = event.returnValues;
-
-    // update Metamap
-
-    return true;
-  }));
-  */
-  return CEaddressList;
-};
-const getIncomingDonationAddressList = async (ORGaddress) => {
-  const ORGcontract = new app.state.web3.eth.Contract(app.state.initList.abis['Organization'], ORGaddress.toLowerCase());
-  const added = await ORGcontract.getPastEvents('IncomingDonationAdded', {fromBlock: 0});
-
-  const IDaddressList = await Promise.all(added.map(async (event) => {
-    const incomingDonationObjectExt = await IncomingDonationObjectExt(event);
-    const id = await IncomingDonation.findOne({address: incomingDonationObjectExt.address});
-    if (!id) await IncomingDonation.create(incomingDonationObjectExt);
-    
-    return incomingDonationObjectExt.forIDaddressList;
-  }));
-  // SearchService.addBatchToLine(batch);
-  return IDaddressList;
-};
-const subscribe = async (_ORGAddressList) => {
-  const charityEventAdded = async (event) => {
-    console.log(new Date().toLocaleString());
-    const charityEventObjectExt = await CharityEventObjectExt(event);
-    const orgFromDB = await Organization.findOne({ ORGaddress: charityEventObjectExt.ORGaddress });
-    if (orgFromDB) {
-      const { _id, CEAddressList } = orgFromDB;
-      CEAddressList.push(charityEventObjectExt.forCEaddressList);
-      const charityEventCount = orgFromDB.charityEventCount+1;
-      await Organization.update({ _id }, { CEAddressList, charityEventCount });
-      app.io.emit('newCharityEvent', JSON.stringify(charityEventObjectExt));
-    } else {
-      console.error('Organization not found');
-    }
-    console.log(charityEventObjectExt);
-  };
-  const incomingDonationAdded = async (event) => {
-    console.log(new Date().toLocaleString());
-    const incomingDonationObjectExt = await IncomingDonationObjectExt(event);
-    const orgFromDB = await Organization.findOne({ORGaddress: incomingDonationObjectExt.ORGaddress});
-    if (orgFromDB) {
-      const { _id, IDAddressList } = orgFromDB;
-      IDAddressList.push(incomingDonationObjectExt.forIDaddressList);
-      const incomingDonationCount = orgFromDB.incomingDonationCount+1;
-      await Organization.update({ _id }, { IDAddressList, incomingDonationCount });
-      app.io.emit('newIncomingDonation', JSON.stringify(incomingDonationObjectExt));
-    } else {
-      console.error('Organization not found');
-    }
-    console.log(incomingDonationObjectExt);
-  };
-  const fundsMovedToCharityEvent = async (event) => {
-    console.log(new Date().toLocaleString());
-    const { timestamp } = await app.state.web3.eth.getBlock(event.blockHash);
-    const date = (new Date(timestamp * 1000)).toLocaleString();
-    const ORGaddress = event.address;
-    const { incomingDonation, charityEvent, amount } = event.returnValues;
-    const ce = await CharityEvent.findOne({ address: charityEvent });
-    const id = await IncomingDonation.findOne({ address: incomingDonation });
-    await CharityEvent.update({ address: ce.address }, { raised: ce.raised + Number(amount) });
-    await IncomingDonation.update({ address: id.address }, { amount: id.amount - Number(amount) });
-    app.io.emit('moveFunds', JSON.stringify({ ORGaddress, incomingDonation, charityEvent, amount, date }));
-    console.log(`${incomingDonation}--(${amount})-->${charityEvent}`);
-  };
-  const metaStorageHashUpdated = async (event) => {
-    console.log(new Date().toLocaleString());
-    console.log('MetaUpdated');
-    const ORGaddress = event.address;
-    const { ownerAddress, metaStorageHash } = event.returnValues;
-    // edit DB
-  };
-  
-  _ORGAddressList.forEach(async (ORGaddress) => {
-    const ORGcontract = new app.state.web3.eth.Contract(app.state.initList.abis['Organization'], ORGaddress);
-    ORGcontract.events.CharityEventAdded({ fromBlock: 'latest' }).on('data', charityEventAdded);
-    ORGcontract.events.IncomingDonationAdded({ fromBlock: 'latest' }).on('data', incomingDonationAdded);
-    ORGcontract.events.FundsMovedToCharityEvent({ fromBlock: 'latest' }).on('data', fundsMovedToCharityEvent);
-    ORGcontract.events.MetaStorageHashUpdated({ fromBlock: 'latest' }).on('data', metaStorageHashUpdated);
-  });
 };
 
 export default {
