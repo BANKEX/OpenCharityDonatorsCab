@@ -1,5 +1,4 @@
-![logo](https://opencharity.staging.bankex.team/api/logo.png)
-# OpenCharity DonatorsCab
+# BANKEX Foundation OpenCharity DonatorsCab
 
 Backend API for OpenCharity Donators Cabinet Front.
 
