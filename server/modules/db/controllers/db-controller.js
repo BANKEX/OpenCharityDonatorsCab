@@ -1,7 +1,8 @@
-import { Organization } from '../../dapp';
+import { Organization, CharityEvent, IncomingDonation } from '../../dapp';
 import { User } from '../../user';
 import DappService from '../../../services/dapp-service';
 import AppError from '../../../utils/AppErrors.js';
+import dappAll from '../../../inits/stack/02-dappAll';
  
 export default {
 
@@ -24,7 +25,11 @@ export default {
     if (ctx.request.header['content-type']!='application/json' &&
       ctx.request.header['content-type']!='application/x-www-form-urlencoded') throw new AppError(400, 10);
     if (ctx.request.body.password!='organ') throw new AppError(401, 100);
-    ctx.body = await DappService.init();
+    await Organization.remove();
+    await CharityEvent.remove();
+    await IncomingDonation.remove();
+    await dappAll();
+    ctx.body = 'Ok';
   },
   
 };

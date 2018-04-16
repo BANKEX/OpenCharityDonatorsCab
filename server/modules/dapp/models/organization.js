@@ -5,8 +5,6 @@ const OrgSchema = new Schema({
   name: String,
   charityEventCount: Number,
   incomingDonationCount: Number,
-  CEAddressList: [String],
-  IDAddressList: [String],
 }, {
   timestamps: false,
 });

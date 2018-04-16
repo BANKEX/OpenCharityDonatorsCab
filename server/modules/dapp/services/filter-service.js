@@ -1,7 +1,7 @@
 
 const cardOrganization = ['name', 'charityEventCount', 'incomingDonationCount', 'address'];
-const cardCharityEvent = ['name', 'payed', 'target', 'raised', 'tags', 'date', 'address'];
-const cardIncomingDonation = ['realWorldIdentifier', 'amount', 'note', 'tags', 'date', 'address'];
+const cardCharityEvent = ['name', 'payed', 'target', 'raised', 'tags', 'cdate', 'mdate', 'address', 'metaStorageHash'];
+const cardIncomingDonation = ['realWorldIdentifier', 'amount', 'note', 'tags', 'cdate', 'mdate', 'address', 'metaStorageHash'];
 
 const includeTest = (dataField, reqField) => {
   if (reqField.include) {
@@ -15,22 +15,16 @@ const rangeTest = (dataField, reqField) => {
   if (reqField.range) {
     if (Array.isArray(reqField.range)) {
       if (reqField.range.length == 2) {
-        if (Date.parse(dataField)) {
-          if (Date.parse(reqField.range[0]) && Date.parse(reqField.range[1])) {
-            return (Date.parse(dataField) >= Date.parse(reqField.range[0]) && Date.parse(dataField) <= Date.parse(reqField.range[1]));
-          } else return false;
-        } else {
-          if (!isNaN(Number(reqField.range[0])) && !isNaN(Number(reqField.range[1]))) {
-            return (Number(dataField) >= Number(reqField.range[0]) && Number(dataField) <= Number(reqField.range[1]));
-          } else return false;
-        }
+        if (!isNaN(Number(dataField)) && !isNaN(Number(reqField.range[0])) && !isNaN(Number(reqField.range[1]))) {
+          return (Number(dataField) >= Number(reqField.range[0]) && Number(dataField) <= Number(reqField.range[1]));
+        } else return false;
       } else return false;
     } else return false;
   } else return true;
 };
 
 const enumTest = (dataField, reqField) => {
-  if (reqField.enum!=undefined) {
+  if (reqField.enum) {
     if (Array.isArray(reqField.enum)) {
       let test = false;
       reqField.enum.forEach((elem) => {

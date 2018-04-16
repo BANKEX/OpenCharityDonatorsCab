@@ -42,8 +42,8 @@
   <div class="ev newID" align="center" id="newEventID">0</div>
   <div class="container">
     <h1>OpenCharityDonatorsCab testAPI</h1>
-
     <div class="panel-group" id="accordion">
+
       <div class="panel panel-default">
         <div class="panel-heading">
           <h4 class="panel-title">
@@ -140,6 +140,9 @@
             <div class="row">
               <h3>Dapp getOrganizations</h3>
               <div class="col-sm-6">
+                <div>
+                  <span>From BC: <input type="checkbox" id="checkORG"></span>
+                </div>
                 <button class="btn btn-success" onClick="getOrganizations()">Send</button>
               </div>
               <div class="col-sm-6 resp" id="respORG"></div>
@@ -287,9 +290,9 @@
           </div>
         </div>
       </div>
+
     </div>
   </div>
-
   <script src="testAPI.js"></script>
 </body>
 </html>

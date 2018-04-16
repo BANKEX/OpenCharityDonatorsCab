@@ -3,7 +3,8 @@ import mongoose, { Schema } from 'mongoose';
 const schema = new Schema({
   address: String,
   ORGaddress: String,
-  date: Date,
+  cdate: Number,
+  mdate: Number,
   realWorldIdentifier: String,
   note: String,
   amount: Number,

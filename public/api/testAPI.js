@@ -138,13 +138,16 @@ const printArray = (text) => {
 
 const getOrganizations = () => {
   respORG.innerHTML = '';
+  const how = (checkORG.checked) ? '?how=bc' : '';
   const xhr = new XMLHttpRequest();
-  xhr.open('get', '/api/dapp/getOrganizations');
+  xhr.open('get', '/api/dapp/getOrganizations'+how);
   xhr.send();
   xhr.onload = (event) => {
-    JSON.parse(event.target.responseText).forEach((elem) => {
-      addData(respORG, JSON.stringify(elem));
-    });
+    if (!checkORG.checked) {
+      respORG.innerHTML = printArray(event.target.responseText);
+    } else {
+      socketResponse(event, respORG);
+    }
   };
 };
 
@@ -208,7 +211,7 @@ const filterCharityEvent = () => {
   const body = JSON.parse(filterCE.value);
   xhr.send(JSON.stringify(body));
   xhr.onload = (event) => {
-    socketResponse(event, respFCE);
+    respFCE.innerHTML = printArray(event.target.responseText);
   };
 };
 
@@ -220,7 +223,7 @@ const filterIncomingDonation = () => {
   const body = JSON.parse(filterID.value);
   xhr.send(JSON.stringify(body));
   xhr.onload = (event) => {
-    socketResponse(event, respFID);
+    respFID.innerHTML = printArray(event.target.responseText);
   };
 };
 

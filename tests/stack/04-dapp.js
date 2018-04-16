@@ -52,7 +52,8 @@ socket.on('connect', () => {
               assert.notEqual(data.target, undefined);
               assert.notEqual(data.raised, undefined);
               assert.notEqual(data.tags, undefined);
-              assert.notEqual(data.date, undefined);
+              assert.notEqual(data.cdate, undefined);
+              assert.notEqual(data.mdate, undefined);
               assert.notEqual(data.address, undefined);
               assert.notEqual(data.metaStorageHash, undefined);
             } else {
@@ -80,7 +81,8 @@ socket.on('connect', () => {
               assert.notEqual(data.amount, undefined);
               assert.notEqual(data.note, undefined);
               assert.notEqual(data.tags, undefined);
-              assert.notEqual(data.date, undefined);
+              assert.notEqual(data.cdate, undefined);
+              assert.notEqual(data.mdate, undefined);
               assert.notEqual(data.address, undefined);
             } else {
               if (counter == testOrg.incomingDonationCount) done();
@@ -105,7 +107,7 @@ socket.on('connect', () => {
         assert.equal(responseData.payed, CE[0].payed);
         assert.equal(responseData.raised, CE[0].raised);
         assert.equal(responseData.tags, CE[0].tags);
-        assert.equal(responseData.date, CE[0].date);
+        assert.equal(responseData.cdate, CE[0].cdate);
         assert.equal(responseData.address, CE[0].address);
       } else {
         console.log('There is no test organization');
@@ -124,7 +126,7 @@ socket.on('connect', () => {
         assert.equal(responseData.note, ID[0].note);
         assert.equal(responseData.amount, ID[0].amount);
         assert.equal(responseData.tags, ID[0].tags);
-        assert.equal(responseData.date, ID[0].date);
+        assert.equal(responseData.cdate, ID[0].cdate);
         assert.equal(responseData.address, ID[0].address);
       } else {
         console.log('There is no test organization');
@@ -138,6 +140,9 @@ socket.on('connect', () => {
           name: {
             include: CE[0].name
           },
+          cdate: {
+            range: [CE[0].cdate, CE[0].cdate]
+          }
         };
   
         const options = {
@@ -153,19 +158,9 @@ socket.on('connect', () => {
         let test = true;
         rp.post(options)
           .then((body) => {
-            socket.on(JSON.parse(body).room, (dt) => {
-              if (dt!='close') {
-                const data = JSON.parse(dt);
-                counter++;
-                process.stdout.write('.');
-                if (data !== false) {
-                  test = test && (data.name.indexOf(CE[0].name) != -1);
-                }
-                assert.equal(test, true);
-              } else {
-                if (counter == testOrg.charityEventCount) done();
-              }
-            });
+            const obj = JSON.parse(body);
+            assert.equal(obj[0].address, CE[0].address);
+            done();
           })
           .catch((err) => {
             if (err) return done(err);

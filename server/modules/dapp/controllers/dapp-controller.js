@@ -4,154 +4,145 @@ import AppError from '../../../utils/AppErrors.js';
 import DappService from '../../../services/dapp-service';
 import uuid from 'uuid/v4';
 import { Organization, CharityEvent, IncomingDonation } from '../index';
-import { doWithAllCE, doWithAllID, getDataFromDB } from '../helpers';
 import app from 'app';
+
+const getMany = async (ctx, type) => {
+  const options = {
+    'CE': {
+      count: 'charityEventCount',
+      collection: CharityEvent,
+    },
+    'ID': {
+      count: 'incomingDonationCount',
+      collection: IncomingDonation,
+    },
+  };
+
+  if (ctx.query.how == 'bc' && app.state.web3) {
+    const listORG = (ctx.params.org == 'all') ? app.state.initList.list : [ctx.params.org];
+    let quantity = 0;
+    await Promise.all(listORG.map(async (ORGaddress) => {
+      const org = await DappService.singleOrganization(ORGaddress);
+      quantity += Number(org[options[type].count]);
+      return null;
+    }));
+    const room = uuid();
+    ctx.body = { room, quantity };
+
+    let i = 0;
+    listORG.forEach(async (ORGaddress) => {
+      const list = await DappService.getAddresses(ORGaddress, type);
+      list.forEach(async (address) => {
+        const res = await DappService.getFullObject(address, null, type, ORGaddress);
+        app.io.emit(room, JSON.stringify(res));
+        i++;
+        if (i == quantity) app.io.emit(room, 'close');
+      });
+    });
+  } else {
+    const org = (ctx.params.org == 'all') ? {} : { ORGaddress: ctx.params.org };
+    ctx.body = await options[type].collection.find(org).select({__v: 0, _id: 0}).sort({date: -1});
+  }
+};
+
+const getOne = async (ctx, type) => {
+  const options = {
+    'CE': {
+      type: 'charityEvent',
+      collection: CharityEvent,
+    },
+    'ID': {
+      type: 'incomingDonation',
+      collection: IncomingDonation,
+    },
+  };
+
+  if (ctx.query.how == 'bc' && app.state.web3) {
+    const res = await DappService.getFullObject(ctx.params.hash, null, type, null);
+    res.history = await DappService.getHistory(res.ORGaddress, res.address, type);
+    ctx.body = res;
+  } else {
+    const res = (await options[type].collection.findOne({ address: ctx.params.hash }).select({__v: 0, _id: 0})).toObject();
+    if (res) {
+      res.history = await DappService.getHistory(res.ORGaddress, res.address, type);
+    }
+    ctx.body = res || 'Not found';
+  }
+};
+
+const filter = async (ctx, type) => {
+  const options = {
+    'CE': {
+      card: 'cardCharityEvent',
+      collection: CharityEvent,
+    },
+    'ID': {
+      card: 'cardIncomingDonation',
+      collection: IncomingDonation,
+    },
+  };
+
+  if (ctx.request.header['content-type'] != 'application/json' &&
+    ctx.request.header['content-type'] != 'application/x-www-form-urlencoded') throw new AppError(400, 10);
+
+  const fields = pick(ctx.request.body, FilterService[options[type].card]);
+  const filtering = Object.getOwnPropertyNames(fields).length != 0;
+  const ORGsearch = (!ctx.request.body.ORGaddress)
+    ? {}
+    : {ORGaddress: ctx.request.body.ORGaddress};
+
+  const all = await options[type].collection.find(ORGsearch).select({__v: 0, _id: 0});
+  const res = [];
+  await Promise.all(all.map((obj) => {
+    const filtered = (filtering) ? FilterService.filter(obj, fields) : obj;
+    if (filtered) res.push(filtered);
+    return null;
+  }));
+  ctx.body = res;
+};
 
 export default {
   async getOrganizations(ctx) {
     if (ctx.query.how == 'bc' && app.state.web3) {
-      ctx.body = 'Development';
+      const room = uuid();
+      const quantity = app.state.initList.list.length;
+      ctx.body = { room, quantity };
+
+      let i = 0;
+      app.state.initList.list.forEach(async (ORGaddress) => {
+        const orgData = await DappService.singleOrganization(ORGaddress);
+        orgData.ORGaddress = ORGaddress;
+        app.io.emit(room, JSON.stringify(orgData));
+        i++;
+        if (i == quantity) app.io.emit(room, 'close');
+      });
     } else {
       ctx.body = await Organization.find().select({__v: 0, _id: 0});
     }
   },
 
   async getCharityEvents(ctx) {
-    const org = (ctx.params.org=='all') ? {} : { ORGaddress: ctx.params.org };
-
-    if (ctx.query.how == 'bc' && app.state.web3) {
-      const orgFromDB = await Organization.find(org);
-      if (orgFromDB.length) {
-        let quantity = 0;
-        orgFromDB.forEach((el) => quantity += el.charityEventCount);
-        const room = uuid();
-        ctx.body = { room, quantity };
-
-        let i = 0;
-        orgFromDB.forEach((org) => {
-          doWithAllCE(org, (charityEvent) => {
-            app.io.emit(room, JSON.stringify(charityEvent));
-            i++;
-            if (i == quantity) app.io.emit(room, 'close');
-          });
-        });
-      }
-    } else {
-      ctx.body = await CharityEvent.find(org).select({__v: 0, _id: 0}).sort({date: -1});
-    }
+    await getMany(ctx, 'CE');
   },
 
   async getIncomingDonations(ctx) {
-    const org = (ctx.params.org=='all') ? {} : { ORGaddress: ctx.params.org };
-
-    if (ctx.query.how == 'bc' && app.state.web3) {
-      const orgFromDB = await Organization.find(org);
-      if (orgFromDB.length) {
-        let quantity = 0;
-        orgFromDB.forEach((el) => {
-          quantity += el.incomingDonationCount;
-        });
-        const room = uuid();
-        ctx.body = { room, quantity };
-
-        let i = 0;
-        orgFromDB.forEach((org) => {
-          doWithAllID(org, (incomingDonation) => {
-            app.io.emit(room, JSON.stringify(incomingDonation));
-            i++;
-            if (i == quantity) app.io.emit(room, 'close');
-          });
-        });
-      }
-    } else {
-      ctx.body = await IncomingDonation.find(org).select({__v: 0, _id: 0}).sort({date: -1});
-    }
+    await getMany(ctx, 'ID');
   },
 
   async getCharityEvent(ctx) {
-    if (ctx.query.how == 'bc' && app.state.web3) {
-      const charityEvent = await DappService.singleCharityEvent(ctx.params.hash);
-      const ext = await getDataFromDB(ctx.params.hash);
-      charityEvent.date = ext.date;
-      charityEvent.address = ext.charityEvent;
-      charityEvent.ORGaddress = ext.ORGaddress;
-      charityEvent.history = await DappService.getHistory(ext.ORGaddress, ext.charityEvent, 'CE');
-      ctx.body = charityEvent;
-    } else {
-      ctx.body = await CharityEvent.findOne({ address: ctx.params.hash }).select({__v: 0, _id: 0}) || 'Not found';
-    }
+    await getOne(ctx, 'CE');
   },
   
   async getIncomingDonation(ctx) {
-    if (ctx.query.how == 'bc' && app.state.web3) {
-      const incomingDonation = await DappService.singleIncomingDonation(ctx.params.hash);
-      const ext = await getDataFromDB(ctx.params.hash);
-      incomingDonation.date = ext.date;
-      incomingDonation.address = ext.incomingDonation;
-      incomingDonation.ORGaddress = ext.ORGaddress;
-      incomingDonation.history = await DappService.getHistory(ext.ORGaddress, ext.incomingDonation, 'ID');
-      ctx.body = incomingDonation;
-    } else {
-      ctx.body = await IncomingDonation.findOne({ address: ctx.params.hash }).select({__v: 0, _id: 0}) || 'Not found';
-    }
+    await getOne(ctx, 'ID');
   },
   
   async filterCharityEvents(ctx) {
-    if (ctx.request.header['content-type'] != 'application/json' &&
-      ctx.request.header['content-type'] != 'application/x-www-form-urlencoded') throw new AppError(400, 10);
-    if (!app.state.web3) throw new AppError(406, 801);
-
-    const fields = pick(ctx.request.body, FilterService.cardCharityEvent);
-    const filtering = Object.getOwnPropertyNames(fields).length != 0;
-    const ORGsearch = (!ctx.request.body.ORGaddress)
-      ? {}
-      : {ORGaddress: ctx.request.body.ORGaddress};
-    const ORGList = await Organization.find(ORGsearch);
-    const room = uuid();
-    let quantity = 0;
-    ORGList.forEach((orgFromDB) => {
-      quantity += orgFromDB.charityEventCount;
-    });
-    ctx.body = {room, quantity};
-
-    let i = 0;
-    ORGList.forEach((orgFromDB) => {
-      doWithAllCE(orgFromDB, (charityEvent) => {
-        const filtered = (filtering) ? FilterService.filter(charityEvent, fields) : charityEvent;
-        app.io.emit(room, JSON.stringify(filtered));
-        i++;
-        if (i == quantity) app.io.emit(room, 'close');
-      });
-    });
+    await filter(ctx, 'CE');
   },
 
   async filterIncomingDonation(ctx) {
-    if (!app.state.web3) throw new AppError(406, 801);
-    if (ctx.request.header['content-type']!='application/json' &&
-      ctx.request.header['content-type']!='application/x-www-form-urlencoded') throw new AppError(400, 10);
-
-    const fields = pick(ctx.request.body, FilterService.cardIncomingDonation);
-    const filtering = Object.getOwnPropertyNames(fields).length != 0;
-    const ORGsearch = (!ctx.request.body.ORGaddress)
-      ? {}
-      : {ORGaddress: ctx.request.body.ORGaddress};
-    const ORGList = await Organization.find(ORGsearch);
-    const room = uuid();
-    let quantity = 0;
-    ORGList.forEach((orgFromDB) => {
-      quantity += orgFromDB.incomingDonationCount;
-    });
-    ctx.body = { room, quantity };
-    
-    let i=0;
-    ORGList.forEach((orgFromDB) => {
-      doWithAllID(orgFromDB, (incomingDonation) => {
-        const filtered = (filtering) ? FilterService.filter(incomingDonation, fields) : incomingDonation;
-        app.io.emit(room, JSON.stringify(filtered));
-        i++;
-        if (i==quantity) app.io.emit(room, 'close');
-      });
-    });
+    await filter(ctx, 'ID');
   },
 
   async search(ctx) {
@@ -172,9 +163,7 @@ export default {
     if (body.page) {
       if (!Number.isInteger(body.page) || body.page<1) throw new AppError(406, 620);
     }
-
     const addresses = JSON.parse(await SearchService.search(body));
-    console.log(addresses);
     
     if (ctx.request.body.how == 'bc' && app.state.web3) {
       const room = uuid();
@@ -182,31 +171,23 @@ export default {
       ctx.body = {room, quantity};
       if (quantity == 0) setTimeout(() => app.io.emit(room, 'close'), 1000);
 
-      if (body.type == 'charityEvent') {
+      const type = (body.type == 'charityEvent')
+        ? 'CE'
+        : (body.type == 'incomingDonation')
+          ? 'ID'
+          : undefined;
+
+      if (type) {
         let i = 0;
         addresses.forEach(async (address) => {
-          const charityEvent = await DappService.singleCharityEvent(address);
-          const ext = await getDataFromDB(address);
-          charityEvent.date = ext.date;
-          charityEvent.address = ext.charityEvent;
-          charityEvent.ORGaddress = ext.ORGaddress;
-          app.io.emit(room, JSON.stringify(charityEvent));
+          const res = await DappService.getFullObject(address, null, type, null);
+          app.io.emit(room, JSON.stringify(res));
           i++;
           if (i == addresses.length) app.io.emit(room, 'close');
         });
-      }
-      if (body.type == 'incomingDonation') {
-        let i = 0;
-        addresses.forEach(async (address) => {
-          const incomingDonation = await DappService.singleIncomingDonation(address);
-          const ext = await getDataFromDB(address);
-          incomingDonation.date = ext.date;
-          incomingDonation.address = ext.incomingDonation;
-          incomingDonation.ORGaddress = ext.ORGaddress;
-          app.io.emit(room, JSON.stringify(incomingDonation));
-          i++;
-          if (i == addresses.length) app.io.emit(room, 'close');
-        });
+      } else {
+        console.log('type - undefined');
+        setTimeout(() => app.io.emit(room, 'close'), 1000);
       }
     } else {
       ctx.body = (body.type == 'charityEvent')
