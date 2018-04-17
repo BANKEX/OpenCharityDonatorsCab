@@ -2,4 +2,4 @@ intervals:
   dapp:
     reconnection: 10000
     checkConnection: 120000
-    refreshInitList: 600000
+    refreshInitList: 60000
