@@ -318,7 +318,7 @@ const getORGaddress = async (address, type) => {
     fromBlock: app.state.minBlock,
   };
   const logs = await app.state.web3.eth.getPastLogs(opts);
-  return logs[0].address;
+  return (logs[0]) ? logs[0].address : false;
 };
 const getFullObject = async (address, event, type, ORGaddress) => {
   const options = {
@@ -336,9 +336,14 @@ const getFullObject = async (address, event, type, ORGaddress) => {
   if (address && !event) {
     _this.address = address;
     _this.ORGaddress = ORGaddress || await getORGaddress(address, type);
-    const { cdate, mdate } = await getDates(_this.ORGaddress, _this.address, type);
-    _this.cdate = cdate;
-    _this.mdate = mdate;
+    if (_this.ORGaddress) {
+      const {cdate, mdate} = await getDates(_this.ORGaddress, _this.address, type);
+      _this.cdate = cdate;
+      _this.mdate = mdate;
+    } else {
+      _this.cdate = 0;
+      _this.mdate = 0;
+    }
     const singleObject = await options[type].singleFunc(_this.address);
     Object.getOwnPropertyNames(singleObject).forEach((key) => {
       _this[key] = singleObject[key];
